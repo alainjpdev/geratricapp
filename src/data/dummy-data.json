@@ -1,0 +1,1623 @@
+{
+  "users": [
+    {
+      "id": "0878689b-74cd-417a-83a9-7310b6314814",
+      "email": "prof.emanuelrosado@gmail.com",
+      "firstName": "Emanuel",
+      "lastName": "Sin Apellido",
+      "role": "teacher",
+      "passwordHash": "$2b$10$eXp9S89AaDrizgE4qj5tZuV1pCojkX72yYSblCDV.uA3bq6./Lp7W",
+      "grupoAsignado": "Tribu1",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:44.605",
+      "updatedAt": "2025-12-20T01:08:04.373"
+    },
+    {
+      "id": "emanuel-happytribe-001",
+      "email": "emanuel@happytribe.com",
+      "firstName": "Emanuel",
+      "lastName": "Sin Apellido",
+      "role": "teacher",
+      "passwordHash": "$2b$10$H1v.WipTvcR0XcT4f2aPeuWGvMowQywdGrmp73mLTuL4btH0r5iTO",
+      "grupoAsignado": "Tribu1",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:44.605",
+      "updatedAt": "2025-12-20T01:08:04.373"
+    },
+    {
+      "id": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "email": "roufatrigoaylar@gmail.com",
+      "firstName": "Aylar",
+      "lastName": "Roufa Trigo",
+      "role": "student",
+      "passwordHash": "$2b$10$x8.xuwOlPYFLzSOUr64FCOMbv0av6HcRWaoMi9b/v9Tylg64gkX5W",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:47.32",
+      "updatedAt": "2025-12-20T01:08:06.929"
+    },
+    {
+      "id": "34d53bdc-8e86-41a6-b81d-d24246882c39",
+      "email": "chasemont25@gmail.com",
+      "firstName": "Usuario",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$HZaU2cmwGnsw7.uDL.8xVu5dP3c4BPf/FtqqYdmSjbZ3hX0eguIEm",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:47.161",
+      "updatedAt": "2025-12-20T01:08:06.778"
+    },
+    {
+      "id": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab",
+      "email": "mr.miguel.salvador@gmail.com",
+      "firstName": "Miguel",
+      "lastName": "Salvador",
+      "role": "student",
+      "passwordHash": "$2b$10$m26/wKZOPEoqiNoCwC/FJerVyS4d2tY5HKJoWjNbuQYkpUqHUI442",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:46.051",
+      "updatedAt": "2025-12-20T01:08:05.73"
+    },
+    {
+      "id": "3e0f6ba6-849f-40aa-a95f-0ef141722c5c",
+      "email": "lizvar1210@gmail.com",
+      "firstName": "Elizabeth",
+      "lastName": "Sin Apellido",
+      "role": "teacher",
+      "passwordHash": "$2b$10$Q2xrz9holaGQahSNNOCt8OU2eylESw0hUyCO8bks2X5e2MRwTXLPe",
+      "grupoAsignado": "Teacher",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:44.773",
+      "updatedAt": "2025-12-20T01:08:04.526"
+    },
+    {
+      "id": "41b8116b-f280-47c3-9bab-37dce8769daa",
+      "email": "victoriashelly068@gmail.com",
+      "firstName": "Victoria",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$04XEE0fdd86E3X8Je2PYH.JPSDgmdXOzKPLpXGA3ivPlPm1nv98wq",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:48.113",
+      "updatedAt": "2025-12-20T01:08:07.675"
+    },
+    {
+      "id": "41cf7c9a-774c-4fd2-89d1-9dba9ca5006a",
+      "email": "jaxtonhc@gmail.com",
+      "firstName": "Usuario",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$UxGaAAeW08b7P.aFMq/2EOuoT8/PE4I.rOula5/AjPaBlLghirK.a",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:47.481",
+      "updatedAt": "2025-12-20T01:08:07.08"
+    },
+    {
+      "id": "44541473-275a-497c-9d92-717294b7775d",
+      "email": "ale.valenzuela.simental@gmail.com",
+      "firstName": "Ale",
+      "lastName": "Valenzuela",
+      "role": "student",
+      "passwordHash": "$2b$10$2WRQJF4mvUJeVSQQ5SDNCOmVwyl/NorJ5sw.2oIF4rDCEhQzfOmVm",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:48.428",
+      "updatedAt": "2025-12-20T01:08:07.968"
+    },
+    {
+      "id": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "email": "ark2784@gmail.com",
+      "firstName": "Jean",
+      "lastName": "Paul Raimond",
+      "role": "admin",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJ0C5BPa8xxc7s25UtkQ6bcjyADtoZOT_L1NPXP76dQlZRFel4tlQ=s96-c",
+      "passwordHash": "$2b$10$yOoXAQ2n5YTWCGrZxtQJSOCP0.pSJWp25RKb9wz.JzX5kL3LffOmW",
+      "grupoAsignado": "Admin",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:44.355",
+      "updatedAt": "2025-12-20T01:08:04.147"
+    },
+    {
+      "id": "5e8a99cf-f620-4e30-aea7-5140cf9f772e",
+      "email": "sophie.ollivier.aguirre2011@gmail.com",
+      "firstName": "Sophie",
+      "lastName": "Ollivier aguirre",
+      "role": "student",
+      "passwordHash": "$2b$10$mILc5CWMjU0fm/gUvT0eZeCZQa5fT6gTfc8ldAC.F/GPEfu4DQRRu",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:47.639",
+      "updatedAt": "2025-12-20T01:08:07.227"
+    },
+    {
+      "id": "6020b02a-2610-48f1-9a6f-e58445c63393",
+      "email": "jacobprivateemail82@gmail.com",
+      "firstName": "Jacob",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$/yK94dj3hAwpu3jgp5t.8.CQBcBZ3FRiIwb6nn5fvmVphY./GcKCm",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:45.574",
+      "updatedAt": "2025-12-20T01:08:05.281"
+    },
+    {
+      "id": "651bfcd9-5686-4151-8d83-ba196b5ac0da",
+      "email": "robertagzdz@gmail.com",
+      "firstName": "Roberta",
+      "lastName": "Gzlez",
+      "role": "student",
+      "passwordHash": "$2b$10$f2fRyzw3aGdZzx9Ep/ju1e69Wciz1ko3oZ45ezJ5OFIwalpbDCPHa",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:46.209",
+      "updatedAt": "2025-12-20T01:08:05.882"
+    },
+    {
+      "id": "6725de9b-1eda-4f63-90c2-ccd32176efc6",
+      "email": "rc_yaz@hotmail.com",
+      "firstName": "Yazmin",
+      "lastName": "Sin Apellido",
+      "role": "teacher",
+      "passwordHash": "$2b$10$QsagKv5Gus84SpBlNtYW4uGMv6DWLAOCJlqOy4lutrh3h8ITV23m.",
+      "grupoAsignado": "Teacher",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:44.934",
+      "updatedAt": "2025-12-20T01:08:04.68"
+    },
+    {
+      "id": "67fad58f-bd58-4b9b-8f48-ec15db123409",
+      "email": "dodgejaquemate@gmail.com",
+      "firstName": "Usuario",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$m/9MzmL11nQuZlOHRP09NuhKWGgYQQIQvW3l1qQLe1h5azoM4OCcG",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:47.955",
+      "updatedAt": "2025-12-20T01:08:07.525"
+    },
+    {
+      "id": "6f67a53c-0d43-4220-8114-a484546aff51",
+      "email": "aguirre.s.d.2011@gmail.com",
+      "firstName": "La",
+      "lastName": "Oveja Verde",
+      "role": "admin",
+      "passwordHash": "$2b$10$UvszhgqV1RIkzhCV6vp9GeSqQc0uqdffNwarBzLkCbSpJMxo7fhO.",
+      "grupoAsignado": "Teacher",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:45.412",
+      "updatedAt": "2025-12-20T01:08:05.129"
+    },
+    {
+      "id": "799eb527-05ab-43c2-97b6-6e924d5be573",
+      "email": "cursoraiht@gmail.com",
+      "firstName": "Jean",
+      "lastName": "Paul Raimond Kedilhac",
+      "role": "student",
+      "passwordHash": "$2b$10$JDAijOy9VsVBzAueaQAYAevihi.1BIq25Gc8DY0Z8IrHK.luu9r1m",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:48.587",
+      "updatedAt": "2025-12-20T01:08:08.118"
+    },
+    {
+      "id": "8de943fb-fbae-4db7-b830-8804994d4baa",
+      "email": "mayadagenaisbee@gmail.com",
+      "firstName": "Usuario",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$8wymJACQ5xA11t8wCNhiH.dLDzJ.XuzKXDisOhQLbN4tzkvCIHnnu",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:46.844",
+      "updatedAt": "2025-12-20T01:08:06.48"
+    },
+    {
+      "id": "91d2fbf3-01d3-4ad2-a287-ca30f71261df",
+      "email": "mayasmunro@gmail.com",
+      "firstName": "Usuario",
+      "lastName": "Sin Apellido",
+      "role": "student",
+      "passwordHash": "$2b$10$.ySjg0jQpu13IVb5pVU9C.I1lcwdn/ozGuR1nzLByt4Duh7V3aKJm",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:47.003",
+      "updatedAt": "2025-12-20T01:08:06.629"
+    },
+    {
+      "id": "cc57d361-fcca-4d81-bca3-54bfbe9b000c",
+      "email": "evelineacuna7010@gmail.com",
+      "firstName": "Evelin",
+      "lastName": "Sin Apellido",
+      "role": "teacher",
+      "passwordHash": "$2b$10$7oc3nzRDVXs6Xqq4Aip.Ye5FRf0JFfzdPe8K2IJrt5eBDVATlqn7W",
+      "grupoAsignado": "Teacher",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:45.092",
+      "updatedAt": "2025-12-20T01:08:04.829"
+    },
+    {
+      "id": "fc35f503-18bb-42a6-b106-7c4f2c04aa19",
+      "email": "emegb2015@gmail.com",
+      "firstName": "Emilio",
+      "lastName": "Gutierrez",
+      "role": "student",
+      "passwordHash": "$2b$10$qPqeLsYeOxi6WVFH0CY6COb7sswv2QvgaWipz/VfzSaaLqH.WCKiW",
+      "grupoAsignado": "Tribu3",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:45.731",
+      "updatedAt": "2025-12-20T01:08:05.431"
+    },
+    {
+      "id": "fd41beeb-6bec-4a4f-a3ae-fb2dfa638e17",
+      "email": "20172310381@upnqr.edu.mx",
+      "firstName": "Luz",
+      "lastName": "Sin Apellido",
+      "role": "teacher",
+      "passwordHash": "$2b$10$.GwgVqpgVB.gbYZP7aPTeuy5IjR0fZmHqXKRyEGp9FL4/uyaW2T.a",
+      "grupoAsignado": "Teacher",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:45.25",
+      "updatedAt": "2025-12-20T01:08:04.977"
+    },
+    {
+      "id": "fed308aa-531f-4b51-984a-a0ead32654c0",
+      "email": "bogaston13@gmail.com",
+      "firstName": "Gaston",
+      "lastName": "Bo",
+      "role": "student",
+      "passwordHash": "$2b$10$dHe1izNZhKfkYMKOeUKtOO3yYP8d.iQW5Kn9ShCDxyQoEoIffV7XW",
+      "grupoAsignado": "Tribu4",
+      "isActive": true,
+      "createdAt": "2025-12-19T23:23:46.367",
+      "updatedAt": "2025-12-20T01:08:06.032"
+    }
+  ],
+  "classes": [
+    {
+      "id": "06a33551-3679-47b0-87a9-fe2f1e49f100",
+      "title": "Art",
+      "classCode": "CLASS-1766289135882",
+      "section": "",
+      "subject": "Art",
+      "room": "",
+      "teacherId": "cc57d361-fcca-4d81-bca3-54bfbe9b000c",
+      "isArchived": false,
+      "status": "active",
+      "createdAt": "2025-12-21T03:52:15.881Z",
+      "updatedAt": "2025-12-21T03:52:15.881Z"
+    },
+    {
+      "id": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "title": "Biology",
+      "classCode": "CLASS-1766259325748",
+      "section": "",
+      "subject": "Biology",
+      "room": "",
+      "teacherId": "0878689b-74cd-417a-83a9-7310b6314814",
+      "isArchived": false,
+      "status": "active",
+      "createdAt": "2025-12-20T19:35:25.746Z",
+      "updatedAt": "2025-12-20T19:35:25.746Z"
+    },
+    {
+      "id": "6f492294-f769-4476-8794-8d1f814181c5",
+      "title": "Chemistry",
+      "classCode": "CLASS-1766259564467",
+      "section": "",
+      "subject": "Chemistry",
+      "room": "",
+      "teacherId": "3e0f6ba6-849f-40aa-a95f-0ef141722c5c",
+      "isArchived": true,
+      "status": "active",
+      "createdAt": "2025-12-20T19:39:24.466Z",
+      "updatedAt": "2025-12-20T22:35:05.448Z"
+    },
+    {
+      "id": "d6949075-61f5-4155-a188-8374cf3ff54c",
+      "title": "Computer Science",
+      "classCode": "CLASS-1766270262788",
+      "section": "",
+      "subject": "Computer Science",
+      "room": "",
+      "teacherId": "6725de9b-1eda-4f63-90c2-ccd32176efc6",
+      "isArchived": false,
+      "status": "active",
+      "createdAt": "2025-12-20T22:37:42.788Z",
+      "updatedAt": "2025-12-20T22:37:42.788Z"
+    },
+    {
+      "id": "ecce905d-83da-4278-92a8-218eb294a405",
+      "title": "Art",
+      "classCode": "G4S8PJBS",
+      "subject": "Art",
+      "teacherId": "emanuel-happytribe-001",
+      "isArchived": false,
+      "status": "active",
+      "createdAt": "2025-12-20T03:04:36.75",
+      "updatedAt": "2025-12-20T22:54:05.914Z"
+    }
+  ],
+  "classMembers": [
+    {
+      "id": "cm-091b48c3-tribu3-1",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "userId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "role": "student",
+      "joinedAt": "2025-12-19T23:23:47.32"
+    },
+    {
+      "id": "cm-091b48c3-tribu3-2",
+      "classId": "d6949075-61f5-4155-a188-8374cf3ff54c",
+      "userId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "role": "student",
+      "joinedAt": "2025-12-19T23:23:47.32"
+    },
+    {
+      "id": "cm-091b48c3-tribu3-3",
+      "classId": "ecce905d-83da-4278-92a8-218eb294a405",
+      "userId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "role": "student",
+      "joinedAt": "2025-12-19T23:23:47.32"
+    },
+    {
+      "id": "cm-3a454ae2-tribu3-1",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "userId": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab",
+      "role": "student",
+      "joinedAt": "2025-12-19T23:23:46.051"
+    },
+    {
+      "id": "cm-3a454ae2-tribu3-2",
+      "classId": "d6949075-61f5-4155-a188-8374cf3ff54c",
+      "userId": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab",
+      "role": "student",
+      "joinedAt": "2025-12-19T23:23:46.051"
+    }
+  ],
+  "topics": [],
+  "streamItems": [
+    {
+      "id": "0bea0f1f-22b9-4e0d-acbe-0970f92fdb67",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "quiz",
+      "title": "Quiz de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:34.103Z",
+      "updatedAt": "2025-12-20T13:26:34.103Z"
+    },
+    {
+      "id": "1212fac0-b70f-4a8d-8b26-85ae49775557",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "quiz",
+      "title": "Quiz de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:35.446Z",
+      "updatedAt": "2025-12-20T13:26:35.446Z"
+    },
+    {
+      "id": "1ce427aa-a7bb-4144-a4cb-c967cab6e912",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "announcement",
+      "title": "Anuncio de Prueba",
+      "content": "Contenido del anuncio",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:54.878Z",
+      "updatedAt": "2025-12-20T13:25:54.878Z"
+    },
+    {
+      "id": "24885896-a9a5-4493-aa65-85b8980852bd",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "announcement",
+      "title": "Anuncio de Prueba",
+      "content": "Contenido del anuncio",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:35.429Z",
+      "updatedAt": "2025-12-20T13:26:35.429Z"
+    },
+    {
+      "id": "32031fe0-9be4-4b80-b700-38d0c53a13db",
+      "classId": "957bd655-b3de-4473-896a-d5ad8d3c44e2",
+      "type": "assignment",
+      "title": "zdgfsegesrg hidtori",
+      "content": "",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "className": "History",
+      "isArchived": false,
+      "createdAt": "2025-12-21T00:12:23.499Z",
+      "updatedAt": "2025-12-21T00:28:47.846Z"
+    },
+    {
+      "id": "41f3c5d6-70b0-41f5-a069-b35823d2d1a9",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "biology",
+      "content": "instructions",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": true,
+      "createdAt": "2025-12-20T19:48:10.215Z",
+      "updatedAt": "2025-12-20T22:36:14.698Z",
+      "attachments": [
+        {
+          "type": "drive",
+          "name": "Google Drive file",
+          "url": "https://drive.google.com/file/d/1fKFnX9ul8BNuRkdzdhFcAgJJMmoKIjbn/view?usp=share_link"
+        }
+      ]
+    },
+    {
+      "id": "49e9d783-05fc-4840-afe2-05d385f773dd",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "material",
+      "title": "material",
+      "content": "aqui material",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": true,
+      "createdAt": "2025-12-20T21:12:48.179Z",
+      "updatedAt": "2025-12-20T22:34:47.673Z",
+      "attachments": []
+    },
+    {
+      "id": "5a93027b-f075-4ad9-ae9e-95d7d73c147e",
+      "classId": "ecce905d-83da-4278-92a8-218eb294a405",
+      "type": "assignment",
+      "title": "una clase",
+      "content": "instrucciones",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T19:20:27.100Z",
+      "updatedAt": "2025-12-20T19:20:27.100Z"
+    },
+    {
+      "id": "604f5612-a8f4-43b1-a8d1-b3fe4bf9b661",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "quiz",
+      "title": "Quiz de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:22.188Z",
+      "updatedAt": "2025-12-20T13:25:22.188Z"
+    },
+    {
+      "id": "72e061e2-cb8a-4b13-8aa8-552a9a47a62d",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "material",
+      "title": "Material de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:54.888Z",
+      "updatedAt": "2025-12-20T13:25:54.888Z"
+    },
+    {
+      "id": "7c713d6b-c60d-49e3-8469-c3300f61610a",
+      "classId": "d6949075-61f5-4155-a188-8374cf3ff54c",
+      "type": "assignment",
+      "title": "otra tarea",
+      "content": "aqui mero",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "className": "Computer Science",
+      "isArchived": false,
+      "createdAt": "2025-12-21T01:55:10.329Z",
+      "updatedAt": "2025-12-21T01:55:10.329Z"
+    },
+    {
+      "id": "7d1bba3c-5049-4ab8-b429-5597f01afa8f",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "Assignment de Prueba",
+      "content": "Instrucciones del assignment",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:35.438Z",
+      "updatedAt": "2025-12-20T13:26:35.438Z"
+    },
+    {
+      "id": "824012b1-5ef0-4929-bf4c-dc2c52636e06",
+      "classId": "6f492294-f769-4476-8794-8d1f814181c5",
+      "type": "quiz",
+      "title": "un quiz",
+      "content": "fespon de",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T21:27:34.392Z",
+      "updatedAt": "2025-12-20T22:50:42.742Z"
+    },
+    {
+      "id": "87cf036e-c7c7-455d-9628-368ae0838496",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "Assignment de Prueba",
+      "content": "Instrucciones del assignment",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:22.186Z",
+      "updatedAt": "2025-12-20T13:25:22.186Z"
+    },
+    {
+      "id": "8a6e96ea-4cec-4603-9cdc-3892223eb5a5",
+      "classId": "d6949075-61f5-4155-a188-8374cf3ff54c",
+      "type": "assignment",
+      "title": "compu assib",
+      "content": "asfas",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T22:37:53.177Z",
+      "updatedAt": "2025-12-20T22:50:18.136Z"
+    },
+    {
+      "id": "97e5bbe2-c50c-4ed7-90e9-1aaf111b6412",
+      "classId": "ecce905d-83da-4278-92a8-218eb294a405",
+      "type": "quiz",
+      "title": "aca una pregunt",
+      "authorId": "799eb527-05ab-43c2-97b6-6e924d5be573",
+      "isArchived": true,
+      "createdAt": "2025-12-20T04:12:17.731",
+      "updatedAt": "2025-12-20T04:14:19.325"
+    },
+    {
+      "id": "9de90122-5ae8-4ec1-87c5-433bb2ce9f68",
+      "classId": "5d43ba5d-6775-47c7-b906-734257eec7d9",
+      "type": "assignment",
+      "title": "pisis",
+      "content": "",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": true,
+      "createdAt": "2025-12-21T00:05:39.974Z",
+      "updatedAt": "2025-12-21T00:11:59.982Z"
+    },
+    {
+      "id": "9fff4a93-4b17-46b7-8181-375200838177",
+      "classId": "c0a9d2a4-81be-4f52-bf50-e84e8cbdf704",
+      "type": "assignment",
+      "title": "Assignment de Prueba",
+      "content": "Instrucciones del assignment",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:24:58.542Z",
+      "updatedAt": "2025-12-20T13:24:58.542Z"
+    },
+    {
+      "id": "a3d985c8-36d1-4be6-876b-143c878a6ee6",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "announcement",
+      "title": "Anuncio de Prueba",
+      "content": "Contenido del anuncio",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:34.083Z",
+      "updatedAt": "2025-12-20T13:26:34.083Z"
+    },
+    {
+      "id": "a5772126-b822-4df3-953e-88df0835e821",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "Assignment de Prueba",
+      "content": "Instrucciones del assignment",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:54.880Z",
+      "updatedAt": "2025-12-20T13:25:54.880Z"
+    },
+    {
+      "id": "a5a27257-6913-4d02-9bc6-dadcdd20f62e",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "quiz",
+      "title": "Quiz de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:54.884Z",
+      "updatedAt": "2025-12-20T13:25:54.884Z"
+    },
+    {
+      "id": "b48a372d-2777-4e30-b8ce-0d4955c76f98",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "material",
+      "title": "Material de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:34.116Z",
+      "updatedAt": "2025-12-20T13:26:34.116Z"
+    },
+    {
+      "id": "c816e9ae-53e6-4f05-90a0-a676a8683a64",
+      "classId": "c0a9d2a4-81be-4f52-bf50-e84e8cbdf704",
+      "type": "material",
+      "title": "Material de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:24:58.547Z",
+      "updatedAt": "2025-12-20T13:24:58.547Z"
+    },
+    {
+      "id": "cb13a6f6-b2a8-46e6-b09b-f836ae455d9a",
+      "classId": "ecce905d-83da-4278-92a8-218eb294a405",
+      "type": "assignment",
+      "title": "un assigment2",
+      "content": "instructions here",
+      "authorId": "799eb527-05ab-43c2-97b6-6e924d5be573",
+      "isArchived": false,
+      "createdAt": "2025-12-20T03:58:34.282",
+      "updatedAt": "2025-12-20T22:51:09.185Z"
+    },
+    {
+      "id": "cfb1dcaf-65dd-4c97-bfe7-26cac8ab393a",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "Assignment de Prueba",
+      "content": "Instrucciones del assignment",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:34.094Z",
+      "updatedAt": "2025-12-20T13:26:34.094Z"
+    },
+    {
+      "id": "d146b248-56d3-4d2d-9c7c-426292ea44e5",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "una tarea biologia",
+      "content": "aqui mero ",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "className": "Biology",
+      "isArchived": false,
+      "createdAt": "2025-12-21T01:54:15.175Z",
+      "updatedAt": "2025-12-21T01:54:15.175Z"
+    },
+    {
+      "id": "d43db63f-a182-439d-ad36-09b8c9f6b1ef",
+      "classId": "6f492294-f769-4476-8794-8d1f814181c5",
+      "type": "assignment",
+      "title": "quimica",
+      "content": "instrucciones",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T19:40:06.689Z",
+      "updatedAt": "2025-12-20T21:26:54.729Z",
+      "attachments": [
+        {
+          "type": "drive",
+          "name": "Google Drive file",
+          "url": "https://drive.google.com/file/d/1fKFnX9ul8BNuRkdzdhFcAgJJMmoKIjbn/view?usp=share_link"
+        }
+      ]
+    },
+    {
+      "id": "d88566ae-49ad-4b3d-ac9f-2bafe3d487fc",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "ddasf",
+      "content": "dawffd",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T22:54:29.717Z",
+      "updatedAt": "2025-12-20T22:55:13.059Z"
+    },
+    {
+      "id": "d9786f19-a39f-40a4-bdb7-8ea68044a37a",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "material",
+      "title": "Material de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:22.189Z",
+      "updatedAt": "2025-12-20T13:25:22.189Z"
+    },
+    {
+      "id": "dd8cfb80-23da-4010-b7ee-ba454f8668f4",
+      "classId": "06a33551-3679-47b0-87a9-fe2f1e49f100",
+      "type": "assignment",
+      "title": "classs something",
+      "content": "asfaf",
+      "authorId": "cc57d361-fcca-4d81-bca3-54bfbe9b000c",
+      "className": "Art",
+      "isArchived": false,
+      "createdAt": "2025-12-21T03:56:38.518Z",
+      "updatedAt": "2025-12-21T03:56:38.518Z"
+    },
+    {
+      "id": "e047c1c3-86fc-4bdf-bee7-74316a064f5b",
+      "classId": "ecce905d-83da-4278-92a8-218eb294a405",
+      "type": "quiz",
+      "title": "Blank Quiz2",
+      "content": "acac",
+      "authorId": "799eb527-05ab-43c2-97b6-6e924d5be573",
+      "isArchived": false,
+      "createdAt": "2025-12-20T04:13:49.008",
+      "updatedAt": "2025-12-20T22:54:05.921Z"
+    },
+    {
+      "id": "e17625f4-87da-42c0-89da-e5fe2b942718",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "material",
+      "title": "Material de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:26:35.455Z",
+      "updatedAt": "2025-12-20T13:26:35.455Z"
+    },
+    {
+      "id": "e8a71f0d-edf4-486f-af63-83c3e6fb20fe",
+      "classId": "c0a9d2a4-81be-4f52-bf50-e84e8cbdf704",
+      "type": "announcement",
+      "title": "Anuncio de Prueba",
+      "content": "Contenido del anuncio",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:24:58.540Z",
+      "updatedAt": "2025-12-20T13:24:58.540Z"
+    },
+    {
+      "id": "eec98d30-7699-4b1d-b738-de6d0e565bc1",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "announcement",
+      "title": "Anuncio de Prueba",
+      "content": "Contenido del anuncio",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:25:22.185Z",
+      "updatedAt": "2025-12-20T13:25:22.185Z"
+    },
+    {
+      "id": "fbc16c18-05cd-48a8-ab44-9279b26813f6",
+      "classId": "c0a9d2a4-81be-4f52-bf50-e84e8cbdf704",
+      "type": "quiz",
+      "title": "Quiz de Prueba",
+      "authorId": "4ba163e1-dadd-45ed-ad72-8ecb5e6a6ad7",
+      "isArchived": false,
+      "createdAt": "2025-12-20T13:24:58.545Z",
+      "updatedAt": "2025-12-20T13:24:58.545Z"
+    },
+    {
+      "id": "a8b9c7d6-e5f4-4a3b-9c2d-1e2f3a4b5c6d",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "quiz",
+      "title": "Quiz de Biología - Sistema Digestivo",
+      "authorId": "0878689b-74cd-417a-83a9-7310b6314814",
+      "isArchived": false,
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    },
+    {
+      "id": "si-art-001",
+      "classId": "06a33551-3679-47b0-87a9-fe2f1e49f100",
+      "type": "assignment",
+      "title": "Project: Surrealism",
+      "authorId": "cc57d361-fcca-4d81-bca3-54bfbe9b000c",
+      "isArchived": false,
+      "createdAt": "2025-12-22T12:00:00.000Z",
+      "updatedAt": "2025-12-22T12:00:00.000Z"
+    },
+    {
+      "id": "si-bio-001",
+      "classId": "07a2fff7-b160-4b10-88cc-d165b49ab9cc",
+      "type": "assignment",
+      "title": "Lab Report: Mitosis",
+      "authorId": "0878689b-74cd-417a-83a9-7310b6314814",
+      "isArchived": false,
+      "createdAt": "2025-12-22T13:00:00.000Z",
+      "updatedAt": "2025-12-22T13:00:00.000Z"
+    },
+    {
+      "id": "si-chem-001",
+      "classId": "6f492294-f769-4476-8794-8d1f814181c5",
+      "type": "assignment",
+      "title": "Chemical Bonds Worksheet",
+      "authorId": "3e0f6ba6-849f-40aa-a95f-0ef141722c5c",
+      "isArchived": false,
+      "createdAt": "2025-12-22T14:00:00.000Z",
+      "updatedAt": "2025-12-22T14:00:00.000Z"
+    },
+    {
+      "id": "si-cs-001",
+      "classId": "d6949075-61f5-4155-a188-8374cf3ff54c",
+      "type": "assignment",
+      "title": "Python Basics",
+      "authorId": "6725de9b-1eda-4f63-90c2-ccd32176efc6",
+      "isArchived": false,
+      "createdAt": "2025-12-22T15:00:00.000Z",
+      "updatedAt": "2025-12-22T15:00:00.000Z"
+    },
+    {
+      "id": "si-art2-001",
+      "classId": "ecce905d-83da-4278-92a8-218eb294a405",
+      "type": "assignment",
+      "title": "Portfolio Review",
+      "authorId": "emanuel-happytribe-001",
+      "isArchived": false,
+      "createdAt": "2025-12-22T16:00:00.000Z",
+      "updatedAt": "2025-12-22T16:00:00.000Z"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "145f79e7-5abc-4ff2-a730-81caa0871a4a",
+      "streamItemId": "bf43d6aa-1b13-4ec6-8086-033e74e8cc1c",
+      "instructions": "",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T22:56:07.988Z",
+      "updatedAt": "2025-12-20T22:56:07.988Z"
+    },
+    {
+      "id": "15f5f60c-01d8-4dc8-8165-775725163a1d",
+      "streamItemId": "41f3c5d6-70b0-41f5-a069-b35823d2d1a9",
+      "dueDate": "2025-12-21",
+      "dueTime": "19:00",
+      "instructions": "instructions",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T19:48:10.228Z",
+      "updatedAt": "2025-12-20T22:10:33.893Z"
+    },
+    {
+      "id": "1c3023ac-0e75-4fbf-9fc3-dd98a0294aba",
+      "streamItemId": "9de90122-5ae8-4ec1-87c5-433bb2ce9f68",
+      "instructions": "",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-21T00:05:39.981Z",
+      "updatedAt": "2025-12-21T00:05:39.981Z"
+    },
+    {
+      "id": "35e76932-23af-4b9f-9516-4458e0b7645d",
+      "streamItemId": "d88566ae-49ad-4b3d-ac9f-2bafe3d487fc",
+      "instructions": "dawffd",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T22:54:29.726Z",
+      "updatedAt": "2025-12-20T22:54:29.726Z"
+    },
+    {
+      "id": "4836fc1f-4891-43cf-a5e0-822832af3ccd",
+      "streamItemId": "a80dd873-ad66-4548-89b8-1aaa1fd37fd1",
+      "instructions": "instruction",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T04:20:48.534",
+      "updatedAt": "2025-12-20T04:56:42.374"
+    },
+    {
+      "id": "680cdaf0-b30f-4f87-89d7-f1119d2bf587",
+      "streamItemId": "a9685730-9505-4b35-b18d-e07ad8a56651",
+      "instructions": "bio",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T22:35:40.023Z",
+      "updatedAt": "2025-12-20T22:35:40.023Z"
+    },
+    {
+      "id": "72b8085e-cc8d-41dc-8cbf-594b77b30a58",
+      "streamItemId": "d146b248-56d3-4d2d-9c7c-426292ea44e5",
+      "dueDate": "2025-12-21",
+      "dueTime": "20:54",
+      "instructions": "aqui mero ",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-21T01:54:15.184Z",
+      "updatedAt": "2025-12-21T01:54:15.184Z"
+    },
+    {
+      "id": "8009860d-1d44-485d-88c1-e7df805b3285",
+      "streamItemId": "",
+      "points": 100,
+      "dueDate": "2025-12-31",
+      "instructions": "Instrucciones de prueba",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T13:24:58.543Z",
+      "updatedAt": "2025-12-20T13:26:35.440Z"
+    },
+    {
+      "id": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "streamItemId": "dd8cfb80-23da-4010-b7ee-ba454f8668f4",
+      "instructions": "asfaf",
+      "assignToAll": false,
+      "assignedGroups": [
+        "Tribu3"
+      ],
+      "isDeleted": false,
+      "createdAt": "2025-12-21T03:56:38.536Z",
+      "updatedAt": "2025-12-21T03:56:38.536Z"
+    },
+    {
+      "id": "a1566a03-ed5c-41dc-b910-3b8cea2ccc77",
+      "streamItemId": "77c1ae15-2a5d-4998-8a6f-76c53db91ef2",
+      "instructions": "",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-21T00:02:32.565Z",
+      "updatedAt": "2025-12-21T00:02:32.565Z"
+    },
+    {
+      "id": "a59a72a2-f371-4d12-91f9-f9504de52730",
+      "streamItemId": "7c713d6b-c60d-49e3-8469-c3300f61610a",
+      "dueDate": "2025-12-21",
+      "dueTime": "20:55",
+      "instructions": "aqui mero",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-21T01:55:10.338Z",
+      "updatedAt": "2025-12-21T01:55:10.338Z"
+    },
+    {
+      "id": "b29608b3-be8e-4b00-a569-1abb4ae3973e",
+      "streamItemId": "32031fe0-9be4-4b80-b700-38d0c53a13db",
+      "instructions": "",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-21T00:12:23.506Z",
+      "updatedAt": "2025-12-21T00:12:23.506Z"
+    },
+    {
+      "id": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "streamItemId": "cb13a6f6-b2a8-46e6-b09b-f836ae455d9a",
+      "instructions": "instructions here",
+      "assignToAll": false,
+      "assignedGroups": [
+        "Tribu3"
+      ],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T03:58:34.947",
+      "updatedAt": "2025-12-20T04:01:54.399"
+    },
+    {
+      "id": "c2224233-f309-4b8d-972c-c76136a74b55",
+      "streamItemId": "8a6e96ea-4cec-4603-9cdc-3892223eb5a5",
+      "instructions": "asfas",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T22:37:53.192Z",
+      "updatedAt": "2025-12-20T22:37:53.192Z"
+    },
+    {
+      "id": "d685d09b-da18-4752-b0f3-67d7eb188a8b",
+      "streamItemId": "4a6b2a97-5e67-4892-9014-374ab8e4ec91",
+      "instructions": "instrcutions",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T05:09:38.132",
+      "updatedAt": "2025-12-20T05:09:38.132"
+    },
+    {
+      "id": "e3eaf1db-8b4a-4aa3-b688-99ba1b0f4c9d",
+      "streamItemId": "d43db63f-a182-439d-ad36-09b8c9f6b1ef",
+      "instructions": "instrucciones",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-20T19:40:06.702Z",
+      "updatedAt": "2025-12-20T21:26:54.737Z"
+    },
+    {
+      "id": "as-art-001",
+      "streamItemId": "si-art-001",
+      "points": 100,
+      "dueDate": "2025-12-30",
+      "dueTime": "23:59",
+      "instructions": "Create a surrealist artwork.",
+      "assignToAll": false,
+      "assignedGroups": [
+        "Tribu4"
+      ],
+      "selectedStudents": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-22T12:00:00.000Z",
+      "updatedAt": "2025-12-22T12:00:00.000Z"
+    },
+    {
+      "id": "as-bio-001",
+      "streamItemId": "si-bio-001",
+      "points": 100,
+      "dueDate": "2025-12-30",
+      "dueTime": "23:59",
+      "instructions": "Submit your lab report.",
+      "assignToAll": false,
+      "assignedGroups": [
+        "Tribu3"
+      ],
+      "selectedStudents": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-22T13:00:00.000Z",
+      "updatedAt": "2025-12-22T13:00:00.000Z"
+    },
+    {
+      "id": "as-chem-001",
+      "streamItemId": "si-chem-001",
+      "points": 100,
+      "dueDate": "2025-12-30",
+      "dueTime": "23:59",
+      "instructions": "Complete the worksheet.",
+      "assignToAll": false,
+      "assignedGroups": [
+        "Tribu3"
+      ],
+      "selectedStudents": [],
+      "isDeleted": false,
+      "createdAt": "2025-12-22T14:00:00.000Z",
+      "updatedAt": "2025-12-22T14:00:00.000Z"
+    },
+    {
+      "id": "as-cs-001",
+      "streamItemId": "si-cs-001",
+      "points": 100,
+      "dueDate": "2025-12-30",
+      "dueTime": "23:59",
+      "instructions": "Complete the Python exercises.",
+      "assignToAll": false,
+      "assignedGroups": [],
+      "selectedStudents": [
+        "091b48c3-3e13-49b0-ae5b-99e52d96c626"
+      ],
+      "isDeleted": false,
+      "createdAt": "2025-12-22T15:00:00.000Z",
+      "updatedAt": "2025-12-22T15:00:00.000Z"
+    },
+    {
+      "id": "as-art2-001",
+      "streamItemId": "si-art2-001",
+      "points": 100,
+      "dueDate": "2025-12-30",
+      "dueTime": "23:59",
+      "instructions": "Upload your portfolio.",
+      "assignToAll": false,
+      "assignedGroups": [],
+      "selectedStudents": [
+        "34d53bdc-8e86-41a6-b81d-d24246882c39"
+      ],
+      "isDeleted": false,
+      "createdAt": "2025-12-22T16:00:00.000Z",
+      "updatedAt": "2025-12-22T16:00:00.000Z"
+    }
+  ],
+  "assignmentStudents": [
+    {
+      "id": "017307dd-46df-4ff8-b056-6b18812b30e3",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "fc35f503-18bb-42a6-b106-7c4f2c04aa19"
+    },
+    {
+      "id": "2209633d-c190-40ab-b2d4-4674fd1fd458",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "c4bb4d9d-0a33-497c-be94-d17dd28ff7e2"
+    },
+    {
+      "id": "37475d2c-0200-408b-8353-0f18cba776c8",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "41cf7c9a-774c-4fd2-89d1-9dba9ca5006a"
+    },
+    {
+      "id": "3f833336-3294-43f6-898d-cdaada641bd8",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "6020b02a-2610-48f1-9a6f-e58445c63393"
+    },
+    {
+      "id": "40011a72-fb50-4fe7-b58c-6f1bac419b78",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "799eb527-05ab-43c2-97b6-6e924d5be573"
+    },
+    {
+      "id": "4c18c6d0-00fc-4cfb-b51f-b30ece4da5ed",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "d04454dd-471e-4abb-8f86-608be00e49c8"
+    },
+    {
+      "id": "4fbe1bd9-3795-45e3-a0ea-6384e2a46dfb",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "6020b02a-2610-48f1-9a6f-e58445c63393"
+    },
+    {
+      "id": "51e14b9a-557c-4247-9825-b69fea75be8d",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "41cf7c9a-774c-4fd2-89d1-9dba9ca5006a"
+    },
+    {
+      "id": "6804a0f5-536e-49cb-9a94-8b57d5e0eab9",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "44541473-275a-497c-9d92-717294b7775d"
+    },
+    {
+      "id": "7947a5c9-267a-405b-8fb4-11be8fea375c",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626"
+    },
+    {
+      "id": "b7820001-b60c-43d3-a36c-eb87c5dc5b4c",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "799eb527-05ab-43c2-97b6-6e924d5be573"
+    },
+    {
+      "id": "c0728ce0-d9b9-4444-8274-e525892b9c74",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "fc35f503-18bb-42a6-b106-7c4f2c04aa19"
+    },
+    {
+      "id": "d39efd54-c6ee-42fb-a01d-4e6a5bd16906",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab"
+    },
+    {
+      "id": "e1fbc40c-9153-4f80-bd74-f142727f5685",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626"
+    },
+    {
+      "id": "ec523a09-0537-4342-970e-f303ab71be95",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "44541473-275a-497c-9d92-717294b7775d"
+    },
+    {
+      "id": "f3368d57-2df6-4748-80cd-fbfbf909aa91",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab"
+    },
+    {
+      "id": "as-stud-001",
+      "assignmentId": "as-cs-001",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626"
+    },
+    {
+      "id": "as-stud-002",
+      "assignmentId": "as-art2-001",
+      "studentId": "34d53bdc-8e86-41a6-b81d-d24246882c39"
+    }
+  ],
+  "assignmentSubmissions": [
+    {
+      "id": "manual-sub-001",
+      "assignmentId": "35e76932-23af-4b9f-9516-4458e0b7645d",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "content": "Entrega manual de prueba realizada por desarrollador.",
+      "attachments": [],
+      "status": "submitted",
+      "submittedAt": "2025-12-22T08:00:00.000Z",
+      "createdAt": "2025-12-22T08:00:00.000Z",
+      "updatedAt": "2025-12-22T08:00:00.000Z"
+    },
+    {
+      "id": "manual-sub-aylar-002",
+      "assignmentId": "bcfa7af4-f2dc-4f69-a5dc-9dc65d13c814",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "content": "Aquí está mi ensayo sobre el tema solicitado.",
+      "attachments": [],
+      "status": "submitted",
+      "submittedAt": "2025-12-23T10:00:00.000Z",
+      "createdAt": "2025-12-23T10:00:00.000Z",
+      "updatedAt": "2025-12-23T10:00:00.000Z"
+    },
+    {
+      "id": "manual-sub-aylar-003",
+      "assignmentId": "9df5b987-433c-4c0d-8d12-ef29c6869d92",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "content": "Respuesta al cuestionario adjunto.",
+      "attachments": [],
+      "status": "submitted",
+      "submittedAt": "2025-12-23T11:00:00.000Z",
+      "createdAt": "2025-12-23T11:00:00.000Z",
+      "updatedAt": "2025-12-23T11:00:00.000Z"
+    },
+    {
+      "id": "manual-sub-002",
+      "assignmentId": "35e76932-23af-4b9f-9516-4458e0b7645d",
+      "studentId": "34d53bdc-8e86-41a6-b81d-d24246882c39",
+      "content": "Aquí está mi tarea profesor. Tuve algunas dudas con el punto 3.",
+      "attachments": [],
+      "status": "reviewed",
+      "grade": 85,
+      "teacherComments": "Buen análisis, pero intenta resolver las dudas en clase la próxima vez. Faltó profundidad en la conclusión.",
+      "submittedAt": "2025-12-22T09:15:00.000Z",
+      "reviewedAt": "2025-12-22T12:00:00.000Z",
+      "createdAt": "2025-12-22T09:15:00.000Z",
+      "updatedAt": "2025-12-22T12:00:00.000Z"
+    },
+    {
+      "id": "manual-sub-003",
+      "assignmentId": "35e76932-23af-4b9f-9516-4458e0b7645d",
+      "studentId": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab",
+      "content": "Adjunto el archivo solicitado.",
+      "attachments": [],
+      "status": "reviewed",
+      "grade": 95,
+      "teacherComments": "Excelente trabajo Miguel. Muy completo.",
+      "submittedAt": "2025-12-21T18:30:00.000Z",
+      "reviewedAt": "2025-12-22T13:00:00.000Z",
+      "createdAt": "2025-12-21T18:30:00.000Z",
+      "updatedAt": "2025-12-22T13:00:00.000Z"
+    },
+    {
+      "id": "manual-sub-004",
+      "assignmentId": "35e76932-23af-4b9f-9516-4458e0b7645d",
+      "studentId": "41b8116b-f280-47c3-9bab-37dce8769daa",
+      "content": "",
+      "attachments": [],
+      "status": "to_review",
+      "submittedAt": "2025-12-22T10:00:00.000Z",
+      "createdAt": "2025-12-22T10:00:00.000Z",
+      "updatedAt": "2025-12-22T10:00:00.000Z"
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "05187a30-a24e-417d-ab85-d4c7bfef17ca",
+      "streamItemId": "97e5bbe2-c50c-4ed7-90e9-1aaf111b6412",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "createdAt": "2025-12-20T04:12:18.238",
+      "updatedAt": "2025-12-20T04:12:18.238"
+    },
+    {
+      "id": "0e3b9978-cd32-4957-ae8a-1e684831ab5b",
+      "streamItemId": "e047c1c3-86fc-4bdf-bee7-74316a064f5b",
+      "description": "acac",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "createdAt": "2025-12-20T04:13:49.559",
+      "updatedAt": "2025-12-20T04:13:49.559"
+    },
+    {
+      "id": "10b9ee0d-6050-4c27-b110-03b1da5751f9",
+      "streamItemId": "7da0d25e-3c97-4272-b7ce-65a4325a6669",
+      "description": "desc",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "createdAt": "2025-12-20T04:09:41.011",
+      "updatedAt": "2025-12-20T04:09:41.011"
+    },
+    {
+      "id": "18f516db-5a7a-40a8-b9e7-f6ac4e1b8bbf",
+      "streamItemId": "060a80e7-3844-468f-a78b-302a9003c008",
+      "description": "des",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "createdAt": "2025-12-20T04:21:40.407",
+      "updatedAt": "2025-12-20T04:21:40.407"
+    },
+    {
+      "id": "74536ef0-52c8-45fc-bb0c-627be076c39d",
+      "streamItemId": "3c8582f3-1629-4d8e-947b-7b001d7ad3b2",
+      "description": "quiz prueba 2",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "createdAt": "2025-12-20T04:36:23.702",
+      "updatedAt": "2025-12-20T04:36:23.702"
+    },
+    {
+      "id": "7596cc03-abe2-4495-9345-7ded2a213210",
+      "streamItemId": "",
+      "points": 50,
+      "description": "Descripción del quiz",
+      "assignToAll": true,
+      "assignedGroups": [],
+      "createdAt": "2025-12-20T13:24:58.546Z",
+      "updatedAt": "2025-12-20T13:26:35.448Z"
+    },
+    {
+      "id": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "streamItemId": "a8b9c7d6-e5f4-4a3b-9c2d-1e2f3a4b5c6d",
+      "points": 100,
+      "dueDate": "2025-12-28",
+      "dueTime": "23:59",
+      "description": "Este quiz evalúa tu conocimiento sobre el sistema digestivo humano. Lee cada pregunta cuidadosamente y selecciona la mejor respuesta. Tienes tiempo hasta el 28 de diciembre.",
+      "assignToAll": false,
+      "assignedGroups": [
+        "Tribu3"
+      ],
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    }
+  ],
+  "quizQuestions": [
+    {
+      "id": "472e3e32-55c9-4cdc-bf6e-af38e315e1fb",
+      "quizId": "74536ef0-52c8-45fc-bb0c-627be076c39d",
+      "title": "aca 2 pregunt",
+      "description": "",
+      "type": "short-answer",
+      "required": true,
+      "points": 0,
+      "options": [
+        "Option 1"
+      ],
+      "order": 1,
+      "createdAt": "2025-12-20T21:27:45.934Z",
+      "updatedAt": "2025-12-20T21:27:45.934Z"
+    },
+    {
+      "id": "61d0e0c8-aae7-412f-8381-8881507be6c0",
+      "quizId": "10b9ee0d-6050-4c27-b110-03b1da5751f9",
+      "title": "segunda",
+      "description": "",
+      "type": "short-answer",
+      "required": true,
+      "points": 0,
+      "options": [
+        "Option 1"
+      ],
+      "order": 1,
+      "createdAt": "2025-12-20T21:34:04.861Z",
+      "updatedAt": "2025-12-20T21:34:04.861Z"
+    },
+    {
+      "id": "a382a68f-109c-43e5-8f13-d7624e9f1c70",
+      "quizId": "7596cc03-abe2-4495-9345-7ded2a213210",
+      "title": "Pregunta 1",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 10,
+      "options": [
+        "Opción 1",
+        "Opción 2"
+      ],
+      "order": 0,
+      "createdAt": "2025-12-20T13:26:35.448Z",
+      "updatedAt": "2025-12-20T13:26:35.448Z"
+    },
+    {
+      "id": "b1ee922f-49af-47b1-aa29-a83a2e7c708a",
+      "quizId": "10b9ee0d-6050-4c27-b110-03b1da5751f9",
+      "title": "como se hace ",
+      "description": "",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 0,
+      "options": [
+        "asi",
+        "asasdo",
+        "acuya"
+      ],
+      "order": 0,
+      "createdAt": "2025-12-20T21:34:04.861Z",
+      "updatedAt": "2025-12-20T21:34:04.861Z"
+    },
+    {
+      "id": "cba7fce0-56c0-4033-a374-ecbb10b0a2c8",
+      "quizId": "74536ef0-52c8-45fc-bb0c-627be076c39d",
+      "title": "aqui una pregunta",
+      "description": "",
+      "type": "short-answer",
+      "required": true,
+      "points": 0,
+      "options": [
+        "Option 1"
+      ],
+      "order": 0,
+      "createdAt": "2025-12-20T21:27:45.934Z",
+      "updatedAt": "2025-12-20T21:27:45.934Z"
+    },
+    {
+      "id": "q1-bio-digest-001",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "title": "¿Cuál es el órgano principal del sistema digestivo donde se realiza la mayor parte de la digestión?",
+      "description": "Piensa en el órgano más largo del sistema digestivo",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 20,
+      "options": [
+        "Estómago",
+        "Intestino delgado",
+        "Intestino grueso",
+        "Esófago"
+      ],
+      "correctAnswer": "Intestino delgado",
+      "order": 1,
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    },
+    {
+      "id": "q2-bio-digest-002",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "title": "¿Qué enzima se produce en el estómago y ayuda a digerir las proteínas?",
+      "description": "Esta enzima funciona mejor en ambientes ácidos",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 20,
+      "options": [
+        "Amilasa",
+        "Pepsina",
+        "Lipasa",
+        "Tripsina"
+      ],
+      "correctAnswer": "Pepsina",
+      "order": 2,
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    },
+    {
+      "id": "q3-bio-digest-003",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "title": "¿Cuál es la función principal del hígado en el sistema digestivo?",
+      "description": "El hígado produce una sustancia importante para la digestión de grasas",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 20,
+      "options": [
+        "Producir insulina",
+        "Producir bilis",
+        "Absorber nutrientes",
+        "Digerir carbohidratos"
+      ],
+      "correctAnswer": "Producir bilis",
+      "order": 3,
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    },
+    {
+      "id": "q4-bio-digest-004",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "title": "¿En qué parte del sistema digestivo se absorbe principalmente el agua?",
+      "description": "Este órgano es el último del tracto digestivo",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 20,
+      "options": [
+        "Intestino delgado",
+        "Estómago",
+        "Intestino grueso",
+        "Duodeno"
+      ],
+      "correctAnswer": "Intestino grueso",
+      "order": 4,
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    },
+    {
+      "id": "q5-bio-digest-005",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "title": "¿Qué estructura muscular controla el paso de los alimentos del esófago al estómago?",
+      "description": "Esta estructura previene el reflujo de los ácidos estomacales",
+      "type": "multiple-choice",
+      "required": true,
+      "points": 20,
+      "options": [
+        "Válvula ileocecal",
+        "Esfínter esofágico inferior",
+        "Píloro",
+        "Cardias"
+      ],
+      "correctAnswer": "Esfínter esofágico inferior",
+      "order": 5,
+      "createdAt": "2025-12-21T10:00:00.000Z",
+      "updatedAt": "2025-12-21T10:00:00.000Z"
+    }
+  ],
+  "quizStudents": [
+    {
+      "id": "qs-tribu3-001",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626"
+    },
+    {
+      "id": "qs-tribu3-002",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "3a454ae2-fa1d-4d7b-820c-07b0992f3bab"
+    },
+    {
+      "id": "qs-tribu3-003",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "41cf7c9a-774c-4fd2-89d1-9dba9ca5006a"
+    },
+    {
+      "id": "qs-tribu3-004",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "44541473-275a-497c-9d92-717294b7775d"
+    },
+    {
+      "id": "qs-tribu3-005",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "fc35f503-18bb-42a6-b106-7c4f2c04aa19"
+    }
+  ],
+  "quizSubmissions": [
+    {
+      "id": "manual-quiz-sub-001",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "091b48c3-3e13-49b0-ae5b-99e52d96c626",
+      "answers": [
+        {
+          "questionId": "q1-bio-digest-001",
+          "answer": "Intestino delgado"
+        },
+        {
+          "questionId": "q2-bio-digest-002",
+          "answer": "Pepsina"
+        }
+      ],
+      "status": "submitted",
+      "submittedAt": "2025-12-22T08:05:00.000Z",
+      "createdAt": "2025-12-22T08:05:00.000Z",
+      "updatedAt": "2025-12-22T08:05:00.000Z"
+    },
+    {
+      "id": "manual-quiz-sub-002",
+      "quizId": "b7c8d9e0-f1a2-4b3c-9d4e-5f6a7b8c9d0e",
+      "studentId": "34d53bdc-8e86-41a6-b81d-d24246882c39",
+      "answers": [
+        {
+          "questionId": "q1-bio-digest-001",
+          "answer": "Intestino delgado"
+        },
+        {
+          "questionId": "q2-bio-digest-002",
+          "answer": "Pepsina"
+        }
+      ],
+      "status": "reviewed",
+      "grade": 100,
+      "teacherComments": "Perfecto.",
+      "submittedAt": "2025-12-22T09:00:00.000Z",
+      "reviewedAt": "2025-12-22T14:30:00.000Z",
+      "createdAt": "2025-12-22T09:00:00.000Z",
+      "updatedAt": "2025-12-22T14:30:00.000Z"
+    }
+  ],
+  "materials": [
+    {
+      "id": "3dfd5ea2-731d-4c6b-971c-cfb4b0e6853a",
+      "streamItemId": "49e9d783-05fc-4840-afe2-05d385f773dd",
+      "description": "aqui material",
+      "assignToAll": true,
+      "createdAt": "2025-12-20T21:12:48.193Z",
+      "updatedAt": "2025-12-20T22:19:14.659Z",
+      "assignedGroups": []
+    },
+    {
+      "id": "b9ae4c28-fbe9-49c5-948a-817782c76110",
+      "streamItemId": "",
+      "description": "Descripción del material",
+      "assignToAll": true,
+      "createdAt": "2025-12-20T13:24:58.548Z",
+      "updatedAt": "2025-12-20T13:26:35.458Z"
+    }
+  ],
+  "materialStudents": [],
+  "attachments": [
+    {
+      "id": "3e02f943-3482-49f7-8b41-3ae908ca4377",
+      "streamItemId": "41f3c5d6-70b0-41f5-a069-b35823d2d1a9",
+      "type": "drive",
+      "name": "Google Drive file",
+      "url": "https://drive.google.com/file/d/1fKFnX9ul8BNuRkdzdhFcAgJJMmoKIjbn/view?usp=share_link",
+      "order": 0,
+      "createdAt": "2025-12-20T22:10:33.892Z"
+    },
+    {
+      "id": "990c3b56-8ac3-49b6-89d2-0d577ffad605",
+      "streamItemId": "5a93027b-f075-4ad9-ae9e-95d7d73c147e",
+      "type": "drive",
+      "name": "Google Drive file",
+      "url": "https://drive.google.com/file/d/1fKFnX9ul8BNuRkdzdhFcAgJJMmoKIjbn/view?usp=share_link",
+      "order": 0,
+      "createdAt": "2025-12-20T19:20:27.100Z"
+    },
+    {
+      "id": "cbf33c60-d17a-4b6b-a95c-fbe664b3b981",
+      "streamItemId": "d43db63f-a182-439d-ad36-09b8c9f6b1ef",
+      "type": "drive",
+      "name": "Google Drive file",
+      "url": "https://drive.google.com/file/d/1fKFnX9ul8BNuRkdzdhFcAgJJMmoKIjbn/view?usp=share_link",
+      "order": 0,
+      "createdAt": "2025-12-20T21:26:54.735Z"
+    }
+  ],
+  "grades": []
+}
