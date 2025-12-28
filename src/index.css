@@ -360,7 +360,7 @@ body:not(.dark) a:hover {
   height: 100%;
 }
 
-/* Scrollbar personalizado - oscuro - HappyTribe */
+/* Scrollbar personalizado - oscuro - GeriatricApp */
 .dark ::-webkit-scrollbar {
   width: 6px;
 }
@@ -371,13 +371,13 @@ body:not(.dark) a:hover {
 
 .dark ::-webkit-scrollbar-thumb {
   background: #4B8B3B;
-  /* Verde medio HappyTribe */
+  /* Verde medio GeriatricApp */
   border-radius: 3px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #3F6E2B;
-  /* Verde oscuro HappyTribe */
+  /* Verde oscuro GeriatricApp */
 }
 
 /* Scrollbar personalizado - claro */
@@ -398,8 +398,8 @@ body:not(.dark) a:hover {
   background: #9ca3af;
 }
 
-/* Estilos para HappyTribe Landing */
-/* Colores del logo Happy Tribe */
+/* Estilos para GeriatricApp Landing */
+/* Colores del logo GeriatricApp */
 .text-brand-brown {
   color: #6A3A1E;
 }

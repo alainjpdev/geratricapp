@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             }`}>
             <img
               src={currentLogo}
-              alt="Happy Tribe Logo"
+              alt="GeriatricApp Logo"
               className={`transition-all duration-200 ${collapsed
                 ? 'h-10 w-10'
                 : 'h-20 w-auto'
