@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Save, Printer, Activity, ClipboardList } from 'lucide-react';
 import { NursingClinicalSheet } from '../../components/medical/NursingClinicalSheet';
+import { residentService, Resident } from '../../services/residentService';
 
 export const Dashboard: React.FC = () => {
     // Tab State
     const [activeTab, setActiveTab] = useState<'vitals' | 'care'>('vitals');
+    const [residents, setResidents] = useState<Resident[]>([]);
+
+    useEffect(() => {
+        const loadResidents = async () => {
+            try {
+                const data = await residentService.getAllResidents();
+                setResidents(data);
+            } catch (error) {
+                console.error('Error loading residents:', error);
+            }
+        };
+        loadResidents();
+    }, []);
 
     // State for Header
     const [headerData, setHeaderData] = useState({
@@ -15,6 +29,7 @@ export const Dashboard: React.FC = () => {
         tvName: '',
         tnName: '',
         patientName: '',
+        patientId: '',
         diagnosis: ''
     });
 
@@ -37,7 +52,6 @@ export const Dashboard: React.FC = () => {
         }))
     );
 
-    // State for Medications (Start with 10 empty rows)
     const [medications, setMedications] = useState(
         Array(10).fill({
             medicamento: '',
@@ -138,13 +152,31 @@ export const Dashboard: React.FC = () => {
                     <div className="grid grid-cols-12">
                         <div className="col-span-12 md:col-span-6 border-b md:border-b-0 md:border-r border-gray-300 p-3">
                             <label className="text-xs font-bold text-gray-500 uppercase mb-1">Paciente</label>
-                            <input
-                                type="text"
-                                value={headerData.patientName}
-                                onChange={(e) => handleHeaderChange('patientName', e.target.value)}
-                                className="w-full bg-white border-b border-gray-300 px-0 py-1 text-gray-900 focus:outline-none focus:border-blue-500"
-                                placeholder="Nombre del Paciente"
-                            />
+                            <select
+                                value={headerData.patientId}
+                                onChange={(e) => {
+                                    const selectedId = e.target.value;
+                                    const resident = residents.find(r => r.id === selectedId);
+                                    if (resident) {
+                                        setHeaderData(prev => ({
+                                            ...prev,
+                                            patientId: resident.id,
+                                            patientName: `${resident.firstName} ${resident.lastName}`,
+                                            diagnosis: resident.conditions || ''
+                                        }));
+                                    } else {
+                                        setHeaderData(prev => ({ ...prev, patientId: '', patientName: '', diagnosis: '' }));
+                                    }
+                                }}
+                                className="w-full bg-white border-b border-gray-300 px-0 py-1 text-gray-900 focus:outline-none focus:border-blue-500 text-sm"
+                            >
+                                <option value="">Seleccionar Paciente...</option>
+                                {residents.map(r => (
+                                    <option key={r.id} value={r.id}>
+                                        {r.firstName} {r.lastName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="col-span-12 md:col-span-6 p-3">
                             <label className="text-xs font-bold text-gray-500 uppercase mb-1">Diagnóstico</label>
@@ -163,8 +195,8 @@ export const Dashboard: React.FC = () => {
                 <div className="flex border-b border-gray-200">
                     <button
                         className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors ${activeTab === 'vitals'
-                                ? 'border-b-2 border-blue-600 text-blue-600'
-                                : 'text-gray-500 hover:text-gray-700'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-700'
                             }`}
                         onClick={() => setActiveTab('vitals')}
                     >
@@ -173,8 +205,8 @@ export const Dashboard: React.FC = () => {
                     </button>
                     <button
                         className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors ${activeTab === 'care'
-                                ? 'border-b-2 border-blue-600 text-blue-600'
-                                : 'text-gray-500 hover:text-gray-700'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-700'
                             }`}
                         onClick={() => setActiveTab('care')}
                     >

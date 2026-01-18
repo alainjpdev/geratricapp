@@ -160,7 +160,7 @@ const App: React.FC = () => {
             <Route path="residents" element={<ResidentsDirectory />} />
             <Route path="residents/:id" element={<ResidentProfile />} />
             <Route path="admissions" element={<PlaceholderPage />} />
-            <Route path="records" element={<PlaceholderPage />} />
+            <Route path="records" element={<LogbookDashboard />} />
             <Route path="medical" element={<PlaceholderPage />} />
             <Route path="care-plans" element={<PlaceholderPage />} />
             <Route path="pharmacy" element={<PlaceholderPage />} />

@@ -17,6 +17,7 @@ export interface VitalSign {
         firstName: string;
         lastName: string;
     };
+    recorderName?: string;
 }
 
 export interface NursingNote {

@@ -28,11 +28,25 @@ export const residentService = {
             .order('last_name', { ascending: true });
 
         if (error) {
-            console.error('Error fetching residents:', error);
+            console.error('residentService: Supabase error:', error);
             throw error;
         }
 
-        return data as Resident[];
+        return (data || []).map((item: any) => ({
+            id: item.id,
+            firstName: item.first_name,
+            lastName: item.last_name,
+            dateOfBirth: item.date_of_birth,
+            roomNumber: item.room_number,
+            status: item.status,
+            emergencyContact: item.emergency_contact,
+            allergies: item.allergies,
+            conditions: item.conditions,
+            carePlanSummary: item.care_plan_summary,
+            userId: item.user_id,
+            createdAt: item.created_at,
+            updatedAt: item.updated_at
+        })) as Resident[];
     },
 
     async getResidentById(id: string) {
