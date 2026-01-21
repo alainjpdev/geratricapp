@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AuthState, User, RegisterData } from '../types';
 import { loginWithUsersTable, getUserFromTable } from '../services/authService';
+import { supabase } from '../config/supabaseClient';
+import bcrypt from 'bcryptjs';
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -14,14 +16,14 @@ export const useAuthStore = create<AuthState>()(
         console.log('Intentando login con tabla users', email);
         try {
           const { user: userData, token } = await loginWithUsersTable(email, password);
-          
-          set({ 
-            user: userData, 
-            token, 
-            isAuthenticated: true 
+
+          set({
+            user: userData,
+            token,
+            isAuthenticated: true
           });
           localStorage.setItem('token', token);
-          
+
           console.log('✅ Login exitoso', { email: userData.email, role: userData.role });
         } catch (error: any) {
           console.error('Error en login:', error);
@@ -31,9 +33,43 @@ export const useAuthStore = create<AuthState>()(
 
       register: async (userData: RegisterData) => {
         try {
-          // Por ahora, el registro debe hacerse manualmente o a través de un script
-          // porque requiere hashear la contraseña en el servidor
-          throw new Error('El registro debe hacerse a través de un administrador. Contacta al administrador del sistema.');
+          const { email, password, firstName, lastName, role } = userData;
+
+          // Crear el usuario directamente en la tabla users
+          const { data: newUser, error } = await supabase
+            .from('users')
+            .insert([{
+              id: crypto.randomUUID(),
+              email,
+              first_name: firstName,
+              last_name: lastName,
+              role: role || 'enfermero',
+              password_hash: await bcrypt.hash(password, 10),
+              is_active: true,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            }])
+            .select()
+            .single();
+
+          if (error) throw error;
+
+          // Auto-login después de registrar
+          const user: User = {
+            id: newUser.id,
+            email: newUser.email,
+            firstName: newUser.first_name,
+            lastName: newUser.last_name,
+            role: newUser.role as any,
+            avatar: newUser.avatar || '',
+            createdAt: newUser.created_at
+          };
+
+          const token = btoa(JSON.stringify({ userId: user.id, email: user.email, timestamp: Date.now() }));
+
+          set({ user, token, isAuthenticated: true });
+          localStorage.setItem('token', token);
+
         } catch (error: any) {
           console.error('Error en registro:', error);
           throw new Error(error.message || 'Error al registrar usuario');

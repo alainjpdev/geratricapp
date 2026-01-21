@@ -3,8 +3,9 @@ import { Users, UserPlus, Search, Filter, MoreVertical, Mail, Calendar, User, X 
 // @ts-ignore
 import { supabase } from '../../../config/supabaseClient';
 import { residentService, Resident } from '../../../services/residentService';
-import { createUser } from '../../../services/userService';
+import { createUser, updateUser } from '../../../services/userService';
 import { Toast } from '../../../components/ui/Toast';
+import { useAuthStore } from '../../../store/authStore';
 
 interface StaffUser {
   id: string;
@@ -36,15 +37,22 @@ export const StaffDashboard: React.FC = () => {
   const [roleFilter, setRoleFilter] = useState<string>('all');
 
   const [showAddUser, setShowAddUser] = useState(false);
+  const [showEditUser, setShowEditUser] = useState(false);
   const [showEditResident, setShowEditResident] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<StaffUser | null>(null);
   const [selectedResident, setSelectedResident] = useState<Resident | null>(null);
   const [creatingUser, setCreatingUser] = useState(false);
+  const [updatingUser, setUpdatingUser] = useState(false);
   const [updatingResident, setUpdatingResident] = useState(false);
+
+  const { user: currentUser } = useAuthStore();
+  const isAdmin = currentUser?.role === 'admin';
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    role: 'staff',
+    role: 'enfermero',
+    password: '123456',
     telefono: ''
   });
   const [toast, setToast] = useState<{ visible: boolean; message: string; type: 'success' | 'error' }>({
@@ -60,13 +68,37 @@ export const StaffDashboard: React.FC = () => {
       await createUser(newUser);
       setToast({ visible: true, message: 'Usuario creado exitosamente', type: 'success' });
       setShowAddUser(false);
-      setNewUser({ firstName: '', lastName: '', email: '', role: 'staff', telefono: '' });
+      setNewUser({ firstName: '', lastName: '', email: '', role: 'enfermero', password: '123456', telefono: '' });
       fetchStaff();
     } catch (error) {
       console.error('Error creating user:', error);
       setToast({ visible: true, message: 'Error al crear usuario', type: 'error' });
     } finally {
       setCreatingUser(false);
+    }
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUser) return;
+
+    try {
+      setUpdatingUser(true);
+      await updateUser(selectedUser.id, {
+        firstName: selectedUser.first_name,
+        lastName: selectedUser.last_name,
+        email: selectedUser.email,
+        role: selectedUser.role,
+        is_active: selectedUser.is_active
+      });
+      setToast({ visible: true, message: 'Usuario actualizado exitosamente', type: 'success' });
+      setShowEditUser(false);
+      fetchStaff();
+    } catch (error) {
+      console.error('Error updating user:', error);
+      setToast({ visible: true, message: 'Error al actualizar usuario', type: 'error' });
+    } finally {
+      setUpdatingUser(false);
     }
   };
 
@@ -229,9 +261,6 @@ export const StaffDashboard: React.FC = () => {
               <option value="all">Todos los Roles</option>
               <option value="admin">Admin</option>
               <option value="enfermero">Enfermero</option>
-              <option value="teacher">Maestro</option>
-              <option value="student">Estudiante</option>
-              <option value="parent">Familiar</option>
             </select>
           </div>
         )}
@@ -322,8 +351,14 @@ export const StaffDashboard: React.FC = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <button className="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                          <MoreVertical className="w-5 h-5" />
+                        <button
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setShowEditUser(true);
+                          }}
+                          className="px-3 py-1 text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:text-indigo-300 rounded-md transition-colors border border-indigo-100 dark:border-indigo-800 font-bold uppercase"
+                        >
+                          MODIFICAR
                         </button>
                       </td>
                     </tr>
@@ -551,19 +586,27 @@ export const StaffDashboard: React.FC = () => {
               </div>
 
               <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Contraseña (Por defecto: 123456)</label>
+                <input
+                  type="text"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                  value={newUser.password}
+                  onChange={e => setNewUser({ ...newUser, password: e.target.value })}
+                />
+              </div>
+
+              <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Rol *</label>
                 <select
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                  disabled={!isAdmin}
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white disabled:opacity-50"
                   value={newUser.role}
                   onChange={e => setNewUser({ ...newUser, role: e.target.value })}
                 >
                   <option value="admin">Administrador</option>
-                  <option value="teacher">Maestro (Teacher)</option>
-                  <option value="student">Estudiante</option>
-                  <option value="parent">Familiar</option>
                   <option value="enfermero">Enfermero</option>
-                  <option value="staff">Staff General</option>
                 </select>
+                {!isAdmin && <p className="text-[10px] text-amber-600 mt-1 uppercase">Solo administradores pueden asignar roles.</p>}
               </div>
 
               <div className="flex gap-3 mt-6 pt-2">
@@ -580,6 +623,100 @@ export const StaffDashboard: React.FC = () => {
                   className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
                 >
                   {creatingUser ? 'Creando...' : 'Crear Usuario'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditUser && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white uppercase">Modificar Usuario</h2>
+              <button onClick={() => setShowEditUser(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateUser} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Nombre</label>
+                  <input
+                    required
+                    type="text"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={selectedUser.first_name}
+                    onChange={e => setSelectedUser({ ...selectedUser, first_name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Apellido</label>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={selectedUser.last_name || ''}
+                    onChange={e => setSelectedUser({ ...selectedUser, last_name: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Email</label>
+                <input
+                  required
+                  type="email"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                  value={selectedUser.email}
+                  onChange={e => setSelectedUser({ ...selectedUser, email: e.target.value })}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Rol</label>
+                  <select
+                    disabled={!isAdmin}
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white disabled:opacity-50"
+                    value={selectedUser.role}
+                    onChange={e => setSelectedUser({ ...selectedUser, role: e.target.value })}
+                  >
+                    <option value="admin">Administrador</option>
+                    <option value="enfermero">Enfermero</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
+                  <select
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={selectedUser.is_active ? 'active' : 'inactive'}
+                    onChange={e => setSelectedUser({ ...selectedUser, is_active: e.target.value === 'active' })}
+                  >
+                    <option value="active">Activo</option>
+                    <option value="inactive">Inactivo</option>
+                  </select>
+                </div>
+              </div>
+
+              {!isAdmin && <p className="text-[10px] text-amber-600 italic uppercase">Solo administradores pueden cambiar el rol del personal.</p>}
+
+              <div className="flex gap-3 mt-6 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowEditUser(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={updatingUser}
+                  className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                >
+                  {updatingUser ? 'Guardando...' : 'Guardar Cambios'}
                 </button>
               </div>
             </form>

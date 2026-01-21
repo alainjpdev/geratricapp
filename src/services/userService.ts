@@ -7,6 +7,7 @@ import { supabase } from '../config/supabaseClient';
 import { USE_LOCAL_DB, USE_JSON_DB } from '../config/devMode';
 import { localUserService } from './localUserService';
 import { jsonUserService } from './jsonUserService';
+import bcrypt from 'bcryptjs';
 
 export interface UserData {
   id: string;
@@ -217,6 +218,7 @@ export const createUser = async (userData: CreateUserData): Promise<UserData> =>
         first_name: userData.firstName,
         last_name: userData.lastName,
         role: userData.role,
+        password_hash: await bcrypt.hash(userData.password || '123456', 10),
         is_active: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -237,6 +239,33 @@ export const createUser = async (userData: CreateUserData): Promise<UserData> =>
     };
   } catch (error) {
     console.error('Error creating user:', error);
+    throw error;
+  }
+};
+
+export const updateUser = async (userId: string, updates: Partial<CreateUserData & { is_active: boolean }>) => {
+  try {
+    const dbUpdates: any = {
+      updated_at: new Date().toISOString()
+    };
+
+    if (updates.firstName) dbUpdates.first_name = updates.firstName;
+    if (updates.lastName) dbUpdates.last_name = updates.lastName;
+    if (updates.email) dbUpdates.email = updates.email;
+    if (updates.role) dbUpdates.role = updates.role;
+    if (updates.is_active !== undefined) dbUpdates.is_active = updates.is_active;
+
+    const { data, error } = await supabase
+      .from('users')
+      .update(dbUpdates)
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error updating user:', error);
     throw error;
   }
 };
