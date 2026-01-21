@@ -8,16 +8,19 @@ import { medicalService, VitalSign } from '../../services/medicalService';
 
 interface Props {
     residentId: string;
+    date?: string;
+    readOnly?: boolean;
 }
 
-const VitalSignsTable: React.FC<Props> = ({ residentId }) => {
+
+const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }) => {
     const { user } = useAuthStore();
     const [vitals, setVitals] = useState<VitalSign[]>([]);
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
 
     // New entry state
-    const [newVital, setNewVital] = useState<Partial<VitalSign>>({
+    const [newVital, setNewVital] = useState<any>({
         bloodPressureSystolic: 120,
         bloodPressureDiastolic: 80,
         heartRate: 75,
@@ -28,12 +31,18 @@ const VitalSignsTable: React.FC<Props> = ({ residentId }) => {
 
     useEffect(() => {
         if (residentId) loadVitals();
-    }, [residentId]);
+    }, [residentId, date]);
 
     const loadVitals = async () => {
         try {
-            const data = await medicalService.getVitalsByResident(residentId);
-            setVitals(data);
+            const data = await medicalService.getVitalsByResident(residentId, date);
+            // Sort by time ascending (early to late)
+            // If v.time exists (HH:mm), sort by it. Else fallback to recordedAt.
+            const sortedData = [...data].sort((a, b) => {
+                if (a.time && b.time) return a.time.localeCompare(b.time);
+                return new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime();
+            });
+            setVitals(sortedData);
         } catch (error) {
             console.error('Error loading vitals', error);
         }
@@ -48,12 +57,11 @@ const VitalSignsTable: React.FC<Props> = ({ residentId }) => {
             await medicalService.recordVitals({
                 residentId,
                 recordedBy: user.id,
-                bloodPressureSystolic: newVital.bloodPressureSystolic,
-                bloodPressureDiastolic: newVital.bloodPressureDiastolic,
-                heartRate: newVital.heartRate,
-                temperature: newVital.temperature,
-                oxygenSaturation: newVital.oxygenSaturation,
-                glucose: newVital.glucose,
+                ta: `${newVital.bloodPressureSystolic}/${newVital.bloodPressureDiastolic}`,
+                fc: newVital.heartRate,
+                temp: newVital.temperature,
+                sato2: newVital.oxygenSaturation,
+                dxtx: newVital.glucose,
                 notes: newVital.notes
             });
             loadVitals();
@@ -72,9 +80,11 @@ const VitalSignsTable: React.FC<Props> = ({ residentId }) => {
                     <Activity className="w-5 h-5 text-amber-600" />
                     Registro de Signos Vitales
                 </h3>
-                <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "secondary" : "primary"}>
-                    {showForm ? 'Cancelar' : 'Nuevo Registro'}
-                </Button>
+                {!readOnly && (
+                    <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "secondary" : "primary"}>
+                        {showForm ? 'Cancelar' : 'Nuevo Registro'}
+                    </Button>
+                )}
             </div>
 
             {showForm && (
@@ -128,22 +138,22 @@ const VitalSignsTable: React.FC<Props> = ({ residentId }) => {
                         {vitals.map(v => (
                             <tr key={v.id} className="hover:bg-gray-50 dark:hover:bg-gray-750">
                                 <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">
-                                    {new Date(v.recordedAt).toLocaleString()}
+                                    {v.time || new Date(v.recordedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </td>
                                 <td className="px-4 py-2">
-                                    {v.bloodPressureSystolic}/{v.bloodPressureDiastolic}
+                                    {v.ta}
                                 </td>
                                 <td className="px-4 py-2">
-                                    {v.heartRate} bpm
+                                    {v.fc} bpm
                                 </td>
                                 <td className="px-4 py-2">
-                                    {v.temperature}°C
+                                    {v.temp}°C
                                 </td>
                                 <td className="px-4 py-2">
-                                    {v.oxygenSaturation}%
+                                    {v.sato2}%
                                 </td>
                                 <td className="px-4 py-2">
-                                    {v.glucose || '-'}
+                                    {v.dxtx || '-'}
                                 </td>
                                 <td className="px-4 py-2 text-gray-500 text-xs">
                                     {v.recorderName || 'Unknown'}

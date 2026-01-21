@@ -161,7 +161,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
       to={item.to}
       end={item.to === '/dashboard'}
       className={({ isActive }) =>
-        `${item.to === '/dashboard/db' ? 'hidden md:flex' : mobileClass} items-center ${collapsed ? 'justify-center' : ''} px-3 py-2 rounded-lg text-sm font-medium transition-colors group relative ` +
+        `${mobileClass} items-center ${collapsed ? 'justify-center' : ''} px-3 py-2 rounded-lg text-sm font-medium transition-colors group relative ` +
         (isActive
           ? 'bg-gray-100 text-gray-900'
           : 'text-gray-900 hover:bg-gray-100 hover:text-gray-700')

@@ -26,7 +26,7 @@ export interface MedicationLog {
     status: 'Given' | 'Refused' | 'Missed';
     notes?: string;
     shift?: string;
-    order?: MedicationOrder;
+    order?: Partial<MedicationOrder>;
 }
 
 export const emarService = {

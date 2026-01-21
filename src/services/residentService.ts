@@ -14,6 +14,7 @@ export interface Resident {
     };
     allergies?: string;
     conditions?: string;
+    relevantNotes?: string;
     carePlanSummary?: string;
     userId?: string;
     createdAt?: string;
@@ -42,6 +43,7 @@ export const residentService = {
             emergencyContact: item.emergency_contact,
             allergies: item.allergies,
             conditions: item.conditions,
+            relevantNotes: item.relevant_notes,
             carePlanSummary: item.care_plan_summary,
             userId: item.user_id,
             createdAt: item.created_at,
@@ -77,6 +79,7 @@ export const residentService = {
                     emergency_contact: resident.emergencyContact,
                     allergies: resident.allergies,
                     conditions: resident.conditions,
+                    relevant_notes: resident.relevantNotes,
                     care_plan_summary: resident.carePlanSummary,
                     user_id: resident.userId
                 }
@@ -103,6 +106,7 @@ export const residentService = {
         if (updates.emergencyContact) dbUpdates.emergency_contact = updates.emergencyContact;
         if (updates.allergies) dbUpdates.allergies = updates.allergies;
         if (updates.conditions) dbUpdates.conditions = updates.conditions;
+        if (updates.relevantNotes) dbUpdates.relevant_notes = updates.relevantNotes;
         if (updates.carePlanSummary) dbUpdates.care_plan_summary = updates.carePlanSummary;
         if (updates.userId) dbUpdates.user_id = updates.userId;
 

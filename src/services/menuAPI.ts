@@ -1,8 +1,72 @@
 import { DynamicMenuItem, CreateMenuItemData, UpdateMenuItemData } from '../types/menu';
 import { useAuthStore } from '../store/authStore';
 
-// Menú hardcodeado - no usar localStorage
+// Hard‑coded menu items (always visible)
+export const hardcodedMenu: DynamicMenuItem[] = [
+  {
+    id: 'adm-dashboard',
+    label: 'DASHBOARD',
+    icon: 'LayoutDashboard',
+    to: '/dashboard',
+    order: 0,
+    isActive: true,
+    role: 'admin',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'res-directory',
+    label: 'DIRECTORIO',
+    icon: 'BookUser',
+    to: '/dashboard/residents',
+    order: 1,
+    isActive: true,
+    role: 'admin',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'res-records',
+    label: 'EXPEDIENTES',
+    icon: 'FolderOpen',
+    to: '/dashboard/records',
+    order: 2,
+    isActive: true,
+    role: 'admin',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'adm-medical',
+    label: 'MÉDICA',
+    icon: 'Stethoscope',
+    to: '/dashboard/medical',
+    order: 3,
+    isActive: false,
+    role: 'admin',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    submenu: [
+      { id: 'sub-med-care', label: 'Cuidados', to: '/dashboard/care-plans', icon: 'HeartPulse', order: 0, isActive: true },
+      { id: 'sub-med-phar', label: 'Farmacia', to: '/dashboard/pharmacy', icon: 'Pill', order: 1, isActive: true },
+      { id: 'sub-med-inc', label: 'Incidencias', to: '/dashboard/incidents', icon: 'AlertTriangle', order: 2, isActive: true }
+    ]
+  },
+  {
+    id: 'adm-staff',
+    label: 'PERSONAL',
+    icon: 'Briefcase',
+    to: '/dashboard/staff',
+    order: 4,
+    isActive: true,
+    role: 'admin',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+];
+
 class MenuAPI {
+  // Existing methods (kept for compatibility) ...
 
   // Obtener todos los elementos de menú para un rol específico
   async getMenuItems(role: 'admin' | 'enfermero' | 'paciente' | 'pariente'): Promise<DynamicMenuItem[]> {
@@ -31,28 +95,34 @@ class MenuAPI {
           updatedAt: now
         },
         {
-          id: 'adm-residents',
-          label: 'RESIDENTES',
-          icon: 'Users',
+          id: 'res-directory',
+          label: 'DIRECTORIO',
+          icon: 'BookUser',
           to: '/dashboard/residents',
           order: 1,
           isActive: true,
           role: 'admin',
           createdAt: now,
-          updatedAt: now,
-          submenu: [
-            { id: 'sub-res-dir', label: 'Directorio', to: '/dashboard/residents', icon: 'BookUser', order: 0, isActive: true },
-            { id: 'sub-res-adm', label: 'Admisiones', to: '/dashboard/admissions', icon: 'UserPlus', order: 1, isActive: true },
-            { id: 'sub-res-exp', label: 'Expedientes', to: '/dashboard/records', icon: 'FolderOpen', order: 2, isActive: true }
-          ]
+          updatedAt: now
+        },
+        {
+          id: 'res-records',
+          label: 'EXPEDIENTES',
+          icon: 'FolderOpen',
+          to: '/dashboard/records',
+          order: 2,
+          isActive: true,
+          role: 'admin',
+          createdAt: now,
+          updatedAt: now
         },
         {
           id: 'adm-medical',
           label: 'MÉDICA',
           icon: 'Stethoscope',
           to: '/dashboard/medical',
-          order: 2,
-          isActive: true,
+          order: 3,
+          isActive: false,
           role: 'admin',
           createdAt: now,
           updatedAt: now,
@@ -67,12 +137,13 @@ class MenuAPI {
           label: 'PERSONAL',
           icon: 'Briefcase',
           to: '/dashboard/staff',
-          order: 3,
+          order: 4,
           isActive: true,
           role: 'admin',
           createdAt: now,
           updatedAt: now
         },
+        /*
         {
           id: 'adm-hotel',
           label: 'HOTELERÍA',
@@ -89,28 +160,31 @@ class MenuAPI {
             { id: 'sub-hot-maint', label: 'Mantenimiento', to: '/dashboard/maintenance', icon: 'Hammer', order: 2, isActive: true }
           ]
         },
+        */
         {
           id: 'adm-finance',
           label: 'FINANZAS',
           icon: 'DollarSign',
           to: '/dashboard/finance',
-          order: 5,
+          order: 6,
           isActive: true,
           role: 'admin',
           createdAt: now,
           updatedAt: now
         },
-        {
-          id: 'menu-mgmt',
-          label: 'MENÚS',
-          icon: 'Menu',
-          to: '/dashboard/menu-management',
-          order: 99,
-          isActive: true,
-          role: 'admin',
-          createdAt: now,
-          updatedAt: now
-        }
+        /*
+                {
+                  id: 'menu-mgmt',
+                  label: 'MENÚS',
+                  icon: 'Menu',
+                  to: '/dashboard/menu-management',
+                  order: 99,
+                  isActive: true,
+                  role: 'admin',
+                  createdAt: now,
+                  updatedAt: now
+                },
+        */
       ];
 
       if (isRestrictedUser) {

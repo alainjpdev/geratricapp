@@ -196,3 +196,48 @@ export const getTeachers = async (): Promise<UserData[]> => {
   }
 };
 
+export interface CreateUserData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  password?: string;
+  telefono?: string;
+}
+
+export const createUser = async (userData: CreateUserData): Promise<UserData> => {
+  try {
+    const newId = crypto.randomUUID();
+
+    const { data, error } = await supabase
+      .from('users')
+      .insert([{
+        id: newId,
+        email: userData.email,
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        role: userData.role,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      id: data.id,
+      email: data.email,
+      firstName: data.first_name,
+      lastName: data.last_name,
+      role: data.role,
+      avatar: data.avatar,
+      grupoAsignado: data.grupo_asignado
+    };
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+};
+

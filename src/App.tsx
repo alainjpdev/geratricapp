@@ -62,6 +62,8 @@ import ResidentProfile from './pages/dashboard/residents/ResidentProfile';
 import EMARDashboard from './pages/dashboard/emar/EMARDashboard';
 import VitalsDashboard from './pages/dashboard/medical/VitalsDashboard';
 import LogbookDashboard from './pages/dashboard/medical/LogbookDashboard';
+import StaffDashboard from './pages/dashboard/staff/StaffDashboard';
+import DailyLogbook from './pages/dashboard/logbook/DailyLogbook';
 
 // Google OAuth eliminado: ya no se maneja callback de Google en el frontend
 
@@ -148,7 +150,7 @@ const App: React.FC = () => {
             <Route path="search" element={<Search />} />
             <Route path="studentclasses" element={<StudentClasses />} />
             <Route path="notion" element={<Notion />} />
-            <Route path="menu-management" element={<MenuManagement />} />
+            {/* <Route path="menu-management" element={<MenuManagement />} /> */}
             <Route path="restricted-users" element={<RestrictedUsers />} />
             <Route path="bug-reports" element={<BugReports />} />
             <Route path="configuration" element={<Configuration />} />
@@ -160,12 +162,12 @@ const App: React.FC = () => {
             <Route path="residents" element={<ResidentsDirectory />} />
             <Route path="residents/:id" element={<ResidentProfile />} />
             <Route path="admissions" element={<PlaceholderPage />} />
-            <Route path="records" element={<LogbookDashboard />} />
+            <Route path="records" element={<LogbookDashboard readOnly={true} />} />
             <Route path="medical" element={<PlaceholderPage />} />
             <Route path="care-plans" element={<PlaceholderPage />} />
             <Route path="pharmacy" element={<PlaceholderPage />} />
             <Route path="incidents" element={<PlaceholderPage />} />
-            <Route path="staff" element={<PlaceholderPage />} />
+            <Route path="staff" element={<StaffDashboard />} />
             <Route path="facilities" element={<PlaceholderPage />} />
             <Route path="beds" element={<PlaceholderPage />} />
             <Route path="kitchen" element={<PlaceholderPage />} />
@@ -174,7 +176,7 @@ const App: React.FC = () => {
 
             <Route path="emar" element={<EMARDashboard />} />
             <Route path="vitals" element={<VitalsDashboard />} />
-            <Route path="logbook" element={<LogbookDashboard />} />
+            <Route path="logbook" element={<DailyLogbook />} />
             <Route path="adl" element={<PlaceholderPage />} />
 
             <Route path="meals" element={<PlaceholderPage />} />

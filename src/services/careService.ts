@@ -267,7 +267,7 @@ export const careService = {
     // --- Unified History ---
     async getResidentHistory(residentId: string, limit = 50) {
         // Fetch most recent logs from all categories
-        const [care, nutrition, elimination] = await Promise.all([
+        const [care, nutrition, elimination, vitals] = await Promise.all([
             supabase.from('care_logs')
                 .select('*, performer:users(first_name, last_name)')
                 .eq('resident_id', residentId)
@@ -282,6 +282,11 @@ export const careService = {
                 .select('*, logger:users(first_name, last_name)')
                 .eq('resident_id', residentId)
                 .order('logged_at', { ascending: false })
+                .limit(limit),
+            supabase.from('vital_signs')
+                .select('*, recorder:users(first_name, last_name)')
+                .eq('resident_id', residentId)
+                .order('created_at', { ascending: false })
                 .limit(limit)
         ]);
 
@@ -312,6 +317,15 @@ export const careService = {
             detail: d.characteristics,
             timestamp: d.logged_at,
             author: `${d.logger?.first_name || ''} ${d.logger?.last_name || ''}`
+        }));
+
+        vitals.data?.forEach((d: any) => history.push({
+            id: d.id,
+            type: 'Signos Vitales',
+            summary: `T/A: ${d.ta} | FC: ${d.fc}`,
+            detail: `Temp: ${d.temp}°C | Sat: ${d.sato2}% | Glu: ${d.dxtx}`,
+            timestamp: d.created_at,
+            author: `${d.recorder?.first_name || ''} ${d.recorder?.last_name || ''}`
         }));
 
         // Sort combined

@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Clock, Check, AlertCircle, Filter, Search } from 'lucide-react';
+import { Clock, Check, AlertCircle, Filter, Search, User } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Input } from '../../../components/ui/Input';
 import { emarService, MedicationOrder } from '../../../services/emarService';
 import { useAuthStore } from '../../../store/authStore';
+// @ts-ignore
+import { supabase } from '../../../config/supabaseClient';
+
+interface StaffMember {
+    id: string;
+    first_name: string;
+    last_name: string;
+    role: string;
+}
 
 const EMARDashboard: React.FC = () => {
     const { user } = useAuthStore();
     const [orders, setOrders] = useState<MedicationOrder[]>([]);
     const [loading, setLoading] = useState(true);
     const [filterShift, setFilterShift] = useState<'Morning' | 'Afternoon' | 'Evening' | 'Night'>('Morning');
+
+    // Staff selection state
+    const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
+    const [selectedStaffId, setSelectedStaffId] = useState<string>('');
 
     // Dummy logic to determine current shift based on hour for default selection
     useEffect(() => {
@@ -20,7 +33,29 @@ const EMARDashboard: React.FC = () => {
         else setFilterShift('Night');
 
         loadOrders();
+        fetchStaffMembers();
     }, []);
+
+    const fetchStaffMembers = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('id, first_name, last_name, role')
+                .in('role', ['admin', 'enfermero'])
+                .eq('is_active', true)
+                .order('first_name');
+
+            if (error) throw error;
+            setStaffMembers(data || []);
+
+            // Auto-select current user if they are in the list
+            if (user?.id && data?.some((s: StaffMember) => s.id === user.id)) {
+                setSelectedStaffId(user.id);
+            }
+        } catch (error) {
+            console.error('Error fetching staff:', error);
+        }
+    };
 
     const loadOrders = async () => {
         try {
@@ -38,14 +73,16 @@ const EMARDashboard: React.FC = () => {
         if (!confirm(`¿Confirmar administración de ${order.medicationName} a ${order.resident?.firstName}?`)) return;
 
         try {
-            if (!user?.id) {
-                alert('Error de usuario no identificado');
+            const adminUser = selectedStaffId || user?.id;
+
+            if (!adminUser) {
+                alert('Por favor seleccione el personal que administra');
                 return;
             }
 
             await emarService.logAdministration({
                 orderId: order.id,
-                administeredBy: user.id,
+                administeredBy: adminUser,
                 status: 'Given',
                 notes: 'Administrado desde eMAR Dashboard',
                 shift: filterShift
@@ -71,7 +108,7 @@ const EMARDashboard: React.FC = () => {
 
     return (
         <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Clock className="w-6 h-6 text-sky-600" />
@@ -79,17 +116,39 @@ const EMARDashboard: React.FC = () => {
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400">Gestión de dosis por turno</p>
                 </div>
-                <div className="flex gap-2">
-                    {(['Morning', 'Evening', 'Night'] as const).map(shift => (
-                        <Button
-                            key={shift}
-                            variant={filterShift === shift ? 'primary' : 'outline'}
-                            onClick={() => setFilterShift(shift)}
-                            className="capitalize"
+
+                <div className="flex flex-col sm:flex-row gap-4 items-end sm:items-center">
+                    {/* Staff Dropdown */}
+                    <div className="relative min-w-[200px]">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <User className="h-4 w-4 text-gray-400" />
+                        </div>
+                        <select
+                            value={selectedStaffId}
+                            onChange={(e) => setSelectedStaffId(e.target.value)}
+                            className="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm h-10 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                         >
-                            {shift === 'Morning' ? 'Mañana' : shift === 'Evening' ? 'Tarde/Noche' : 'Noche'}
-                        </Button>
-                    ))}
+                            <option value="">Seleccionar Personal</option>
+                            {staffMembers.map(staff => (
+                                <option key={staff.id} value={staff.id}>
+                                    {staff.first_name} {staff.last_name} ({staff.role})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="flex gap-2">
+                        {(['Morning', 'Evening', 'Night'] as const).map(shift => (
+                            <Button
+                                key={shift}
+                                variant={filterShift === shift ? 'primary' : 'outline'}
+                                onClick={() => setFilterShift(shift)}
+                                className="capitalize"
+                            >
+                                {shift === 'Morning' ? 'Mañana' : shift === 'Evening' ? 'Tarde/Noche' : 'Noche'}
+                            </Button>
+                        ))}
+                    </div>
                 </div>
             </div>
 

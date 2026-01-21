@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Send, AlertTriangle, Info, FileText } from 'lucide-react';
+import { Send, AlertTriangle, Info, FileText, Activity } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { medicalService, NursingNote } from '../../services/medicalService';
@@ -7,9 +7,10 @@ import { useAuthStore } from '../../store/authStore';
 
 interface Props {
     residentId: string;
+    readOnly?: boolean;
 }
 
-const NursingNotesSection: React.FC<Props> = ({ residentId }) => {
+const NursingNotesSection: React.FC<Props> = ({ residentId, readOnly = false }) => {
     const { user } = useAuthStore();
     const [notes, setNotes] = useState<NursingNote[]>([]);
     const [loading, setLoading] = useState(false);
@@ -58,72 +59,74 @@ const NursingNotesSection: React.FC<Props> = ({ residentId }) => {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+        <div className={`grid grid-cols-1 ${readOnly ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-6 h-full`}>
             {/* New Entry */}
-            <Card className="p-6 flex flex-col h-fit lg:h-full lg:overflow-y-auto">
-                <h3 className="font-bold text-gray-900 dark:text-white mb-4">Nueva Nota</h3>
-                <form onSubmit={handleSubmit} className="space-y-4 flex-1 flex flex-col">
-                    <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Categoría</label>
-                        <div className="flex gap-2 flex-wrap">
-                            {(['General', 'Incident', 'Medical', 'Family'] as const).map(c => (
-                                <button
-                                    key={c}
-                                    type="button"
-                                    onClick={() => setCategory(c)}
-                                    className={`px-3 py-1 rounded-full text-xs font-medium border ${category === c
-                                        ? 'bg-amber-100 border-amber-300 text-amber-800'
-                                        : 'bg-white border-gray-200 text-gray-500'
-                                        }`}
-                                >
-                                    {c === 'Incident' ? 'Incidente' : c === 'Family' ? 'Familiar' : c === 'Medical' ? 'Médico' : 'General'}
-                                </button>
-                            ))}
+            {!readOnly && (
+                <Card className="p-6 flex flex-col h-fit lg:h-full lg:overflow-y-auto">
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-4">Nueva Nota</h3>
+                    <form onSubmit={handleSubmit} className="space-y-4 flex-1 flex flex-col">
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Categoría</label>
+                            <div className="flex gap-2 flex-wrap">
+                                {(['General', 'Incident', 'Medical', 'Family'] as const).map(c => (
+                                    <button
+                                        key={c}
+                                        type="button"
+                                        onClick={() => setCategory(c)}
+                                        className={`px-3 py-1 rounded-full text-xs font-medium border ${category === c
+                                            ? 'bg-amber-100 border-amber-300 text-amber-800'
+                                            : 'bg-white border-gray-200 text-gray-500'
+                                            }`}
+                                    >
+                                        {c === 'Incident' ? 'Incidente' : c === 'Family' ? 'Familiar' : c === 'Medical' ? 'Médico' : 'General'}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Severidad</label>
-                        <div className="flex gap-2">
-                            {(['Low', 'Medium', 'High'] as const).map(s => (
-                                <label key={s} className="flex items-center gap-1 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="severity"
-                                        checked={severity === s}
-                                        onChange={() => setSeverity(s)}
-                                        className="text-amber-600 focus:ring-amber-500"
-                                    />
-                                    <span className={`text-sm ${s === 'High' ? 'text-red-600 font-bold' :
-                                        s === 'Medium' ? 'text-orange-600' :
-                                            'text-gray-600'
-                                        }`}>
-                                        {s === 'Low' ? 'Baja' : s === 'Medium' ? 'Media' : 'Alta'}
-                                    </span>
-                                </label>
-                            ))}
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Severidad</label>
+                            <div className="flex gap-2">
+                                {(['Low', 'Medium', 'High'] as const).map(s => (
+                                    <label key={s} className="flex items-center gap-1 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="severity"
+                                            checked={severity === s}
+                                            onChange={() => setSeverity(s)}
+                                            className="text-amber-600 focus:ring-amber-500"
+                                        />
+                                        <span className={`text-sm ${s === 'High' ? 'text-red-600 font-bold' :
+                                            s === 'Medium' ? 'text-orange-600' :
+                                                'text-gray-600'
+                                            }`}>
+                                            {s === 'Low' ? 'Baja' : s === 'Medium' ? 'Media' : 'Alta'}
+                                        </span>
+                                    </label>
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="flex-1">
-                        <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Detalle</label>
-                        <textarea
-                            className="w-full h-32 lg:h-full min-h-[150px] rounded border border-gray-300 dark:border-gray-700 p-3 text-sm resize-none focus:ring-2 focus:ring-amber-500 outline-none"
-                            placeholder="Escribe aquí los detalles..."
-                            value={content}
-                            onChange={e => setContent(e.target.value)}
-                        ></textarea>
-                    </div>
+                        <div className="flex-1">
+                            <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Detalle</label>
+                            <textarea
+                                className="w-full h-32 lg:h-full min-h-[150px] rounded border border-gray-300 dark:border-gray-700 p-3 text-sm resize-none focus:ring-2 focus:ring-amber-500 outline-none"
+                                placeholder="Escribe aquí los detalles..."
+                                value={content}
+                                onChange={e => setContent(e.target.value)}
+                            ></textarea>
+                        </div>
 
-                    <Button type="submit" disabled={loading} className="w-full bg-amber-600 hover:bg-amber-700 text-white">
-                        <Send className="w-4 h-4 mr-2" />
-                        {loading ? 'Guardando...' : 'Registrar Nota'}
-                    </Button>
-                </form>
-            </Card>
+                        <Button type="submit" disabled={loading} className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                            <Send className="w-4 h-4 mr-2" />
+                            {loading ? 'Guardando...' : 'Registrar Nota'}
+                        </Button>
+                    </form>
+                </Card>
+            )}
 
             {/* Feed */}
-            <div className="lg:col-span-2 space-y-4 lg:overflow-y-auto lg:pr-2 h-full">
+            <div className={`${readOnly ? 'lg:col-span-1' : 'lg:col-span-2'} space-y-4 lg:overflow-y-auto lg:pr-2 h-full`}>
                 {notes.length === 0 ? (
                     <div className="text-center py-12 text-gray-500 bg-white dark:bg-gray-800 rounded-lg border border-dashed border-gray-300">
                         No hay notas registradas para este residente.

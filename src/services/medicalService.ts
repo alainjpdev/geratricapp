@@ -4,14 +4,16 @@ export interface VitalSign {
     id: string;
     residentId: string;
     recordedBy: string;
-    recordedAt: string;
-    bloodPressureSystolic?: number;
-    bloodPressureDiastolic?: number;
-    heartRate?: number;
-    temperature?: number;
-    oxygenSaturation?: number;
-    glucose?: number;
-    weight?: number;
+    recordedAt: string; // We will map 'created_at' or rely on 'date' + 'time'
+    date?: string;
+    time?: string;
+    // Database fields are strings
+    ta?: string;
+    fc?: string;
+    fr?: string;
+    temp?: string;
+    sato2?: string;
+    dxtx?: string;
     notes?: string;
     resident?: {
         firstName: string;
@@ -42,21 +44,23 @@ export interface NursingNote {
 export const medicalService = {
     // --- Vitals ---
 
-    async recordVitals(data: Omit<VitalSign, 'id' | 'recordedAt'>) {
+    async recordVitals(data: any) { // Simplified type for now as direct usage is usually via specific UIs
+        // This method might not be used by Dashboard.tsx which has its own logic, 
+        // but keeping it compatible just in case.
         const { data: result, error } = await supabase
             .from('vital_signs')
             .insert([
                 {
                     resident_id: data.residentId,
                     recorded_by: data.recordedBy,
-                    bp_systolic: data.bloodPressureSystolic,
-                    bp_diastolic: data.bloodPressureDiastolic,
-                    heart_rate: data.heartRate,
-                    temperature: data.temperature,
-                    oxygen_saturation: data.oxygenSaturation,
-                    glucose: data.glucose,
-                    weight: data.weight,
-                    notes: data.notes
+                    ta: data.ta,
+                    fc: data.fc,
+                    fr: data.fr,
+                    temp: data.temp,
+                    sato2: data.sato2,
+                    dxtx: data.dxtx,
+                    date: new Date().toISOString().split('T')[0], // Fallback
+                    time: new Date().toLocaleTimeString(), // Fallback
                 }
             ])
             .select()
@@ -69,15 +73,21 @@ export const medicalService = {
         return result;
     },
 
-    async getVitalsByResident(residentId: string) {
-        const { data, error } = await supabase
+    async getVitalsByResident(residentId: string, date?: string) {
+        let query = supabase
             .from('vital_signs')
             .select(`
         *,
         recorder:users (first_name, last_name)
       `)
-            .eq('resident_id', residentId)
-            .order('recorded_at', { ascending: false });
+            .eq('resident_id', residentId);
+
+        if (date) {
+            query = query.eq('date', date);
+        }
+
+        const { data, error } = await query
+            .order('created_at', { ascending: false });
 
         if (error) {
             console.error('Error fetching vitals:', error);
@@ -88,18 +98,19 @@ export const medicalService = {
             id: d.id,
             residentId: d.resident_id,
             recordedBy: d.recorded_by,
-            recordedAt: d.recorded_at,
-            bloodPressureSystolic: d.bp_systolic,
-            bloodPressureDiastolic: d.bp_diastolic,
-            heartRate: d.heart_rate,
-            temperature: d.temperature,
-            oxygenSaturation: d.oxygen_saturation,
-            glucose: d.glucose,
-            weight: d.weight,
-            notes: d.notes,
+            recordedAt: d.created_at, // Map created_at to recordedAt interface property
+            date: d.date,
+            time: d.time,
+            ta: d.ta,
+            fc: d.fc,
+            fr: d.fr,
+            temp: d.temp,
+            sato2: d.sato2,
+            dxtx: d.dxtx,
             recorderName: d.recorder ? `${d.recorder.first_name || ''} ${d.recorder.last_name || ''}` : 'Unknown'
         }));
     },
+
 
     // --- Nursing Notes ---
 

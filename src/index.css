@@ -482,3 +482,7 @@ body:not(.dark) a:hover {
 #landing-footer svg line {
   stroke: currentColor !important;
 }
+
+/* ensure first nav link visible - removed */
+/* hide 5th nav link - removed */
+/* hide specific nav link - removed */

@@ -1,23 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, ChevronLeft, ChevronRight, Settings, Bug, Heart } from 'lucide-react';
+import { LogOut, ChevronLeft, ChevronRight, Settings, Bug, Heart, LayoutDashboard, Users, Stethoscope, Briefcase, Pill, Activity, BookOpen, BookUser, UserPlus, FolderOpen, HeartPulse, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { BugReportModal } from '../modals/BugReportModal';
 import { UserProfile } from './UserProfile';
 import { NavigationItem } from './NavigationItem';
 import { NavigationItem as NavigationItemType } from './navigationConfig';
-import { useDynamicMenu } from '../../hooks/useDynamicMenu';
-import { convertDynamicToNavigation } from './navigationConfig';
+import { hardcodedMenu } from '../../services/menuAPI'; // static menu
 import { AdminMenu } from './AdminMenu';
 import { useDarkMode } from '../../hooks/useDarkMode';
 import logo from '../../assets/logohappy.png';
 import logoWhite from '../../assets/logohappy.png';
 import lpLogo from '../../assets/logohappy.png';
 
+// Icon map for string identifiers to components
+const iconMap = {
+  LayoutDashboard,
+  Users,
+  Stethoscope,
+  Briefcase,
+  Pill,
+  Activity,
+  BookOpen,
+  BookUser,
+  UserPlus,
+  FolderOpen,
+  HeartPulse,
+  AlertTriangle,
+};
+
 interface DynamicSidebarProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
-  role: 'admin' | 'productor' | 'coordinador' | 'student' | 'teacher';
+  role: string;
   expandedMenus: string[];
   onToggleSubmenu: (menuKey: string) => void;
   onLogout: () => void;
@@ -34,47 +49,30 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
   const navigate = useNavigate();
   // Obtener usuario del store de autenticación
   const { user } = useAuthStore();
-  const { menuItems, loading, error } = useDynamicMenu(role);
+  // Use static hardcoded menu instead of dynamic hook
+  const menuItems = hardcodedMenu;
   const [dark] = useDarkMode();
   const [isBugModalOpen, setIsBugModalOpen] = useState(false);
 
   // Seleccionar logo según el tema
   const currentLogo = dark ? logo : logoWhite;
 
-  // Convertir menús dinámicos a NavigationItems
+  // Convert hardcoded menu items to NavigationItem format
   const navigationItems: NavigationItemType[] = React.useMemo(() => {
-    // Filtrar elementos sin 'to' definido (como SETTINGS que está oculto)
-    const validMenuItems = menuItems.filter(item => {
-      // Si no tiene 'to' y es SETTINGS, filtrarlo
-      if (!item.to && item.label === 'SETTINGS') {
-        return false;
-      }
-      return true;
+    return menuItems.filter(item => item.isActive).map(item => {
+      const mappedSubmenu = item.submenu?.map(sub => ({
+        ...sub,
+        icon: iconMap[sub.icon as keyof typeof iconMap] || LayoutDashboard,
+      }));
+      return {
+        key: item.id,
+        label: item.label,
+        to: item.to,
+        icon: iconMap[item.icon as keyof typeof iconMap] || LayoutDashboard,
+        submenu: mappedSubmenu,
+      };
     });
-    return validMenuItems.map(convertDynamicToNavigation);
   }, [menuItems]);
-
-  if (loading) {
-    return (
-      <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-sidebar shadow-lg border-r border-border transition-all duration-200`}>
-        <div className="flex flex-col h-full items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-sidebar shadow-lg border-r border-border transition-all duration-200`}>
-        <div className="flex flex-col h-full items-center justify-center p-4">
-          <div className="text-red-500 text-sm text-center">
-            Error al cargar menú: {error}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-200 z-50`}>
@@ -82,7 +80,7 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
         {/* Collapse Button (centered vertically) */}
         <button
           onClick={onToggleCollapse}
-          className="absolute top-1/2 -right-4 z-20 transform -translate-y-1/2 bg-white shadow-lg border border-gray-200 p-2 rounded-full hover:bg-gray-100 transition"
+          className="absolute top-1/2 -right-3 z-50 transform -translate-y-1/2 bg-white shadow-lg border border-gray-200 p-1.5 rounded-full hover:bg-gray-100 transition-all duration-200"
           aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
         >
