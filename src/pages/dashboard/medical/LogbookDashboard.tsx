@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, User, Droplet, Utensils, Activity, Tablet, Clipboard, FileText, History, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { residentService, Resident } from '../../../services/residentService';
+import { medicalService, DailyStaffing } from '../../../services/medicalService';
 import { Card } from '../../../components/ui/Card';
 
 // Child components
@@ -10,6 +11,7 @@ import NursingNotesSection from '../../../components/logbook/NursingNotesSection
 import PatientHistorySummary from '../../../components/logbook/PatientHistorySummary';
 import RecordsHistoryTable from '../../../components/logbook/RecordsHistoryTable';
 import { NursingClinicalSheet } from '../../../components/medical/NursingClinicalSheet';
+import { MedicationSection } from '../../dashboard/logbook/components/MedicationSection';
 
 const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     const { user } = useAuthStore();
@@ -24,10 +26,26 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     });
     const [activeTab, setActiveTab] = useState<'sheet' | 'notes' | 'history'>('sheet');
     const [loading, setLoading] = useState(false);
+    const [dailyStaffing, setDailyStaffing] = useState<DailyStaffing | null>(null);
 
     useEffect(() => {
         loadResidents();
     }, []);
+
+    useEffect(() => {
+        if (selectedResidentId && selectedDate) {
+            loadStaffing();
+        }
+    }, [selectedResidentId, selectedDate]);
+
+    const loadStaffing = async () => {
+        try {
+            const data = await medicalService.getDailyStaffing(selectedResidentId, selectedDate);
+            setDailyStaffing(data);
+        } catch (error) {
+            console.error('Error loading staffing:', error);
+        }
+    };
 
     const loadResidents = async () => {
         try {
@@ -136,13 +154,35 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                     <>
                         {activeTab === 'sheet' && (
                             <>
-                                <section>
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <FileText className="w-5 h-5 text-amber-600" />
-                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Hoja Clínica</h2>
+                                {/* Staffing Banner */}
+                                {dailyStaffing && (dailyStaffing.tmNurse || dailyStaffing.tvNurse || dailyStaffing.tnNurse) && (
+                                    <div className="bg-white dark:bg-gray-800 border border-blue-100 dark:border-blue-900/30 rounded-lg p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center animate-in fade-in slide-in-from-top-2">
+                                        <div className="flex items-center gap-2">
+                                            <User className="w-5 h-5 text-blue-600" />
+                                            <span className="font-bold text-gray-700 dark:text-gray-200 uppercase text-sm tracking-wide">Enfermeros Asignados:</span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-4 text-sm">
+                                            {dailyStaffing.tmNurse && (
+                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-md border border-blue-100 dark:border-blue-800">
+                                                    <span className="text-xs font-bold text-blue-500 uppercase">Mañana:</span>
+                                                    <span className="font-medium text-gray-800 dark:text-gray-200">{dailyStaffing.tmNurse}</span>
+                                                </div>
+                                            )}
+                                            {dailyStaffing.tvNurse && (
+                                                <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 px-3 py-1.5 rounded-md border border-amber-100 dark:border-amber-800">
+                                                    <span className="text-xs font-bold text-amber-500 uppercase">Tarde:</span>
+                                                    <span className="font-medium text-gray-800 dark:text-gray-200">{dailyStaffing.tvNurse}</span>
+                                                </div>
+                                            )}
+                                            {dailyStaffing.tnNurse && (
+                                                <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-md border border-indigo-100 dark:border-indigo-800">
+                                                    <span className="text-xs font-bold text-indigo-500 uppercase">Noche:</span>
+                                                    <span className="font-medium text-gray-800 dark:text-gray-200">{dailyStaffing.tnNurse}</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <NursingClinicalSheet patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
-                                </section>
+                                )}
 
                                 <section>
                                     <div className="flex items-center gap-2 mb-4">
@@ -150,6 +190,22 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         <h2 className="text-xl font-bold text-gray-800 dark:text-white">Signos Vitales</h2>
                                     </div>
                                     <VitalSignsTable residentId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
+                                </section>
+
+                                <section>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Tablet className="w-5 h-5 text-emerald-600" />
+                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Medicamentos</h2>
+                                    </div>
+                                    <MedicationSection residentId={selectedResidentId} date={selectedDate} />
+                                </section>
+
+                                <section>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <FileText className="w-5 h-5 text-amber-600" />
+                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Hoja Clínica</h2>
+                                    </div>
+                                    <NursingClinicalSheet patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
                             </>
                         )}

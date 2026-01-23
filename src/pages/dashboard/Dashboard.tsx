@@ -5,6 +5,7 @@ import { Trash2, Edit2, Check, X, Save, Printer, Activity, ClipboardList, Plus, 
 import { Toast } from '../../components/ui/Toast';
 import { NursingClinicalSheet } from '../../components/medical/NursingClinicalSheet';
 import { residentService, Resident } from '../../services/residentService';
+import { medicalService } from '../../services/medicalService';
 import { supabase } from '../../config/supabaseClient';
 import { useAuthStore } from '../../store/authStore';
 
@@ -231,6 +232,28 @@ export const Dashboard: React.FC = () => {
             } catch (error) {
                 console.error('Error fetching medications:', error);
             }
+
+            try {
+                // Fetch Staffing
+                const staffing = await medicalService.getDailyStaffing(headerData.patientId, headerData.date);
+                if (staffing) {
+                    setHeaderData(prev => ({
+                        ...prev,
+                        tmName: staffing.tmNurse || '',
+                        tvName: staffing.tvNurse || '',
+                        tnName: staffing.tnNurse || ''
+                    }));
+                } else {
+                    setHeaderData(prev => ({
+                        ...prev,
+                        tmName: '',
+                        tvName: '',
+                        tnName: ''
+                    }));
+                }
+            } catch (error) {
+                console.error('Error fetching staffing:', error);
+            }
         };
 
         fetchVitals();
@@ -250,6 +273,22 @@ export const Dashboard: React.FC = () => {
                 console.error('Error persisting relevant notes:', error);
             }
         }
+
+        // Persist Staffing
+        if ((field === 'tmName' || field === 'tvName' || field === 'tnName') && headerData.patientId) {
+            const updatedData = { ...headerData, [field]: value };
+            try {
+                await medicalService.saveDailyStaffing({
+                    residentId: updatedData.patientId,
+                    date: updatedData.date,
+                    tmNurse: updatedData.tmName,
+                    tvNurse: updatedData.tvName,
+                    tnNurse: updatedData.tnName
+                });
+            } catch (error) {
+                console.error('Error saving staffing:', error);
+            }
+        }
     };
 
     const handleVitalChange = (index: number, field: string, value: string) => {
@@ -265,6 +304,13 @@ export const Dashboard: React.FC = () => {
         // Also ensure patient and date are selected
         if (!headerData.patientId) {
             // Maybe show a toast/tooltip? For now just return
+            return;
+        }
+
+        // Prevent saving if all fields are empty (avoids overwriting with nulls if state was somehow lost or empty)
+        const hasData = vital.ta || vital.fc || vital.fr || vital.temp || vital.sato2 || vital.dxtx;
+        if (!hasData) {
+            console.log(`[Dashboard] Skipping save for ${vital.time} - no data entered`);
             return;
         }
 

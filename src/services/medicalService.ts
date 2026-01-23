@@ -41,6 +41,26 @@ export interface NursingNote {
     };
 }
 
+export interface DailyMedication {
+    id: string;
+    residentId: string;
+    medicamento: string;
+    dosis: string;
+    via: string;
+    hora: string;
+    observacion: string;
+    recordedBy?: string;
+    date: string;
+}
+
+export interface DailyStaffing {
+    residentId: string;
+    date: string;
+    tmNurse?: string;
+    tvNurse?: string;
+    tnNurse?: string;
+}
+
 export const medicalService = {
     // --- Vitals ---
 
@@ -64,7 +84,8 @@ export const medicalService = {
                 }
             ])
             .select()
-            .single();
+            .select()
+            .maybeSingle();
 
         if (error) {
             console.error('Error recording vitals:', error);
@@ -128,7 +149,8 @@ export const medicalService = {
                 }
             ])
             .select()
-            .single();
+            .select()
+            .maybeSingle();
 
         if (error) {
             console.error('Error creating note:', error);
@@ -203,5 +225,67 @@ export const medicalService = {
                 lastName: d.author?.last_name
             }
         }));
+    },
+
+    // --- Daily Medications (Ad-hoc Sheet) ---
+    async getDailyMedications(residentId: string, date: string) {
+        const { data, error } = await supabase
+            .from('medications')
+            .select('*')
+            .eq('resident_id', residentId)
+            .eq('date', date)
+            .order('hora', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching medications:', error);
+            throw error;
+        }
+
+        return data as DailyMedication[];
+    },
+
+    // --- Daily Staffing ---
+    async getDailyStaffing(residentId: string, date: string) {
+        const { data, error } = await supabase
+            .from('daily_staffing')
+            .select('*')
+            .eq('resident_id', residentId)
+            .eq('date', date)
+            .maybeSingle();
+
+        if (error) {
+            console.error('Error fetching daily staffing:', error);
+            return null;
+        }
+
+        if (!data) return null;
+
+        return {
+            residentId: data.resident_id,
+            date: data.date,
+            tmNurse: data.tm_nurse,
+            tvNurse: data.tv_nurse,
+            tnNurse: data.tn_nurse
+        } as DailyStaffing;
+    },
+
+    async saveDailyStaffing(staffing: DailyStaffing) {
+        const { error } = await supabase
+            .from('daily_staffing')
+            .upsert({
+                resident_id: staffing.residentId,
+                date: staffing.date,
+                tm_nurse: staffing.tmNurse,
+                tv_nurse: staffing.tvNurse,
+                tn_nurse: staffing.tnNurse,
+                updated_at: new Date().toISOString()
+            }, {
+                onConflict: 'resident_id,date'
+            });
+
+        if (error) {
+            console.error('Error saving daily staffing:', error);
+            throw error;
+        }
     }
 };

@@ -56,7 +56,8 @@ export const residentService = {
             .from('residents')
             .select('*')
             .eq('id', id)
-            .single();
+            .eq('id', id)
+            .maybeSingle();
 
         if (error) {
             console.error(`Error fetching resident ${id}:`, error);
@@ -85,7 +86,8 @@ export const residentService = {
                 }
             ])
             .select()
-            .single();
+            .select()
+            .maybeSingle();
 
         if (error) {
             console.error('Error creating resident:', error);
@@ -115,7 +117,8 @@ export const residentService = {
             .update(dbUpdates)
             .eq('id', id)
             .select()
-            .single();
+            .select()
+            .maybeSingle();
 
         if (error) {
             console.error(`Error updating resident ${id}:`, error);

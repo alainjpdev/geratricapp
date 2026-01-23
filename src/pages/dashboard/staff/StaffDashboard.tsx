@@ -45,6 +45,9 @@ export const StaffDashboard: React.FC = () => {
   const [updatingUser, setUpdatingUser] = useState(false);
   const [updatingResident, setUpdatingResident] = useState(false);
 
+  // State for the condition input field to ensure pending text is saved
+  const [conditionInput, setConditionInput] = useState('');
+
   const { user: currentUser } = useAuthStore();
   const isAdmin = currentUser?.role === 'admin';
   const [newUser, setNewUser] = useState({
@@ -108,13 +111,25 @@ export const StaffDashboard: React.FC = () => {
 
     try {
       setUpdatingResident(true);
+
+      // Check if there is pending text in the condition input and add it
+      let finalConditions = selectedResident.conditions;
+      if (conditionInput && conditionInput.trim()) {
+        const val = conditionInput.trim();
+        const current = finalConditions ? finalConditions.split(';').filter(Boolean) : [];
+        if (!current.includes(val)) {
+          finalConditions = [...current, val].join(';');
+        }
+      }
+
       await residentService.updateResident(selectedResident.id, {
-        conditions: selectedResident.conditions,
+        conditions: finalConditions,
         roomNumber: selectedResident.roomNumber,
         status: selectedResident.status
       });
       setToast({ visible: true, message: 'Residente actualizado exitosamente', type: 'success' });
       setShowEditResident(false);
+      setConditionInput(''); // Clear input after save
       fetchResidents();
     } catch (error) {
       console.error('Error updating resident:', error);
@@ -467,15 +482,17 @@ export const StaffDashboard: React.FC = () => {
                     type="text"
                     placeholder="Escribe una condición y pulsa Enter..."
                     className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={conditionInput}
+                    onChange={(e) => setConditionInput(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
-                        const val = (e.target as HTMLInputElement).value.trim();
+                        const val = conditionInput.trim();
                         if (val) {
                           const current = selectedResident.conditions ? selectedResident.conditions.split(';').filter(Boolean) : [];
                           if (!current.includes(val)) {
                             setSelectedResident({ ...selectedResident, conditions: [...current, val].join(';') });
-                            (e.target as HTMLInputElement).value = '';
+                            setConditionInput(''); // Clear input
                           }
                         }
                       }
