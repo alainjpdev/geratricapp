@@ -5,8 +5,8 @@ import { UserProfile } from './UserProfile';
 import { NavigationItem } from './NavigationItem';
 import { NavigationItem as NavigationItemType } from './navigationConfig';
 import { useDarkMode } from '../../hooks/useDarkMode';
-import logo from '../../assets/logohappy.png';
-import logoWhite from '../../assets/logohappy.png';
+import logo from '../../assets/logolp.png';
+import logoWhite from '../../assets/logolpwhite.png';
 
 interface SidebarProps {
   collapsed: boolean;

@@ -5,8 +5,8 @@ import { BookOpen, Mail, Lock, Eye, EyeOff, Heart } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import { useDarkMode } from '../hooks/useDarkMode';
-import logo from '../assets/logohappy.png';
-import logoWhite from '../assets/logohappy.png';
+import logo from '../assets/logolp.png';
+import logoWhite from '../assets/logolpwhite.png';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
