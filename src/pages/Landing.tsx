@@ -95,16 +95,16 @@ export const Landing: React.FC = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/contact">
+              <a href="https://casitademaria.com" target="_blank" rel="noopener noreferrer">
                 <Button variant="primary" size="lg" className="bg-sky-500 text-white border-transparent hover:bg-sky-600 px-8 py-3 text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 rounded-full">
                   Agendar Visita
                 </Button>
-              </Link>
-              <Link to="/services">
+              </a>
+              <a href="https://casitademaria.com" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="lg" className="border-2 border-sky-200 text-sky-600 hover:bg-sky-50 hover:border-sky-300 px-8 py-3 text-lg font-semibold rounded-full bg-white">
                   Nuestros Servicios
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -261,11 +261,11 @@ export const Landing: React.FC = () => {
             Agende una visita hoy mismo y descubra por qué somos la mejor opción para el cuidado de sus seres queridos.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/contact">
+            <a href="https://wa.me/529981519578" target="_blank" rel="noopener noreferrer">
               <Button variant="primary" size="lg" className="bg-white text-sky-600 hover:bg-slate-50 hover:text-sky-700 font-bold px-8 py-3 text-lg shadow-lg rounded-full border-none">
                 Contactar Ahora
               </Button>
-            </Link>
+            </a>
             <Link to="/register">
               <Button variant="outline" size="lg" className="bg-sky-600/30 text-white border-white/30 hover:bg-sky-600/50 hover:border-white font-semibold px-8 py-3 text-lg rounded-full backdrop-blur-sm">
                 Registrarse
@@ -304,9 +304,9 @@ export const Landing: React.FC = () => {
             <div>
               <h3 className="text-lg font-bold mb-6 text-white">Enlaces</h3>
               <ul className="space-y-4 text-sm">
-                <li className="hover:text-sky-400 transition-colors cursor-pointer"><Link to="/">Inicio</Link></li>
-                <li className="hover:text-sky-400 transition-colors cursor-pointer"><Link to="/about">Nosotros</Link></li>
-                <li className="hover:text-sky-400 transition-colors cursor-pointer"><Link to="/contact">Contacto</Link></li>
+                <li className="hover:text-sky-400 transition-colors cursor-pointer"><a href="https://casitademaria.com" target="_blank" rel="noopener noreferrer">Inicio</a></li>
+                <li className="hover:text-sky-400 transition-colors cursor-pointer"><a href="https://casitademaria.com" target="_blank" rel="noopener noreferrer">Nosotros</a></li>
+                <li className="hover:text-sky-400 transition-colors cursor-pointer"><a href="https://wa.me/529981519578" target="_blank" rel="noopener noreferrer">Contacto</a></li>
                 <li className="hover:text-sky-400 transition-colors cursor-pointer"><Link to="/login">Portal Familiares</Link></li>
               </ul>
             </div>
