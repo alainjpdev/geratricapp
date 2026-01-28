@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, UserPlus, Search, Filter, MoreVertical, Mail, Calendar, User, X } from 'lucide-react';
+import { Users, UserPlus, Search, Filter, MoreVertical, Mail, Calendar, User, X, Trash2 } from 'lucide-react';
 // @ts-ignore
 import { supabase } from '../../../config/supabaseClient';
 import { residentService, Resident } from '../../../services/residentService';
@@ -170,6 +170,25 @@ export const StaffDashboard: React.FC = () => {
       setToast({ visible: true, message: 'Error al crear residente', type: 'error' });
     } finally {
       setCreatingResident(false);
+    }
+  }
+
+
+  const handleDeleteResident = async () => {
+    if (!selectedResident) return;
+    if (window.confirm('¿Estás seguro de que deseas eliminar este residente? Esta acción no se puede deshacer.')) {
+      try {
+        setUpdatingResident(true);
+        await residentService.deleteResident(selectedResident.id);
+        setToast({ visible: true, message: 'Residente eliminado', type: 'success' });
+        setShowEditResident(false);
+        fetchResidents();
+      } catch (error) {
+        console.error('Error deleting resident:', error);
+        setToast({ visible: true, message: 'Error al eliminar residente', type: 'error' });
+      } finally {
+        setUpdatingResident(false);
+      }
     }
   };
 
@@ -560,20 +579,29 @@ export const StaffDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6 pt-2">
+              <div className="flex gap-3 mt-6 pt-2 items-center">
+                <button
+                  type="button"
+                  onClick={handleDeleteResident}
+                  className="px-3 py-2 border border-red-200 text-red-600 hover:bg-red-50 rounded-lg hover:border-red-300 transition-colors"
+                  title="Eliminar Residente"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+                <div className="flex-1"></div>
                 <button
                   type="button"
                   onClick={() => setShowEditResident(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={updatingResident}
-                  className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                  className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
                 >
-                  {updatingResident ? 'Guardando...' : 'Guardar Cambios'}
+                  {updatingResident ? 'Guardando...' : 'Guardar'}
                 </button>
               </div>
             </form>

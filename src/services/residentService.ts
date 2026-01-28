@@ -84,7 +84,9 @@ export const residentService = {
                     conditions: resident.conditions,
                     relevant_notes: resident.relevantNotes,
                     care_plan_summary: resident.carePlanSummary,
-                    user_id: resident.userId
+                    user_id: resident.userId,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 }
             ])
             .select()
@@ -128,5 +130,17 @@ export const residentService = {
         }
 
         return data;
+    },
+
+    async deleteResident(id: string) {
+        const { error } = await supabase
+            .from('residents')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error(`Error deleting resident ${id}:`, error);
+            throw error;
+        }
     }
 };
