@@ -34,6 +34,19 @@ export interface EliminationLog {
     notes?: string;
 }
 
+
+export interface SleepLog {
+    id: string;
+    resident_id: string;
+    date: string;
+    start_time: string;
+    end_time?: string;
+    quality?: 'Good' | 'Fair' | 'Poor' | 'Interrupted';
+    observations?: string;
+    created_at?: string;
+    created_by?: string;
+}
+
 export const logbookService = {
     // --- Care Logs ---
     async getCareLogs(residentId: string, date: string) {
@@ -119,6 +132,35 @@ export const logbookService = {
 
     async deleteEliminationLog(id: string) {
         const { error } = await supabase.from('elimination_logs').delete().eq('id', id);
+        if (error) throw error;
+    },
+
+    // --- Sleep Logs ---
+    async getSleepLogs(residentId: string, date: string) {
+        const { data, error } = await supabase
+            .from('sleep_logs')
+            .select('*')
+            .eq('resident_id', residentId)
+            .eq('date', date)
+            .order('start_time', { ascending: false });
+
+        if (error) throw error;
+        return data as SleepLog[];
+    },
+
+    async addSleepLog(log: Omit<SleepLog, 'id'>) {
+        const { data, error } = await supabase
+            .from('sleep_logs')
+            .insert([log])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data as SleepLog;
+    },
+
+    async deleteSleepLog(id: string) {
+        const { error } = await supabase.from('sleep_logs').delete().eq('id', id);
         if (error) throw error;
     },
 };

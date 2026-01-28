@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabaseClient';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Resident {
     id: string;
@@ -72,6 +73,7 @@ export const residentService = {
             .from('residents')
             .insert([
                 {
+                    id: uuidv4(),
                     first_name: resident.firstName,
                     last_name: resident.lastName,
                     date_of_birth: resident.dateOfBirth,

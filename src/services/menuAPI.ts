@@ -20,7 +20,7 @@ export const hardcodedMenu: DynamicMenuItem[] = [
     icon: 'BookUser',
     to: '/dashboard/residents',
     order: 1,
-    isActive: true,
+    isActive: false,
     role: 'admin',
     createdAt: new Date(),
     updatedAt: new Date(),

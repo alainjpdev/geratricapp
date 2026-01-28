@@ -59,6 +59,8 @@ export interface DailyStaffing {
     tmNurse?: string;
     tvNurse?: string;
     tnNurse?: string;
+    condition?: string;
+    relevantNotes?: string;
 }
 
 export const medicalService = {
@@ -265,7 +267,9 @@ export const medicalService = {
             date: data.date,
             tmNurse: data.tm_nurse,
             tvNurse: data.tv_nurse,
-            tnNurse: data.tn_nurse
+            tnNurse: data.tn_nurse,
+            condition: data.condition,
+            relevantNotes: data.relevant_notes
         } as DailyStaffing;
     },
 
@@ -278,6 +282,8 @@ export const medicalService = {
                 tm_nurse: staffing.tmNurse,
                 tv_nurse: staffing.tvNurse,
                 tn_nurse: staffing.tnNurse,
+                condition: staffing.condition,
+                relevant_notes: staffing.relevantNotes,
                 updated_at: new Date().toISOString()
             }, {
                 onConflict: 'resident_id,date'
@@ -287,5 +293,115 @@ export const medicalService = {
             console.error('Error saving daily staffing:', error);
             throw error;
         }
+    },
+
+    // --- Range Queries for Reports ---
+    async getVitalsRange(residentId: string, startDate: string, endDate: string) {
+        const { data, error } = await supabase
+            .from('vital_signs')
+            .select('*')
+            .eq('resident_id', residentId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+            .order('date', { ascending: true })
+            .order('time', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching vitals range:', error);
+            throw error;
+        }
+        return data;
+    },
+
+    async getMedicationsRange(residentId: string, startDate: string, endDate: string) {
+        const { data, error } = await supabase
+            .from('medications')
+            .select('*')
+            .eq('resident_id', residentId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+            .order('date', { ascending: true })
+            .order('hora', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching medications range:', error);
+            throw error;
+        }
+        return data;
+    },
+
+    async getDailyStaffingRange(residentId: string, startDate: string, endDate: string) {
+        const { data, error } = await supabase
+            .from('daily_staffing')
+            .select('*')
+            .eq('resident_id', residentId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+            .order('date', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching daily staffing range:', error);
+            throw error;
+        }
+        return data.map((d: any) => ({
+            residentId: d.resident_id,
+            date: d.date,
+            tmNurse: d.tm_nurse,
+            tvNurse: d.tv_nurse,
+            tnNurse: d.tn_nurse,
+            condition: d.condition,
+            relevantNotes: d.relevant_notes
+        }));
+    },
+
+    async getCareLogsRange(residentId: string, startDate: string, endDate: string) {
+        const { data, error } = await supabase
+            .from('care_logs')
+            .select('*')
+            .eq('resident_id', residentId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+            .order('date', { ascending: true })
+            .order('time', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching care logs range:', error);
+            throw error;
+        }
+        return data;
+    },
+
+    async getNutritionLogsRange(residentId: string, startDate: string, endDate: string) {
+        const { data, error } = await supabase
+            .from('nutrition_logs')
+            .select('*')
+            .eq('resident_id', residentId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+            .order('date', { ascending: true })
+            .order('time', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching nutrition logs range:', error);
+            throw error;
+        }
+        return data;
+    },
+
+    async getEliminationLogsRange(residentId: string, startDate: string, endDate: string) {
+        const { data, error } = await supabase
+            .from('elimination_logs')
+            .select('*')
+            .eq('resident_id', residentId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+            .order('date', { ascending: true })
+            .order('time', { ascending: true });
+
+        if (error) {
+            console.error('Error fetching elimination logs range:', error);
+            throw error;
+        }
+        return data;
     }
 };

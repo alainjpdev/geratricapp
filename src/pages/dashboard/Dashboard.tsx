@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Trash2, Edit2, Check, X, Save, Printer, Activity, ClipboardList, Plus, ChevronLeft, ChevronRight, BookOpen, MessageSquarePlus } from 'lucide-react';
+import { Trash2, Edit2, Check, X, Save, Printer, Activity, ClipboardList, Plus, ChevronLeft, ChevronRight, BookOpen, MessageSquarePlus, Moon } from 'lucide-react';
 import { Toast } from '../../components/ui/Toast';
 import { NursingClinicalSheet } from '../../components/medical/NursingClinicalSheet';
+import { SleepDiary } from '../../components/logbook/SleepDiary';
+import { TimeSelect } from '../../components/ui/TimeSelect';
 import { residentService, Resident } from '../../services/residentService';
 import { medicalService } from '../../services/medicalService';
 import { supabase } from '../../config/supabaseClient';
@@ -41,9 +43,10 @@ export const Dashboard: React.FC = () => {
     const { user } = useAuthStore();
 
     // Tab State
-    const [activeTab, setActiveTab] = useState<'vitals' | 'care'>('vitals');
+    const [activeTab, setActiveTab] = useState<'vitals' | 'care' | 'sleep'>('vitals');
     const [residents, setResidents] = useState<Resident[]>([]);
     const [staffMembers, setStaffMembers] = useState<StaffMember[]>([]);
+    // activeField removed - using TimeInput component
 
     // State for Header
     const [headerData, setHeaderData] = useState({
@@ -137,6 +140,28 @@ export const Dashboard: React.FC = () => {
     useEffect(() => {
         if (!headerData.patientId || !headerData.date) return;
 
+        // Reset to empty immediately to avoid showing stale data while loading
+        setVitals(defaultVitalTimes.map(time => ({
+            time,
+            ta: '',
+            fc: '',
+            fr: '',
+            temp: '',
+            sato2: '',
+            dxtx: ''
+        })));
+
+        setMedications(Array(3).fill(null).map((_, i) => ({
+            id: `temp-${i}`,
+            medicamento: '',
+            dosis: '',
+            via: '',
+            hora: '',
+            observacion: ''
+        })));
+
+        let mounted = true;
+
         const fetchVitals = async () => {
             try {
                 const { data, error } = await supabase
@@ -146,6 +171,7 @@ export const Dashboard: React.FC = () => {
                     .eq('date', headerData.date);
 
                 if (error) throw error;
+                if (!mounted) return;
 
                 if (data && data.length > 0) {
                     // Update local state with fetched data
@@ -195,6 +221,7 @@ export const Dashboard: React.FC = () => {
                     .eq('date', headerData.date);
 
                 if (medError) throw medError;
+                if (!mounted) return;
 
                 if (medData && medData.length > 0) {
                     const count = Math.max(medData.length, 3);
@@ -236,6 +263,8 @@ export const Dashboard: React.FC = () => {
             try {
                 // Fetch Staffing
                 const staffing = await medicalService.getDailyStaffing(headerData.patientId, headerData.date);
+                if (!mounted) return;
+
                 if (staffing) {
                     setHeaderData(prev => ({
                         ...prev,
@@ -257,6 +286,10 @@ export const Dashboard: React.FC = () => {
         };
 
         fetchVitals();
+
+        return () => {
+            mounted = false;
+        };
     }, [headerData.patientId, headerData.date]);
 
     const handleHeaderChange = async (field: string, value: string) => {
@@ -479,6 +512,11 @@ export const Dashboard: React.FC = () => {
                                     value={headerData.patientId}
                                     onChange={(e) => {
                                         const selectedId = e.target.value;
+
+                                        // IMMEDIATE RESET to prevent flicker
+                                        setVitals(defaultVitalTimes.map(time => ({ time, ta: '', fc: '', fr: '', temp: '', sato2: '', dxtx: '' })));
+                                        setMedications(Array(3).fill(null).map((_, i) => ({ id: `temp-${i}`, medicamento: '', dosis: '', via: '', hora: '', observacion: '' })));
+
                                         const resident = residents.find(r => r.id === selectedId);
                                         if (resident) {
                                             setHeaderData(prev => ({
@@ -505,6 +543,10 @@ export const Dashboard: React.FC = () => {
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => {
+                                            // IMMEDIATE RESET
+                                            setVitals(defaultVitalTimes.map(time => ({ time, ta: '', fc: '', fr: '', temp: '', sato2: '', dxtx: '' })));
+                                            setMedications(Array(3).fill(null).map((_, i) => ({ id: `temp-${i}`, medicamento: '', dosis: '', via: '', hora: '', observacion: '' })));
+
                                             const [y, m, d] = headerData.date.split('-').map(Number);
                                             const date = new Date(y, m - 1, d);
                                             date.setDate(date.getDate() - 1);
@@ -518,10 +560,20 @@ export const Dashboard: React.FC = () => {
                                         type="date"
                                         className="bg-transparent font-semibold outline-none text-xs text-gray-700 dark:text-gray-200"
                                         value={headerData.date}
-                                        onChange={(e) => handleHeaderChange('date', e.target.value)}
+                                        onChange={(e) => {
+                                            // IMMEDIATE RESET
+                                            setVitals(defaultVitalTimes.map(time => ({ time, ta: '', fc: '', fr: '', temp: '', sato2: '', dxtx: '' })));
+                                            setMedications(Array(3).fill(null).map((_, i) => ({ id: `temp-${i}`, medicamento: '', dosis: '', via: '', hora: '', observacion: '' })));
+
+                                            handleHeaderChange('date', e.target.value);
+                                        }}
                                     />
                                     <button
                                         onClick={() => {
+                                            // IMMEDIATE RESET
+                                            setVitals(defaultVitalTimes.map(time => ({ time, ta: '', fc: '', fr: '', temp: '', sato2: '', dxtx: '' })));
+                                            setMedications(Array(3).fill(null).map((_, i) => ({ id: `temp-${i}`, medicamento: '', dosis: '', via: '', hora: '', observacion: '' })));
+
                                             const [y, m, d] = headerData.date.split('-').map(Number);
                                             const date = new Date(y, m - 1, d);
                                             date.setDate(date.getDate() + 1);
@@ -578,8 +630,8 @@ export const Dashboard: React.FC = () => {
                             <div className="flex flex-wrap gap-1.5 items-center min-h-[22px]">
                                 {headerData.notes ? (
                                     headerData.notes.split(';').filter(Boolean).map((note, idx) => (
-                                        <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-1.5 shadow-sm">
-                                            {note.trim()}
+                                        <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-1.5 shadow-sm max-w-full">
+                                            <span className="truncate max-w-[200px] md:max-w-[300px]" title={note.trim()}>{note.trim()}</span>
                                             <button
                                                 onClick={() => {
                                                     const notes = headerData.notes.split(';').filter(Boolean);
@@ -725,6 +777,16 @@ export const Dashboard: React.FC = () => {
                         <ClipboardList className="w-4 h-4" />
                         Cuidados y Eliminación
                     </button>
+                    <button
+                        className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors ${activeTab === 'sleep'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                        onClick={() => setActiveTab('sleep')}
+                    >
+                        <Moon className="w-4 h-4" />
+                        Diario de Sueño
+                    </button>
                 </div>
 
                 {/* Content Section */}
@@ -858,23 +920,31 @@ export const Dashboard: React.FC = () => {
                                                                 placeholder={index === 0 ? "dosis" : ""}
                                                             />
                                                         </td>
-                                                        <td className="border-r border-b border-gray-300 p-0">
-                                                            <input
-                                                                type="text"
+                                                        <td className="border-r border-b border-gray-300 p-0 text-center relative group">
+                                                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-gray-400">
+                                                                {!row.via && index === 0 && <span className="opacity-50">oral</span>}
+                                                            </div>
+                                                            <select
                                                                 value={row.via}
                                                                 onChange={(e) => handleMedicationChange(index, 'via', e.target.value)}
                                                                 onBlur={() => saveMedication(index)}
-                                                                className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
-                                                                placeholder={index === 0 ? "oral" : ""}
-                                                            />
+                                                                className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent appearance-none cursor-pointer relative z-10"
+                                                            >
+                                                                <option value="" className="text-gray-400">Seleccionar...</option>
+                                                                <option value="oral">Oral</option>
+                                                                <option value="intramuscular">Intramuscular</option>
+                                                                <option value="intravenosa">Intravenosa</option>
+                                                                <option value="subcutanea">Subcutanea</option>
+                                                                <option value="oftalmologica">Oftalmologica</option>
+                                                                <option value="otra">Otra</option>
+                                                            </select>
                                                         </td>
-                                                        <td className="border-r border-b border-gray-300 p-0">
-                                                            <input
-                                                                type="time"
+                                                        <td className="border-r border-b border-gray-300 p-0 h-10">
+                                                            <TimeSelect
                                                                 value={row.hora}
                                                                 onChange={(e) => handleMedicationChange(index, 'hora', e.target.value)}
                                                                 onBlur={() => saveMedication(index)}
-                                                                className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                className="text-center py-2 px-1 h-full"
                                                             />
                                                         </td>
                                                         <td className="border-b border-gray-300 p-0">
@@ -907,12 +977,23 @@ export const Dashboard: React.FC = () => {
                                 </Card>
                             </div>
                         </div>
-                    ) : (
-                        <div className="animate-fadeIn">
-                            <NursingClinicalSheet patientId={headerData.patientId} date={headerData.date} />
+                    ) : activeTab === 'care' ? (
+                        <div className="space-y-6 animate-fadeIn">
+                            <NursingClinicalSheet
+                                key={`${headerData.patientId}-${headerData.date}`} // Force remount to clear state
+                                patientId={headerData.patientId}
+                                date={headerData.date}
+                            />
                         </div>
-                    )
-                }
+                    ) : (
+                        <div className="space-y-6 animate-fadeIn">
+                            <SleepDiary
+                                key={`${headerData.patientId}-${headerData.date}`}
+                                patientId={headerData.patientId}
+                                date={headerData.date}
+                            />
+                        </div>
+                    )}
 
             </div >
         </div >

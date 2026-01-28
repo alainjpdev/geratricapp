@@ -1,23 +1,17 @@
 import React from 'react';
 
-interface ButtonProps {
-  children: React.ReactNode;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
-  onClick?: (e?: React.MouseEvent) => void;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-  className?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
   size = 'md',
-  onClick,
+  className = '',
   type = 'button',
-  disabled = false,
-  className = ''
+  ...props
 }) => {
   const baseClasses = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
 
@@ -35,14 +29,13 @@ export const Button: React.FC<ButtonProps> = ({
     lg: 'px-6 py-3 text-lg'
   };
 
-  const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';
+  const disabledClasses = props.disabled ? 'opacity-50 cursor-not-allowed' : '';
 
   return (
     <button
       type={type}
-      onClick={onClick}
-      disabled={disabled}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`}
+      {...props}
     >
       {children}
     </button>

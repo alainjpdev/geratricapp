@@ -44,6 +44,8 @@ export const StaffDashboard: React.FC = () => {
   const [creatingUser, setCreatingUser] = useState(false);
   const [updatingUser, setUpdatingUser] = useState(false);
   const [updatingResident, setUpdatingResident] = useState(false);
+  const [showAddResident, setShowAddResident] = useState(false);
+  const [creatingResident, setCreatingResident] = useState(false);
 
   // State for the condition input field to ensure pending text is saved
   const [conditionInput, setConditionInput] = useState('');
@@ -57,6 +59,14 @@ export const StaffDashboard: React.FC = () => {
     role: 'enfermero',
     password: '123456',
     telefono: ''
+  });
+  const [newResident, setNewResident] = useState<Partial<Resident>>({
+    firstName: '',
+    lastName: '',
+    dateOfBirth: '',
+    roomNumber: '',
+    status: 'Active',
+    emergencyContact: { name: '', phone: '', relation: '' }
   });
   const [toast, setToast] = useState<{ visible: boolean; message: string; type: 'success' | 'error' }>({
     visible: false,
@@ -139,6 +149,30 @@ export const StaffDashboard: React.FC = () => {
     }
   };
 
+  const handleCreateResident = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setCreatingResident(true);
+      await residentService.createResident(newResident as any);
+      setToast({ visible: true, message: 'Residente creado exitosamente', type: 'success' });
+      setShowAddResident(false);
+      setNewResident({
+        firstName: '',
+        lastName: '',
+        dateOfBirth: '',
+        roomNumber: '',
+        status: 'Active',
+        emergencyContact: { name: '', phone: '', relation: '' }
+      });
+      fetchResidents();
+    } catch (error) {
+      console.error('Error creating resident:', error);
+      setToast({ visible: true, message: 'Error al crear residente', type: 'error' });
+    } finally {
+      setCreatingResident(false);
+    }
+  };
+
   useEffect(() => {
     fetchStaff();
     fetchResidents();
@@ -214,7 +248,7 @@ export const StaffDashboard: React.FC = () => {
           <p className="text-gray-500 dark:text-gray-400">Directorio de usuarios registrados en el sistema</p>
         </div>
         <button
-          onClick={activeTab === 'staff' ? () => setShowAddUser(true) : () => { }}
+          onClick={activeTab === 'staff' ? () => setShowAddUser(true) : () => setShowAddResident(true)}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-sm"
         >
           <UserPlus className="w-5 h-5" />
@@ -734,6 +768,140 @@ export const StaffDashboard: React.FC = () => {
                   className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
                 >
                   {updatingUser ? 'Guardando...' : 'Guardar Cambios'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Resident Modal */}
+      {showAddResident && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Nuevo Residente</h2>
+              <button onClick={() => setShowAddResident(false)} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateResident} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Nombre *</label>
+                  <input
+                    required
+                    type="text"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={newResident.firstName}
+                    onChange={e => setNewResident({ ...newResident, firstName: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Apellido *</label>
+                  <input
+                    required
+                    type="text"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={newResident.lastName}
+                    onChange={e => setNewResident({ ...newResident, lastName: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Fecha de Nacimiento *</label>
+                <input
+                  required
+                  type="date"
+                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                  value={newResident.dateOfBirth}
+                  onChange={e => setNewResident({ ...newResident, dateOfBirth: e.target.value })}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Habitación</label>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={newResident.roomNumber}
+                    onChange={e => setNewResident({ ...newResident, roomNumber: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
+                  <select
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    value={newResident.status}
+                    onChange={e => setNewResident({ ...newResident, status: e.target.value as any })}
+                  >
+                    <option value="Active">Activo</option>
+                    <option value="Hospitalized">Hospitalizado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Contacto de Emergencia</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Nombre</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                      value={newResident.emergencyContact?.name || ''}
+                      onChange={e => setNewResident({
+                        ...newResident,
+                        emergencyContact: { ...newResident.emergencyContact!, name: e.target.value }
+                      })}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Teléfono</label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                        value={newResident.emergencyContact?.phone || ''}
+                        onChange={e => setNewResident({
+                          ...newResident,
+                          emergencyContact: { ...newResident.emergencyContact!, phone: e.target.value }
+                        })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Relación</label>
+                      <input
+                        type="text"
+                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                        value={newResident.emergencyContact?.relation || ''}
+                        onChange={e => setNewResident({
+                          ...newResident,
+                          emergencyContact: { ...newResident.emergencyContact!, relation: e.target.value }
+                        })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddResident(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={creatingResident}
+                  className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                >
+                  {creatingResident ? 'Creando...' : 'Crear Residente'}
                 </button>
               </div>
             </form>

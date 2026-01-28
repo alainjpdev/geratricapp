@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, User, Droplet, Utensils, Activity, Tablet, Clipboard, FileText, History, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BookOpen, User, Users, Droplet, Utensils, Activity, Tablet, Clipboard, FileText, History, ChevronLeft, ChevronRight, Moon } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { residentService, Resident } from '../../../services/residentService';
 import { medicalService, DailyStaffing } from '../../../services/medicalService';
@@ -12,6 +12,10 @@ import PatientHistorySummary from '../../../components/logbook/PatientHistorySum
 import RecordsHistoryTable from '../../../components/logbook/RecordsHistoryTable';
 import { NursingClinicalSheet } from '../../../components/medical/NursingClinicalSheet';
 import { MedicationSection } from '../../dashboard/logbook/components/MedicationSection';
+import { SleepDiary } from '../../../components/logbook/SleepDiary';
+import { StaffingModal } from '../../../components/logbook/StaffingModal';
+import { LogbookPrintModal } from '../../../components/logbook/LogbookPrintModal';
+import { Printer } from 'lucide-react';
 
 const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     const { user } = useAuthStore();
@@ -27,6 +31,8 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     const [activeTab, setActiveTab] = useState<'sheet' | 'notes' | 'history'>('sheet');
     const [loading, setLoading] = useState(false);
     const [dailyStaffing, setDailyStaffing] = useState<DailyStaffing | null>(null);
+    const [staffingModalOpen, setStaffingModalOpen] = useState(false);
+    const [printModalOpen, setPrintModalOpen] = useState(false);
 
     useEffect(() => {
         loadResidents();
@@ -54,6 +60,41 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
             if (data.length > 0) setSelectedResidentId(data[0].id);
         } catch (error) {
             console.error('Error loading residents:', error);
+        }
+    };
+
+    const handleSaveStaffing = async (data: DailyStaffing) => {
+        try {
+            await medicalService.saveDailyStaffing(data);
+            setDailyStaffing(data);
+        } catch (error) {
+            console.error('Error saving staffing:', error);
+        }
+    };
+
+    const handleUpdateField = async (field: keyof DailyStaffing, value: string) => {
+        // Optimistic update
+        const updatedStaffing: DailyStaffing = {
+            ...(dailyStaffing || { residentId: selectedResidentId, date: selectedDate }),
+            [field]: value
+        };
+        setDailyStaffing(updatedStaffing);
+
+        // Debounce save or just save? Immediate save might spam. 
+        // For simplicity in this turn, I'll save immediately but usually debounce is better.
+        // User asked for "siempre se guarden", so onBlur is safer for text areas, 
+        // but let's do onBlur to avoid spamming DB on every keystroke.
+    };
+
+    const handleSaveField = async (field: keyof DailyStaffing, value: string) => {
+        const updatedStaffing: DailyStaffing = {
+            ...(dailyStaffing || { residentId: selectedResidentId, date: selectedDate }),
+            [field]: value
+        };
+        try {
+            await medicalService.saveDailyStaffing(updatedStaffing);
+        } catch (error) {
+            console.error(`Error saving ${field}:`, error);
         }
     };
 
@@ -129,24 +170,45 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                         </div>
                     </div>
 
-                    {/* Tabs Navigation */}
-                    <div className="flex gap-2 overflow-x-auto">
-                        {tabs.map(tab => (
+                    {!readOnly && (
+                        <div className="flex gap-2">
                             <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id as any)}
-                                className={`flex items-center gap-2 px-4 py-2 border-b-2 font-medium transition-colors whitespace-nowrap ${activeTab === tab.id
-                                    ? 'border-amber-600 text-amber-700 dark:text-amber-500'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
-                                    }`}
+                                onClick={() => setPrintModalOpen(true)}
+                                className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm"
+                                title="Imprimir Reporte"
                             >
-                                <tab.icon className="w-4 h-4" />
-                                {tab.label}
+                                <Printer className="w-5 h-5" />
+                                <span className="hidden md:inline">Imprimir</span>
                             </button>
-                        ))}
-                    </div>
+                            <button
+                                onClick={() => setStaffingModalOpen(true)}
+                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors"
+                            >
+                                <Users className="w-5 h-5" />
+                                <span className="font-medium hidden md:inline">Asignar Personal</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Tabs Navigation */}
+                <div className="flex gap-2 overflow-x-auto">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`flex items-center gap-2 px-4 py-2 border-b-2 font-medium transition-colors whitespace-nowrap ${activeTab === tab.id
+                                ? 'border-amber-600 text-amber-700 dark:text-amber-500'
+                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                                }`}
+                        >
+                            <tab.icon className="w-4 h-4" />
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
             </div>
+
 
             {/* Content Area */}
             <div className="flex-1 p-6 space-y-8 max-w-7xl mx-auto w-full">
@@ -184,6 +246,23 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                     </div>
                                 )}
 
+                                {/* Relevant Notes - Daily */}
+                                <div className="mb-6">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Clipboard className="w-5 h-5 text-purple-600" />
+                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Notas Relevantes del Día</h2>
+                                    </div>
+                                    <textarea
+                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow"
+                                        rows={3}
+                                        placeholder="Escriba notas relevantes para este día..."
+                                        value={dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || ''}
+                                        onChange={(e) => handleUpdateField('relevantNotes', e.target.value)}
+                                        onBlur={(e) => handleSaveField('relevantNotes', e.target.value)}
+                                        readOnly={readOnly}
+                                    />
+                                </div>
+
                                 <section>
                                     <div className="flex items-center gap-2 mb-4">
                                         <Activity className="w-5 h-5 text-blue-600" />
@@ -207,6 +286,32 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                     </div>
                                     <NursingClinicalSheet patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
+
+                                <section>
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Moon className="w-5 h-5 text-indigo-600" />
+                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Diario de Sueño</h2>
+                                    </div>
+                                    <SleepDiary patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
+                                </section>
+
+                                {/* Resident Condition - Daily */}
+                                <div className="mt-8 mb-4 p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800 rounded-lg">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Activity className="w-5 h-5 text-amber-600" />
+                                        <h2 className="text-lg font-bold text-gray-800 dark:text-white">Condición del Residente (Diaria)</h2>
+                                    </div>
+                                    <textarea
+                                        className="w-full p-3 border border-amber-200 dark:border-amber-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-shadow"
+                                        rows={2}
+                                        placeholder="Describa la condición general del residente hoy..."
+                                        value={dailyStaffing?.condition || selectedResident?.conditions || ''}
+                                        onChange={(e) => handleUpdateField('condition', e.target.value)}
+                                        onBlur={(e) => handleSaveField('condition', e.target.value)}
+                                        readOnly={readOnly}
+                                    />
+                                </div>
+
                             </>
                         )}
 
@@ -241,7 +346,28 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                     </>
                 )}
             </div>
-        </div>
+
+
+            {
+                selectedResidentId && (
+                    <StaffingModal
+                        isOpen={staffingModalOpen}
+                        onClose={() => setStaffingModalOpen(false)}
+                        onSave={handleSaveStaffing}
+                        initialData={dailyStaffing}
+                        residentId={selectedResidentId}
+                        date={selectedDate}
+                    />
+                )
+
+            }
+            <LogbookPrintModal
+                isOpen={printModalOpen}
+                onClose={() => setPrintModalOpen(false)}
+                residentId={selectedResidentId}
+                initialDate={selectedDate}
+            />
+        </div >
     );
 };
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Toast } from '../ui/Toast';
+import { TimeSelect } from '../ui/TimeSelect';
 import { supabase } from '../../config/supabaseClient';
 import { useAuthStore } from '../../store/authStore';
 
@@ -17,6 +18,7 @@ interface HygieneItem {
     id?: string;
     date: string;
     time: string;
+    observaciones?: string;
 }
 
 interface HygieneRow {
@@ -37,7 +39,6 @@ interface OutputItem {
     // Actually, simpler to just map UI rows to database entries if possible, 
     // but schema requires splitting types. 
     // Let's Simplify: We will just save independent records with same timestamp if needed.
-    // Ideally we'd change schema, but let's work with 'saving multiple records'.
     // Or, for the UI, let's treat "Micciones", "Evacuaciones", "Vomito" as independent lists too?
     // The UI shares "Hora" across them. This implies they happened at same time.
     // Let's store specific IDs for each column in the row.
@@ -49,13 +50,14 @@ interface OutputItem {
 
 export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ patientId, date, readOnly = false }) => {
     const { user } = useAuthStore();
+    // activeField removed
 
     // 3 Rows for Hygiene (Dynamic)
     const [hygieneRows, setHygieneRows] = useState<HygieneRow[]>(
         Array(3).fill(null).map(() => ({
-            diaper: { date: '', time: '' },
+            diaper: { date: '', time: '', observaciones: '' },
             sheets: { date: '', time: '' },
-            bath: { date: '', time: '' }
+            bath: { date: '', time: '', observaciones: '' }
         }))
     );
 
@@ -85,6 +87,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
 
     const showToast = (message: string, type: 'success' | 'error' = 'success') => {
         setToast({ message, type, visible: true });
+        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
     };
 
     const hideToast = () => {
@@ -95,6 +98,30 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
     useEffect(() => {
         if (!patientId || !date) return;
 
+        // Reset state immediately to avoid stale data
+        setHygieneRows(
+            Array(3).fill(null).map(() => ({
+                diaper: { date: '', time: '', observaciones: '' },
+                sheets: { date: '', time: '' },
+                bath: { date: '', time: '', observaciones: '' }
+            }))
+        );
+
+        setFeeding({
+            desayuno: { hora: '', descripcion: '', observaciones: '' },
+            comida: { hora: '', descripcion: '', observaciones: '' },
+            cena: { hora: '', descripcion: '', observaciones: '' },
+        });
+
+        setOutputs(Array(3).fill(null).map(() => ({
+            hora: '',
+            micciones: '', miccionesDesc: '',
+            evacuaciones: '', evacuacionesDesc: '',
+            vomito: '', vomitoDesc: ''
+        })));
+
+        let mounted = true;
+
         const fetchData = async () => {
             // 1. Fetch Care Logs (Hygiene)
             const { data: careData } = await supabase
@@ -104,26 +131,32 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                 .eq('date', date)
                 .order('performed_at', { ascending: true });
 
+            if (!mounted) return;
+
             // Always start with fresh Hygiene rows based on count
             const newHygiene: HygieneRow[] = [];
+            let dIdx = 0, sIdx = 0, bIdx = 0;
 
             if (careData && careData.length > 0) {
-                let dIdx = 0, sIdx = 0, bIdx = 0;
                 careData.forEach((log: any) => {
                     const time = log.performed_at ? new Date(log.performed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                    const item = { id: log.id, date: log.date || '', time: time };
+                    const item = { id: log.id, date: log.date || '', time: time, observaciones: log.notes || '' };
 
                     // Find first empty slot or push new
                     if (log.category === 'Diaper Change') {
-                        while (newHygiene.length <= dIdx) newHygiene.push({ diaper: { date: '', time: '' }, sheets: { date: '', time: '' }, bath: { date: '', time: '' } });
+                        while (newHygiene.length <= dIdx) newHygiene.push({ diaper: { date: '', time: '', observaciones: '' }, sheets: { date: '', time: '' }, bath: { date: '', time: '', observaciones: '' } });
                         newHygiene[dIdx++].diaper = item;
                     }
                     if (log.category === 'Sheet Change') {
-                        while (newHygiene.length <= sIdx) newHygiene.push({ diaper: { date: '', time: '' }, sheets: { date: '', time: '' }, bath: { date: '', time: '' } });
+                        while (newHygiene.length <= sIdx) newHygiene.push({ diaper: { date: '', time: '', observaciones: '' }, sheets: { date: '', time: '' }, bath: { date: '', time: '', observaciones: '' } });
                         newHygiene[sIdx++].sheets = item;
                     }
                     if (log.category === 'Bath') {
-                        while (newHygiene.length <= bIdx) newHygiene.push({ diaper: { date: '', time: '' }, sheets: { date: '', time: '' }, bath: { date: '', time: '' } });
+                        while (newHygiene.length <= bIdx) newHygiene.push({
+                            diaper: { date: '', time: '', observaciones: '' },
+                            sheets: { date: '', time: '' },
+                            bath: { date: '', time: '', observaciones: '' }
+                        });
                         newHygiene[bIdx++].bath = item;
                     }
                 });
@@ -132,11 +165,15 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
 
             // Ensure min 3 rows
             while (newHygiene.length < 3) {
-                newHygiene.push({ diaper: { date: '', time: '' }, sheets: { date: '', time: '' }, bath: { date: '', time: '' } });
+                newHygiene.push({
+                    diaper: { date: '', time: '', observaciones: '' },
+                    sheets: { date: '', time: '' },
+                    bath: { date: '', time: '', observaciones: '' }
+                });
             }
 
             // Set state regardless of data presence to ensure clearing old data
-            setHygieneRows(newHygiene);
+            if (mounted) setHygieneRows(newHygiene);
 
 
             // 2. Fetch Nutrition
@@ -145,6 +182,8 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                 .select('*')
                 .eq('resident_id', patientId)
                 .eq('date', date);
+
+            if (!mounted) return;
 
             // Start with FRESH feeding object
             const newFeeding = {
@@ -168,7 +207,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                     }
                 });
             }
-            setFeeding(newFeeding);
+            if (mounted) setFeeding(newFeeding);
 
             // 3. Fetch Elimination
             const { data: elimData } = await supabase
@@ -178,6 +217,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                 .eq('date', date)
                 .order('logged_at', { ascending: true });
 
+            if (!mounted) return;
 
             // Build groups from scratch
             const groups: { [time: string]: OutputItem } = {};
@@ -211,22 +251,27 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                 newOutputs.push({ hora: '', micciones: '', miccionesDesc: '', evacuaciones: '', evacuacionesDesc: '', vomito: '', vomitoDesc: '' });
             }
             // Always set outputs, ensuring reset if no data
-            setOutputs(newOutputs);
+            if (mounted) setOutputs(newOutputs);
         };
 
         fetchData();
+
+        return () => {
+            mounted = false;
+        };
     }, [patientId, date]);
 
 
     // Persistence Handlers
 
     // Hygiene
-    const saveHygiene = async (index: number, type: 'diaper' | 'sheets' | 'bath') => {
+    // Hygiene
+    const saveHygiene = async (index: number, type: 'diaper' | 'sheets' | 'bath', overrides?: any) => {
         const row = hygieneRows[index];
-        const item = row[type];
+        const item = { ...row[type], ...overrides };
 
         // Only save if we have at least one field? 
-        if (!item.time) return;
+        if (!item.time && !item.observaciones) return;
 
         const categoryMap = { diaper: 'Diaper Change', sheets: 'Sheet Change', bath: 'Bath' };
 
@@ -239,10 +284,11 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
             category: categoryMap[type],
             date: date, // display date
             performed_at: timestamp,
+            notes: item.observaciones || '',
             performed_by: user?.id
         };
 
-        console.log(`[NursingSheet] Saving Hygiene (${type}):`, payload);
+        console.log(`[NursingSheet] Saving Hygiene(${type}): `, payload);
 
         if (item.id) {
             const { error } = await supabase.from('care_logs').update(payload).eq('id', item.id);
@@ -253,24 +299,37 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
             if (error) {
                 showToast('Error al guardar', 'error');
             } else if (data && data[0]) {
-                const newRows = [...hygieneRows];
-                newRows[index][type].id = data[0].id;
-                setHygieneRows(newRows);
+                setHygieneRows(prev => {
+                    const newRows = [...prev];
+                    newRows[index] = { ...newRows[index] };
+                    newRows[index][type] = { ...newRows[index][type], id: data[0].id };
+                    return newRows;
+                });
                 showToast('Guardado');
             }
         }
     };
 
-    const handleHygieneChange = (index: number, type: 'diaper' | 'sheets' | 'bath', field: 'date' | 'time', value: string) => {
-        const newRows = [...hygieneRows];
-        newRows[index][type][field] = value;
-        setHygieneRows(newRows);
+    const handleHygieneChange = (index: number, type: 'diaper' | 'sheets' | 'bath', field: 'date' | 'time' | 'observaciones', value: string) => {
+        setHygieneRows(prev => {
+            const newRows = [...prev];
+            // Create a shallow copy of the row object we are modifying
+            newRows[index] = { ...newRows[index] };
+            // Create a shallow copy of the specific item (diaper/sheets/bath)
+            newRows[index][type] = { ...newRows[index][type], [field]: value };
+            return newRows;
+        });
     };
 
     // Feeding
-    const saveFeeding = async (meal: string) => {
-        const item = feeding[meal as keyof typeof feeding];
+    // Feeding
+    const saveFeeding = async (meal: string, overrides?: any) => {
+        const currentItem = feeding[meal as keyof typeof feeding];
+        const item = { ...currentItem, ...overrides };
         const mealMap = { desayuno: 'Breakfast', comida: 'Lunch', cena: 'Dinner' };
+
+        // If no data, don't save empty records?
+        // if (!item.hora && !item.descripcion) return; 
 
         const timestamp = item.hora ? `${date}T${item.hora}:00` : new Date().toISOString();
 
@@ -284,32 +343,49 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
             logged_by: user?.id
         };
 
-        console.log(`[NursingSheet] Saving Feeding (${meal}):`, payload);
+        console.log(`[NursingSheet] Saving Feeding(${meal}): `, payload);
 
         try {
-            const { data, error } = await supabase
+            // First check if a record already exists for this resident+date+meal
+            const { data: existingData } = await supabase
                 .from('nutrition_logs')
-                .upsert({
-                    ...payload,
-                    id: item.id // Include ID if it exists, otherwise undefined is fine for upsert if we rely on constraints? 
-                    // Actually, for upsert to work on constraint, we shouldn't pass ID if we want it to find by constraint, 
-                    // OR we pass ID if we have it. 
-                    // Better: Upsert by the unique constraint columns.
-                }, {
-                    onConflict: 'resident_id,date,meal_type'
-                })
-                .select()
-                .single();
+                .select('id')
+                .eq('resident_id', patientId)
+                .eq('date', date)
+                .eq('meal_type', payload.meal_type)
+                .maybeSingle();
 
-            if (error) throw error;
+            let savedId = item.id;
 
-            if (data) {
+            if (existingData) {
+                // UPDATE
+                const { error } = await supabase
+                    .from('nutrition_logs')
+                    .update(payload)
+                    .eq('id', existingData.id);
+
+                if (error) throw error;
+                savedId = existingData.id;
+            } else {
+                // INSERT
+                const { data: inserted, error } = await supabase
+                    .from('nutrition_logs')
+                    .insert(payload)
+                    .select()
+                    .single();
+
+                if (error) throw error;
+                savedId = inserted.id;
+            }
+
+            if (savedId) {
                 setFeeding(prev => ({
                     ...prev,
-                    [meal]: { ...prev[meal as keyof typeof prev], id: data.id }
+                    [meal]: { ...prev[meal as keyof typeof feeding], id: savedId }
                 }));
-                showToast('Guardado');
             }
+
+            showToast('Nutrición guardada');
         } catch (error) {
             console.error('Error saving nutrition:', error);
             showToast('Error al guardar', 'error');
@@ -324,11 +400,14 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
     };
 
     // Output
-    const saveOutput = async (index: number, type: 'micciones' | 'evacuaciones' | 'vomito') => {
-        const row = outputs[index];
+    // Output
+    const saveOutput = async (index: number, type: 'micciones' | 'evacuaciones' | 'vomito', overrides?: any) => {
+        const currentRow = outputs[index];
+        const row = { ...currentRow, ...overrides };
+
         // We trigger save on any change? or specific logic?
         // Let's create specific records.
-        if (!row[type] && !row[`${type}Desc` as keyof OutputItem]) return;
+        if (!row[type] && !row[`${type} Desc` as keyof OutputItem]) return;
 
         const typeMap = { micciones: 'Urination', evacuaciones: 'Bowel Movement', vomito: 'Vomit' };
 
@@ -339,13 +418,13 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
             type: typeMap[type],
             date: date,
             logged_at: timestamp,
-            characteristics: row[`${type}Desc` as keyof OutputItem] as string,
+            characteristics: row[`${type} Desc` as keyof OutputItem] as string,
             logged_by: user?.id
         };
 
-        console.log(`[NursingSheet] Saving Output (${type}):`, payload);
+        console.log(`[NursingSheet] Saving Output(${type}): `, payload);
 
-        const idField = `${type}Id` as keyof OutputItem;
+        const idField = `${type} Id` as keyof OutputItem;
         const existingId = row[idField];
 
         if (existingId) {
@@ -366,16 +445,18 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
     };
 
     const handleOutputChange = (index: number, field: string, value: string) => {
-        const newOutputs = [...outputs];
-        (newOutputs[index] as any)[field] = value;
-        setOutputs(newOutputs);
+        setOutputs(prev => {
+            const newOutputs = [...prev];
+            newOutputs[index] = { ...newOutputs[index], [field]: value };
+            return newOutputs;
+        });
     };
 
     const addHygieneRow = () => {
         setHygieneRows(prev => [...prev, {
-            diaper: { date: '', time: '' },
+            diaper: { date: '', time: '', observaciones: '' },
             sheets: { date: '', time: '' },
-            bath: { date: '', time: '' }
+            bath: { date: '', time: '', observaciones: '' }
         }]);
     };
 
@@ -397,42 +478,80 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                     <table className="w-full min-w-[600px] text-sm border-collapse">
                         <thead>
                             <tr className="bg-gray-100 text-gray-700 uppercase">
-                                <th className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold">Cambio de Pañal</th>
-                                <th className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold">Cambio de Sábanas</th>
-                                <th className="border-b border-gray-300 px-2 py-1 text-center font-bold">Baño</th>
+                                <th colSpan={2} className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold">Cambio de Pañal</th>
+                                <th colSpan={2} className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold">Baño</th>
+                                <th className="border-b border-gray-300 px-2 py-1 text-center font-bold">Cambio de Sábanas</th>
                             </tr>
                             <tr className="bg-gray-50 text-gray-600 uppercase text-xs">
                                 <th className="border-r border-b border-gray-300 px-2 py-1 w-24">Hora</th>
+                                <th className="border-r border-b border-gray-300 px-2 py-1">Observación</th>
                                 <th className="border-r border-b border-gray-300 px-2 py-1 w-24">Hora</th>
+                                <th className="border-r border-b border-gray-300 px-2 py-1">Observación</th>
                                 <th className="border-b border-gray-300 px-2 py-1 w-24">Hora</th>
                             </tr>
                         </thead>
                         <tbody>
                             {hygieneRows.map((row, index) => (
-                                <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                                <tr key={index} className={`hover: bg - blue - 50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} `}>
                                     {/* Diaper */}
-                                    <td className="border-r border-b border-gray-300 p-0">
-                                        <input type="time" className="w-full h-10 border-none p-2 text-base md:text-sm focus:ring-0 bg-transparent text-center"
+                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                        <TimeSelect
                                             value={row.diaper.time}
+                                            onChange={(e) => {
+                                                handleHygieneChange(index, 'diaper', 'time', e.target.value);
+                                                saveHygiene(index, 'diaper', { time: e.target.value });
+                                            }}
                                             disabled={readOnly}
-                                            onChange={(e) => handleHygieneChange(index, 'diaper', 'time', e.target.value)}
-                                            onBlur={() => saveHygiene(index, 'diaper')} />
+                                            className="text-center p-2 text-base md:text-sm h-full"
+                                        />
                                     </td>
-                                    {/* Sheets */}
-                                    <td className="border-r border-b border-gray-300 p-0">
-                                        <input type="time" className="w-full h-10 border-none p-2 text-base md:text-sm focus:ring-0 bg-transparent text-center"
-                                            value={row.sheets.time}
+                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                        <input
+                                            type="text"
+                                            value={row.diaper.observaciones || ''}
+                                            onChange={(e) => handleHygieneChange(index, 'diaper', 'observaciones', e.target.value)}
+                                            onBlur={() => saveHygiene(index, 'diaper')}
+                                            onKeyDown={(e) => e.key === 'Enter' && saveHygiene(index, 'diaper')}
                                             disabled={readOnly}
-                                            onChange={(e) => handleHygieneChange(index, 'sheets', 'time', e.target.value)}
-                                            onBlur={() => saveHygiene(index, 'sheets')} />
+                                            className="w-full h-full p-2 text-base md:text-sm bg-transparent border-none focus:ring-0"
+                                            placeholder="Notas..."
+                                        />
                                     </td>
                                     {/* Bath */}
-                                    <td className="border-b border-gray-300 p-0">
-                                        <input type="time" className="w-full h-10 border-none p-2 text-base md:text-sm focus:ring-0 bg-transparent text-center"
+                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                        <TimeSelect
                                             value={row.bath.time}
+                                            onChange={(e) => {
+                                                handleHygieneChange(index, 'bath', 'time', e.target.value);
+                                                saveHygiene(index, 'bath', { time: e.target.value });
+                                            }}
                                             disabled={readOnly}
-                                            onChange={(e) => handleHygieneChange(index, 'bath', 'time', e.target.value)}
-                                            onBlur={() => saveHygiene(index, 'bath')} />
+                                            className="text-center p-2 text-base md:text-sm h-full"
+                                        />
+                                    </td>
+                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                        <input
+                                            type="text"
+                                            value={row.bath.observaciones || ''}
+                                            onChange={(e) => handleHygieneChange(index, 'bath', 'observaciones', e.target.value)}
+                                            onBlur={() => saveHygiene(index, 'bath')}
+                                            onKeyDown={(e) => e.key === 'Enter' && saveHygiene(index, 'bath')}
+                                            disabled={readOnly}
+                                            className="w-full h-full p-2 text-base md:text-sm bg-transparent border-none focus:ring-0"
+                                            placeholder="Notas..."
+                                        />
+                                    </td>
+                                    {/* Sheets */}
+                                    <td className="border-b border-gray-300 p-0 h-10">
+                                        <TimeSelect
+                                            value={row.sheets.time}
+                                            onChange={(e) => {
+                                                handleHygieneChange(index, 'sheets', 'time', e.target.value);
+                                                saveHygiene(index, 'sheets', { time: e.target.value });
+                                            }}
+                                            disabled={readOnly}
+                                            className="text-center p-2 text-base md:text-sm h-full"
+                                        />
                                     </td>
                                 </tr>
                             ))}
@@ -477,14 +596,15 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                         <td className="border-r border-b border-gray-300 px-3 py-2 font-bold text-gray-700 uppercase bg-gray-50">
                                             {meal}
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input
-                                                type="time"
-                                                className="w-full h-full min-h-[40px] p-2 text-base md:text-sm border-none focus:ring-0 bg-transparent text-center"
+                                        <td className="border-r border-b border-gray-300 p-0 h-10">
+                                            <TimeSelect
                                                 value={feeding[meal].hora}
+                                                onChange={(e) => {
+                                                    handleFeedingChange(meal as any, 'hora', e.target.value);
+                                                    saveFeeding(meal, { hora: e.target.value });
+                                                }}
                                                 disabled={readOnly}
-                                                onChange={(e) => handleFeedingChange(meal as any, 'hora', e.target.value)}
-                                                onBlur={() => saveFeeding(meal)}
+                                                className="text-center p-2 text-base md:text-sm h-full"
                                             />
                                         </td>
                                         <td className="border-r border-b border-gray-300 p-0">
@@ -496,6 +616,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 disabled={readOnly}
                                                 onChange={(e) => handleFeedingChange(meal as any, 'descripcion', e.target.value)}
                                                 onBlur={() => saveFeeding(meal)}
+                                                onKeyDown={(e) => e.key === 'Enter' && saveFeeding(meal)}
                                             />
                                         </td>
                                         <td className="border-b border-gray-300 p-0">
@@ -507,6 +628,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 disabled={readOnly}
                                                 onChange={(e) => handleFeedingChange(meal as any, 'observaciones', e.target.value)}
                                                 onBlur={() => saveFeeding(meal)}
+                                                onKeyDown={(e) => e.key === 'Enter' && saveFeeding(meal)}
                                             />
                                         </td>
                                     </tr>
@@ -538,59 +660,93 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                             </thead>
                             <tbody>
                                 {outputs.map((row, index) => (
-                                    <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="time" className="w-full h-10 p-1 text-base md:text-sm text-center border-none bg-transparent"
+                                    <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} `}>
+                                        <td className="border-r border-b border-gray-300 p-0 h-10">
+                                            <TimeSelect
                                                 value={row.hora}
+                                                onChange={(e) => {
+                                                    handleOutputChange(index, 'hora', e.target.value);
+                                                    saveOutput(index, 'vomito', { hora: e.target.value }); // Saving one type saves the row time for all effectively if we save all
+                                                    // Wait, we save them individually. So changing Time should probably update all 3 if they exist?
+                                                    // For MVP let's just save one or assume users fill data then time.
+                                                    // Actually, if we change time, we might want to update the timestamp for all existing records in this row.
+                                                    // But simplified: Just saving 'micciones' or 'evacuaciones' with new time is implicit if we trigger save there.
+                                                    // Users normally select time then data.
+                                                    // If we want Immediate Save on Time, we need to know WHICH record to update.
+                                                    // We can update all 3.
+                                                    // But let's stick to saving logic: If I change time, update state. If I change data, it saves with current time.
+                                                    // If I change time AFTER data, I should update the DB records.
+                                                    // Updating all 3 here:
+                                                    if (row.micciones) saveOutput(index, 'micciones', { hora: e.target.value });
+                                                    if (row.evacuaciones) saveOutput(index, 'evacuaciones', { hora: e.target.value });
+                                                    if (row.vomito) saveOutput(index, 'vomito', { hora: e.target.value });
+                                                }}
                                                 disabled={readOnly}
-                                                onChange={(e) => handleOutputChange(index, 'hora', e.target.value)}
-                                            // Saving entire row vs individual? 
-                                            // Trigger saves on all components if we change time? 
-                                            // For now, let's just assume time is saved when other fields are saved.
+                                                className="text-center p-1 text-base md:text-sm h-full"
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-10 p-1 text-base md:text-sm text-center border-none bg-transparent"
-                                                placeholder={readOnly ? "" : "✓"}
+                                        <td className="border-r border-b border-gray-300 p-0 text-center">
+                                            <select
                                                 value={row.micciones}
+                                                onChange={(e) => {
+                                                    handleOutputChange(index, 'micciones', e.target.value);
+                                                    saveOutput(index, 'micciones', { micciones: e.target.value });
+                                                }}
                                                 disabled={readOnly}
-                                                onChange={(e) => handleOutputChange(index, 'micciones', e.target.value)}
-                                                onBlur={() => saveOutput(index, 'micciones')}
-                                            />
+                                                className="w-full h-10 p-1 text-base md:text-sm text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer"
+                                            >
+                                                <option value="" disabled></option>
+                                                <option value="✓">✓</option>
+                                                <option value="-">-</option>
+                                            </select>
                                         </td>
                                         <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent"
+                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent focus:ring-0"
                                                 value={row.miccionesDesc}
                                                 disabled={readOnly}
                                                 onChange={(e) => handleOutputChange(index, 'miccionesDesc', e.target.value)}
                                                 onBlur={() => saveOutput(index, 'micciones')}
+                                                onKeyDown={(e) => e.key === 'Enter' && saveOutput(index, 'micciones')}
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 text-center border-none bg-transparent"
-                                                placeholder={readOnly ? "" : "✓"}
+                                        <td className="border-r border-b border-gray-300 p-0 text-center">
+                                            <select
                                                 value={row.evacuaciones}
+                                                onChange={(e) => {
+                                                    handleOutputChange(index, 'evacuaciones', e.target.value);
+                                                    saveOutput(index, 'evacuaciones', { evacuaciones: e.target.value });
+                                                }}
                                                 disabled={readOnly}
-                                                onChange={(e) => handleOutputChange(index, 'evacuaciones', e.target.value)}
-                                                onBlur={() => saveOutput(index, 'evacuaciones')}
-                                            />
+                                                className="w-full h-full p-1 text-base md:text-sm text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer"
+                                            >
+                                                <option value="" disabled></option>
+                                                <option value="✓">✓</option>
+                                                <option value="-">-</option>
+                                            </select>
                                         </td>
                                         <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent"
+                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent focus:ring-0"
                                                 value={row.evacuacionesDesc}
                                                 disabled={readOnly}
                                                 onChange={(e) => handleOutputChange(index, 'evacuacionesDesc', e.target.value)}
                                                 onBlur={() => saveOutput(index, 'evacuaciones')}
+                                                onKeyDown={(e) => e.key === 'Enter' && saveOutput(index, 'evacuaciones')}
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 text-center border-none bg-transparent"
-                                                placeholder={readOnly ? "" : "✓"}
+                                        <td className="border-r border-b border-gray-300 p-0 text-center">
+                                            <select
                                                 value={row.vomito}
+                                                onChange={(e) => {
+                                                    handleOutputChange(index, 'vomito', e.target.value);
+                                                    saveOutput(index, 'vomito', { vomito: e.target.value });
+                                                }}
                                                 disabled={readOnly}
-                                                onChange={(e) => handleOutputChange(index, 'vomito', e.target.value)}
-                                                onBlur={() => saveOutput(index, 'vomito')}
-                                            />
+                                                className="w-full h-full p-1 text-base md:text-sm text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer"
+                                            >
+                                                <option value="" disabled></option>
+                                                <option value="✓">✓</option>
+                                                <option value="-">-</option>
+                                            </select>
                                         </td>
                                         <td className="border-b border-gray-300 p-0">
                                             <input type="text" className="w-full h-full p-1 border-none bg-transparent"
@@ -598,6 +754,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 disabled={readOnly}
                                                 onChange={(e) => handleOutputChange(index, 'vomitoDesc', e.target.value)}
                                                 onBlur={() => saveOutput(index, 'vomito')}
+                                                onKeyDown={(e) => e.key === 'Enter' && saveOutput(index, 'vomito')}
                                             />
                                         </td>
                                     </tr>

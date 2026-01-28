@@ -14,19 +14,22 @@ export const MedicationSection: React.FC<Props> = ({ residentId, date }) => {
 
     useEffect(() => {
         if (residentId && date) {
-            loadData();
+            setMedications([]); // Clear previous data
+            let mounted = true;
+            loadData(mounted);
+            return () => { mounted = false; };
         }
     }, [residentId, date]);
 
-    const loadData = async () => {
+    const loadData = async (mounted: boolean) => {
         try {
             setLoading(true);
             const data = await medicalService.getDailyMedications(residentId, date);
-            setMedications(data || []);
+            if (mounted) setMedications(data || []);
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading(false);
+            if (mounted) setLoading(false);
         }
     };
 
@@ -44,33 +47,44 @@ export const MedicationSection: React.FC<Props> = ({ residentId, date }) => {
                     No hay medicamentos registrados en la hoja diaria para esta fecha.
                 </div>
             ) : (
-                <div className="space-y-3">
-                    {medications.map(med => (
-                        <div key={med.id} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-blue-200 transition-colors">
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-bold text-gray-900 dark:text-white text-lg">
+                <div className="overflow-x-auto">
+                    <table className="w-full min-w-[600px] text-sm border-collapse">
+                        <thead>
+                            <tr className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase">
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-left">Medicamento</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">Dosis</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-32">Vía</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">Hora</th>
+                                <th className="border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-left">Observación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {medications.map((med, index) => (
+                                <tr key={med.id} className={`hover:bg-blue-50 dark:hover:bg-blue-900/10 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-800/50'}`}>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-900 dark:text-gray-200 font-medium">
                                         {med.medicamento}
-                                    </span>
-                                    {med.hora && (
-                                        <span className="text-xs font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                            <Clock className="w-3 h-3" />
-                                            {med.hora}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="text-sm text-gray-600 dark:text-gray-300 flex flex-wrap gap-x-4 gap-y-1">
-                                    {med.dosis && <span><strong>Dosis:</strong> {med.dosis}</span>}
-                                    {med.via && <span><strong>Vía:</strong> {med.via}</span>}
-                                </div>
-                                {med.observacion && (
-                                    <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic bg-white dark:bg-gray-800 p-2 rounded border border-gray-100 dark:border-gray-700/50">
-                                        Note: {med.observacion}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                                    </td>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
+                                        {med.dosis || '-'}
+                                    </td>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
+                                        {med.via || '-'}
+                                    </td>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                        {med.hora && (
+                                            <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                <Clock className="w-3 h-3" />
+                                                {med.hora}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className="border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-600 dark:text-gray-400 italic">
+                                        {med.observacion || '-'}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
         </Card>

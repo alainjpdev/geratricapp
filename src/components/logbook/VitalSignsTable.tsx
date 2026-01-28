@@ -29,13 +29,12 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
         glucose: 100
     });
 
-    useEffect(() => {
-        if (residentId) loadVitals();
-    }, [residentId, date]);
-
-    const loadVitals = async () => {
+    const loadVitals = async (mounted: boolean) => {
         try {
             const data = await medicalService.getVitalsByResident(residentId, date);
+
+            if (!mounted) return;
+
             // Sort by time ascending (early to late)
             // If v.time exists (HH:mm), sort by it. Else fallback to recordedAt.
             const sortedData = [...data].sort((a, b) => {
@@ -47,6 +46,26 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
             console.error('Error loading vitals', error);
         }
     };
+
+    useEffect(() => {
+        if (residentId) {
+            // Reset state immediately
+            setVitals([]);
+            setNewVital({
+                bloodPressureSystolic: 120,
+                bloodPressureDiastolic: 80,
+                heartRate: 75,
+                temperature: 36.5,
+                oxygenSaturation: 98,
+                glucose: 100
+            });
+            setShowForm(false);
+
+            let mounted = true;
+            loadVitals(mounted);
+            return () => { mounted = false; };
+        }
+    }, [residentId, date]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,7 +83,7 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
                 dxtx: newVital.glucose,
                 notes: newVital.notes
             });
-            loadVitals();
+            loadVitals(true);
             setShowForm(false);
         } catch (error) {
             alert('Error al registrar signos vitales');

@@ -13,9 +13,10 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       login: async (email: string, password: string) => {
-        console.log('Intentando login con tabla users', email);
+        const normalizedEmail = email.toLowerCase();
+        console.log('Intentando login con tabla users', normalizedEmail);
         try {
-          const { user: userData, token } = await loginWithUsersTable(email, password);
+          const { user: userData, token } = await loginWithUsersTable(normalizedEmail, password);
 
           set({
             user: userData,
