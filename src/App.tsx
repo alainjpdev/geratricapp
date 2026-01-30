@@ -106,7 +106,7 @@ const App: React.FC = () => {
           {/* Rutas públicas */}
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          {/* <Route path="/register" element={<Register />} /> */}
 
 
           {/* Rutas de prueba */}
@@ -158,7 +158,7 @@ const App: React.FC = () => {
 
 
 
-            {/* Rutas GeriatricApp - Nuevos Módulos */}
+            {/* Rutas GeriApp - Nuevos Módulos */}
             <Route path="residents" element={<ResidentsDirectory />} />
             <Route path="residents/:id" element={<ResidentProfile />} />
             <Route path="admissions" element={<PlaceholderPage />} />

@@ -98,7 +98,7 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
             </div>
             {!collapsed && (
               <span className="text-xl font-bold text-slate-800 tracking-tight whitespace-nowrap overflow-hidden">
-                GeriatricApp
+                GeriApp
               </span>
             )}
           </div>

@@ -360,7 +360,7 @@ body:not(.dark) a:hover {
   height: 100%;
 }
 
-/* Scrollbar personalizado - oscuro - GeriatricApp */
+/* Scrollbar personalizado - oscuro - GeriApp */
 .dark ::-webkit-scrollbar {
   width: 6px;
 }
@@ -371,13 +371,13 @@ body:not(.dark) a:hover {
 
 .dark ::-webkit-scrollbar-thumb {
   background: #4B8B3B;
-  /* Verde medio GeriatricApp */
+  /* Verde medio GeriApp */
   border-radius: 3px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #3F6E2B;
-  /* Verde oscuro GeriatricApp */
+  /* Verde oscuro GeriApp */
 }
 
 /* Scrollbar personalizado - claro */
@@ -398,8 +398,8 @@ body:not(.dark) a:hover {
   background: #9ca3af;
 }
 
-/* Estilos para GeriatricApp Landing */
-/* Colores del logo GeriatricApp */
+/* Estilos para GeriApp Landing */
+/* Colores del logo GeriApp */
 .text-brand-brown {
   color: #6A3A1E;
 }

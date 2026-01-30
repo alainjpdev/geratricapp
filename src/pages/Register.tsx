@@ -41,7 +41,7 @@ export const Register = () => {
               <Heart className="h-8 w-8 text-sky-500" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight mb-2">GeriatricApp</h2>
+          <h2 className="text-3xl font-bold text-slate-800 tracking-tight mb-2">GeriApp</h2>
           <p className="text-slate-600 text-lg font-medium">Crea tu cuenta</p>
         </div>
 

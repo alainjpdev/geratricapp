@@ -60,7 +60,7 @@ export const Landing: React.FC = () => {
               <div className="bg-sky-100 p-2 rounded-full">
                 <Heart className="h-6 w-6 text-sky-500" />
               </div>
-              <span className="text-2xl font-bold text-slate-800 tracking-tight">GeriatricApp</span>
+              <span className="text-2xl font-bold text-slate-800 tracking-tight">GeriApp</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link
@@ -68,11 +68,6 @@ export const Landing: React.FC = () => {
                 className="text-slate-600 hover:text-sky-500 transition-colors font-medium"
               >
                 Iniciar Sesión
-              </Link>
-              <Link to="/register" className="hidden sm:inline-block">
-                <Button variant="primary" size="sm" className="bg-sky-500 text-white hover:bg-sky-600 border-transparent shadow-md hover:shadow-lg transition-all">
-                  Registrarse
-                </Button>
               </Link>
             </div>
           </div>
@@ -87,7 +82,7 @@ export const Landing: React.FC = () => {
               Bienvenidos a su nuevo hogar
             </div>
             <h1 className="text-5xl md:text-6xl font-extrabold text-slate-800 mb-6 leading-tight tracking-tight">
-              GeriatricApp <br />
+              GeriApp <br />
               <span className="text-sky-500">Cuidado y Amor</span>
             </h1>
             <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
@@ -153,7 +148,7 @@ export const Landing: React.FC = () => {
                 Un Hogar Lleno de Vida
               </h2>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                En GeriatricApp, creamos un ambiente donde nuestros residentes no solo son cuidados, sino que prosperan. Valoramos su independencia, dignidad y felicidad.
+                En GeriApp, creamos un ambiente donde nuestros residentes no solo son cuidados, sino que prosperan. Valoramos su independencia, dignidad y felicidad.
               </p>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
                 Cada espacio ha sido diseñado pensando en la seguridad y comodidad, permitiendo que cada día sea una nueva oportunidad para disfrutar.
@@ -196,7 +191,7 @@ export const Landing: React.FC = () => {
                     {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-4 h-4 fill-current" />)}
                   </div>
                 </div>
-                <p className="text-slate-700 italic text-sm mb-3">"Gracias a GeriatricApp, mi madre ha vuelto a sonreír. El personal es increíble."</p>
+                <p className="text-slate-700 italic text-sm mb-3">"Gracias a GeriApp, mi madre ha vuelto a sonreír. El personal es increíble."</p>
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-sky-200 rounded-full flex items-center justify-center text-sky-700 font-bold text-xs mr-2">MA</div>
                   <p className="text-slate-900 font-bold text-xs">María Álvarez</p>
@@ -266,11 +261,11 @@ export const Landing: React.FC = () => {
                 Contactar Ahora
               </Button>
             </a>
-            <Link to="/register">
+            {/* <Link to="/register">
               <Button variant="outline" size="lg" className="bg-sky-600/30 text-white border-white/30 hover:bg-sky-600/50 hover:border-white font-semibold px-8 py-3 text-lg rounded-full backdrop-blur-sm">
                 Registrarse
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>
@@ -284,7 +279,7 @@ export const Landing: React.FC = () => {
                 <div className="bg-slate-800 p-2 rounded-full">
                   <Heart className="h-5 w-5 text-sky-400" />
                 </div>
-                <span className="text-xl font-bold tracking-wider text-white">GeriatricApp</span>
+                <span className="text-xl font-bold tracking-wider text-white">GeriApp</span>
               </div>
               <p className="text-slate-400 leading-relaxed mb-6 text-sm">
                 Comprometidos con el bienestar y la dignidad de nuestros adultos mayores, brindando cuidados de excelencia.
@@ -324,14 +319,14 @@ export const Landing: React.FC = () => {
                 </li>
                 <li className="flex items-center">
                   <Mail className="w-5 h-5 mr-3 text-sky-500" />
-                  <span>contacto@geriatricapp.com</span>
+                  <span>contacto@geriapp.com</span>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-slate-800 mt-12 pt-8 text-center text-slate-500 text-xs">
-            <p>&copy; {new Date().getFullYear()} GeriatricApp. Todos los derechos reservados.</p>
+            <p>&copy; {new Date().getFullYear()} GeriApp. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

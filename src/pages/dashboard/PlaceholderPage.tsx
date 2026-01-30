@@ -22,7 +22,7 @@ export const PlaceholderPage: React.FC = () => {
                     {title}
                 </h1>
                 <p className="text-gray-500 dark:text-gray-400 mt-1">
-                    GeriatricApp Module
+                    GeriApp Module
                 </p>
             </div>
 
@@ -48,6 +48,6 @@ export const PlaceholderPage: React.FC = () => {
                     </ul>
                 </div>
             </Card>
-        </div>
+        </div >
     );
 };

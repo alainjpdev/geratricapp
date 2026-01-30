@@ -44,7 +44,7 @@ export const Login = () => {
             <Heart className="h-8 w-8 text-sky-500" />
           </div>
         </div>
-        <h2 className="text-3xl font-bold text-slate-800 tracking-tight mb-2">GeriatricApp</h2>
+        <h2 className="text-3xl font-bold text-slate-800 tracking-tight mb-2">GeriApp</h2>
         <p className="text-slate-600 text-lg font-medium">Ingresa a tu cuenta</p>
       </div>
 
@@ -97,12 +97,12 @@ export const Login = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+          {/* <p className="text-gray-600 text-sm">
             ¿No tienes cuenta?{' '}
             <Link to="/register" className="text-sky-600 hover:text-sky-700 font-medium underline">
               Regístrate aquí
             </Link>
-          </p>
+          </p> */}
         </div>
 
         <div className="mt-4 text-center">
