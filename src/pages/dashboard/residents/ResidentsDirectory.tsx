@@ -39,10 +39,13 @@ const ResidentsDirectory: React.FC = () => {
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Directorio de Residentes</h1>
                     <p className="text-gray-500 dark:text-gray-400">Gestión de adultos mayores en la residencia</p>
                 </div>
-                <Button className="flex items-center gap-2">
+                <Link
+                    to="/dashboard?tab=residents"
+                    className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm"
+                >
                     <Plus className="w-4 h-4" />
                     Nuevo Residente
-                </Button>
+                </Link>
             </div>
 
             <div className="mb-6 relative">

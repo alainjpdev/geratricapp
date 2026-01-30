@@ -7,7 +7,7 @@ export interface Resident {
     lastName: string;
     dateOfBirth: string; // ISO string date
     roomNumber?: string;
-    status: 'Active' | 'Hospitalized' | 'Deceased';
+    status: 'Active' | 'Hospitalized' | 'Deceased' | 'Archived';
     emergencyContact?: {
         name: string;
         phone: string;
@@ -27,6 +27,7 @@ export const residentService = {
         const { data, error } = await supabase
             .from('residents')
             .select('*')
+            .neq('status', 'Archived')
             .order('last_name', { ascending: true });
 
         if (error) {
@@ -135,7 +136,7 @@ export const residentService = {
     async deleteResident(id: string) {
         const { error } = await supabase
             .from('residents')
-            .delete()
+            .update({ status: 'Archived' })
             .eq('id', id);
 
         if (error) {

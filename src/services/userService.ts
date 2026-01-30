@@ -270,3 +270,25 @@ export const updateUser = async (userId: string, updates: Partial<CreateUserData
   }
 };
 
+export const deleteUser = async (userId: string) => {
+  try {
+    console.log(`🗑️ Attempting to soft delete user: ${userId}`);
+    // Soft delete: mark as inactive
+    const { data, error } = await supabase
+      .from('users')
+      .update({ is_active: false })
+      .eq('id', userId)
+      .select();
+
+    if (error) {
+      console.error('❌ Supabase error in deleteUser:', error);
+      throw error;
+    }
+
+    console.log('✅ User successfully marked as inactive in Supabase:', data);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
+};
+

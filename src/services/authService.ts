@@ -35,7 +35,7 @@ export const loginWithUsersTable = async (email: string, password: string): Prom
       .from('users')
       .select('id, email, first_name, last_name, role, avatar, password_hash, is_active, grupo_asignado')
       .eq('email', email)
-      .single();
+      .maybeSingle();
 
     if (userError || !dbUser) {
       throw new Error('Usuario no encontrado o credenciales incorrectas');
@@ -102,7 +102,7 @@ export const getUserFromTable = async (userId: string): Promise<User | null> => 
       .from('users')
       .select('id, email, first_name, last_name, role, avatar, is_active, grupo_asignado')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
     if (error || !dbUser) {
       return null;
