@@ -26,7 +26,9 @@ function ReloadPrompt() {
         setNeedRefresh(false);
     };
 
-    if (!offlineReady && !needRefresh) return null;
+    // Only show prompt if a refresh is needed (new version available)
+    // We suppress the "offline ready" message as per user request
+    if (!needRefresh) return null;
 
     return (
         <div className="fixed bottom-0 right-0 m-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg z-50 flex flex-col gap-2 max-w-sm">
