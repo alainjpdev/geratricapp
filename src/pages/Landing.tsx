@@ -315,7 +315,7 @@ export const Landing: React.FC = () => {
                 </li>
                 <li className="flex items-center">
                   <Phone className="w-5 h-5 mr-3 text-sky-500" />
-                  <span>+52 55 1234 5678</span>
+                  <span>9841979469</span>
                 </li>
                 <li className="flex items-center">
                   <Mail className="w-5 h-5 mr-3 text-sky-500" />
