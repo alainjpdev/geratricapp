@@ -128,3 +128,18 @@ export interface CreateQuotationData {
   validUntil?: string;
   items: QuotationItem[];
 }
+
+export interface Medication {
+  id: string;
+  residentId: string;
+  date: string;
+  medicamento: string;
+  dosis: string;
+  via: string;
+  observacion: string;
+  dose1Time?: string;
+  dose2Time?: string;
+  dose3Time?: string;
+  dose4Time?: string;
+  recordedBy?: string;
+}

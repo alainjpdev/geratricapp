@@ -53,36 +53,73 @@ export const MedicationSection: React.FC<Props> = ({ residentId, date }) => {
                             <tr className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase">
                                 <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-left">Medicamento</th>
                                 <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">Dosis</th>
-                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-32">Vía</th>
-                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">Hora</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">Vía</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">1ª Dosis</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">2ª Dosis</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">3ª Dosis</th>
                                 <th className="border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-left">Observación</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {medications.map((med, index) => (
-                                <tr key={med.id} className={`hover:bg-blue-50 dark:hover:bg-blue-900/10 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-800/50'}`}>
-                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-900 dark:text-gray-200 font-medium">
-                                        {med.medicamento}
-                                    </td>
-                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
-                                        {med.dosis || '-'}
-                                    </td>
-                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
-                                        {med.via || '-'}
-                                    </td>
-                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
-                                        {med.hora && (
-                                            <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
-                                                <Clock className="w-3 h-3" />
-                                                {med.hora}
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-600 dark:text-gray-400 italic">
-                                        {med.observacion || '-'}
-                                    </td>
-                                </tr>
-                            ))}
+                            {Object.values(medications.reduce((acc, med) => {
+                                if (!acc[med.medicamento]) {
+                                    acc[med.medicamento] = {
+                                        common: med,
+                                        doses: []
+                                    };
+                                }
+                                acc[med.medicamento].doses.push(med);
+                                return acc;
+                            }, {} as Record<string, { common: DailyMedication, doses: DailyMedication[] }>))
+                                .map((group, index) => {
+                                    // Sort doses by time
+                                    const sortedDoses = group.doses.sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
+                                    const med = group.common;
+
+                                    return (
+                                        <tr key={index} className={`hover:bg-blue-50 dark:hover:bg-blue-900/10 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-800/50'}`}>
+                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-900 dark:text-gray-200 font-medium">
+                                                {med.medicamento}
+                                            </td>
+                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
+                                                {med.dosis || '-'}
+                                            </td>
+                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
+                                                {med.via || '-'}
+                                            </td>
+                                            {/* 1st Dose */}
+                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                                {sortedDoses[0]?.hora ? (
+                                                    <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                        <Clock className="w-3 h-3" />
+                                                        {sortedDoses[0].hora}
+                                                    </span>
+                                                ) : '-'}
+                                            </td>
+                                            {/* 2nd Dose */}
+                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                                {sortedDoses[1]?.hora ? (
+                                                    <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                        <Clock className="w-3 h-3" />
+                                                        {sortedDoses[1].hora}
+                                                    </span>
+                                                ) : '-'}
+                                            </td>
+                                            {/* 3rd Dose */}
+                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                                {sortedDoses[2]?.hora ? (
+                                                    <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                        <Clock className="w-3 h-3" />
+                                                        {sortedDoses[2].hora}
+                                                    </span>
+                                                ) : '-'}
+                                            </td>
+                                            <td className="border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-600 dark:text-gray-400 italic">
+                                                {med.observacion || '-'}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
                         </tbody>
                     </table>
                 </div>

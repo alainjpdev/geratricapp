@@ -63,6 +63,17 @@ export const hardcodedMenu: DynamicMenuItem[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
+  {
+    id: 'config',
+    label: 'CONFIGURACIÓN',
+    icon: 'Settings',
+    to: '/dashboard/configuration',
+    order: 99,
+    isActive: true,
+    role: 'admin',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
 ];
 
 class MenuAPI {
@@ -172,19 +183,17 @@ class MenuAPI {
           createdAt: now,
           updatedAt: now
         },
-        /*
-                {
-                  id: 'menu-mgmt',
-                  label: 'MENÚS',
-                  icon: 'Menu',
-                  to: '/dashboard/menu-management',
-                  order: 99,
-                  isActive: true,
-                  role: 'admin',
-                  createdAt: now,
-                  updatedAt: now
-                },
-        */
+        {
+          id: 'config',
+          label: 'CONFIGURACIÓN',
+          icon: 'Settings',
+          to: '/dashboard/configuration',
+          order: 99,
+          isActive: true,
+          role: 'admin',
+          createdAt: now,
+          updatedAt: now
+        },
       ];
 
       if (isRestrictedUser) {
@@ -261,6 +270,17 @@ class MenuAPI {
           role: 'enfermero',
           createdAt: now,
           updatedAt: now
+        },
+        {
+          id: 'config',
+          label: 'CONFIGURACIÓN',
+          icon: 'Settings',
+          to: '/dashboard/configuration',
+          order: 99,
+          isActive: true,
+          role: 'enfermero',
+          createdAt: now,
+          updatedAt: now
         }
       ];
     }
@@ -322,6 +342,17 @@ class MenuAPI {
           role: 'paciente',
           createdAt: now,
           updatedAt: now
+        },
+        {
+          id: 'config',
+          label: 'CONFIGURACIÓN',
+          icon: 'Settings',
+          to: '/dashboard/configuration',
+          order: 100,
+          isActive: true,
+          role: 'paciente',
+          createdAt: now,
+          updatedAt: now
         }
       ];
     }
@@ -379,6 +410,17 @@ class MenuAPI {
           icon: 'MessageCircle',
           to: '/dashboard/contact',
           order: 4,
+          isActive: true,
+          role: 'pariente',
+          createdAt: now,
+          updatedAt: now
+        },
+        {
+          id: 'config',
+          label: 'CONFIGURACIÓN',
+          icon: 'Settings',
+          to: '/dashboard/configuration',
+          order: 99,
           isActive: true,
           role: 'pariente',
           createdAt: now,

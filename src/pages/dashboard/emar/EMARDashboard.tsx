@@ -85,7 +85,9 @@ const EMARDashboard: React.FC = () => {
                 administeredBy: adminUser,
                 status: 'Given',
                 notes: 'Administrado desde eMAR Dashboard',
-                shift: filterShift
+                shift: filterShift,
+                medicationName: order.medicationName,
+                residentId: order.residentId
             });
 
             alert('Medicamento registrado exitosamente');
@@ -161,47 +163,86 @@ const EMARDashboard: React.FC = () => {
                     <p className="text-gray-500">No hay medicamentos programados pendientes para el turno de la {filterShift === 'Morning' ? 'Mañana' : filterShift === 'Evening' ? 'Tarde' : 'Noche'}.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {filteredOrders.map((order) => (
-                        <Card key={order.id} className="p-4 border-l-4 border-l-sky-500 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="bg-sky-100 text-sky-800 text-xs font-bold px-2 py-0.5 rounded uppercase">
-                                            {order.resident?.roomNumber || 'N/A'}
-                                        </span>
-                                        <h3 className="font-bold text-gray-900 dark:text-white text-lg">
-                                            {order.resident?.firstName} {order.resident?.lastName}
-                                        </h3>
-                                    </div>
+                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                    <table className="w-full text-sm text-left border-collapse">
+                        <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase">
+                            <tr>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700">Residente</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700">Medicamento</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center">Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center">Vía</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24">1ª Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24">2ª Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24">3ª Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {filteredOrders.map((order) => {
+                                // Simple logic to determine which columns are 'active' based on frequency
+                                // This is aesthetic to match the request "1st, 2nd, 3rd dose"
+                                const isMorning = order.frequency.includes('Morning') || order.frequency === 'Every 8 hours' || order.frequency === 'Every 6 hours';
+                                const isAfternoon = order.frequency.includes('Afternoon') || order.frequency.includes('Evening') || order.frequency === 'Every 8 hours' || order.frequency === 'Every 6 hours';
+                                const isNight = order.frequency.includes('Night') || order.frequency === 'Every 8 hours';
 
-                                    <div className="mt-3">
-                                        <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg flex items-center gap-2">
-                                            {order.medicationName} <span className="text-gray-600 dark:text-gray-400 text-sm font-normal">{order.dosage}</span>
-                                        </p>
-                                        <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                                            <span className="font-medium">Vía:</span> {order.route} • <span className="font-medium">Frecuencia:</span> {order.frequency}
-                                        </p>
-                                        {order.instructions && (
-                                            <div className="mt-2 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-xs text-yellow-800 dark:text-yellow-200 flex items-start gap-2">
-                                                <AlertCircle className="w-3 h-3 mt-0.5 shrink-0" />
-                                                {order.instructions}
+                                return (
+                                    <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors bg-white dark:bg-gray-900">
+                                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                                            <div className="flex flex-col">
+                                                <span>{order.resident?.firstName} {order.resident?.lastName}</span>
+                                                <span className="text-xs text-gray-500">Hab: {order.resident?.roomNumber || 'N/A'}</span>
                                             </div>
-                                        )}
-                                    </div>
-                                </div>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex flex-col">
+                                                <span className="font-semibold text-blue-600 dark:text-blue-400">{order.medicationName}</span>
+                                                {order.instructions && <span className="text-xs text-orange-600 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {order.instructions}</span>}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-3 text-center">{order.dosage}</td>
+                                        <td className="px-4 py-3 text-center">{order.route}</td>
 
-                                <div className="flex flex-col gap-2">
-                                    <Button onClick={() => handleAdminister(order)} className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
-                                        Administrar
-                                    </Button>
-                                    <Button variant="outline" size="sm" className="text-gray-500">
-                                        Posponer
-                                    </Button>
-                                </div>
-                            </div>
-                        </Card>
-                    ))}
+                                        {/* 1st Dose */}
+                                        <td className="px-4 py-3 text-center">
+                                            {isMorning ? (
+                                                <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-semibold">
+                                                    Mañana
+                                                </span>
+                                            ) : <span className="text-gray-300">-</span>}
+                                        </td>
+
+                                        {/* 2nd Dose */}
+                                        <td className="px-4 py-3 text-center">
+                                            {isAfternoon ? (
+                                                <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-semibold">
+                                                    Tarde
+                                                </span>
+                                            ) : <span className="text-gray-300">-</span>}
+                                        </td>
+
+                                        {/* 3rd Dose */}
+                                        <td className="px-4 py-3 text-center">
+                                            {isNight ? (
+                                                <span className="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full font-semibold">
+                                                    Noche
+                                                </span>
+                                            ) : <span className="text-gray-300">-</span>}
+                                        </td>
+
+                                        <td className="px-4 py-3 text-center">
+                                            <Button
+                                                size="sm"
+                                                onClick={() => handleAdminister(order)}
+                                                className="bg-green-600 hover:bg-green-700 text-white shadow-sm w-full"
+                                            >
+                                                Administrar
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             )}
         </div>

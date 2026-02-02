@@ -26,8 +26,8 @@ export const SimpleLayout: React.FC = () => {
     navigate('/login');
   };
 
-  // Forzar rol admin para que siempre vea los ítems principales
-  const currentRole = 'admin';
+  // Usar el rol del usuario autenticado
+  const currentRole = user?.role || 'admin';
 
   return (
     <div className="min-h-screen dark:bg-black bg-white">

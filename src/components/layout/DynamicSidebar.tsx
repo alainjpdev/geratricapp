@@ -27,6 +27,7 @@ const iconMap = {
   FolderOpen,
   HeartPulse,
   AlertTriangle,
+  Settings,
 };
 
 interface DynamicSidebarProps {
@@ -59,19 +60,26 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
 
   // Convert hardcoded menu items to NavigationItem format
   const navigationItems: NavigationItemType[] = React.useMemo(() => {
-    return menuItems.filter(item => item.isActive).map(item => {
-      const mappedSubmenu = item.submenu?.map(sub => ({
-        ...sub,
-        icon: iconMap[sub.icon as keyof typeof iconMap] || LayoutDashboard,
-      }));
-      return {
-        key: item.id,
-        label: item.label,
-        to: item.to,
-        icon: iconMap[item.icon as keyof typeof iconMap] || LayoutDashboard,
-        submenu: mappedSubmenu,
-      };
-    });
+    return menuItems
+      .filter(item => {
+        if (!item.isActive) return false;
+        // Ocultar 'PERSONAL' (Staff) para enfermeros
+        if (role === 'enfermero' && item.id === 'adm-staff') return false;
+        return true;
+      })
+      .map(item => {
+        const mappedSubmenu = item.submenu?.map(sub => ({
+          ...sub,
+          icon: iconMap[sub.icon as keyof typeof iconMap] || LayoutDashboard,
+        }));
+        return {
+          key: item.id,
+          label: item.label,
+          to: item.to,
+          icon: iconMap[item.icon as keyof typeof iconMap] || LayoutDashboard,
+          submenu: mappedSubmenu,
+        };
+      });
   }, [menuItems]);
 
   return (

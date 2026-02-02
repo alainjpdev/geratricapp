@@ -91,8 +91,9 @@ export const emarService = {
     },
 
     // Log a medication administration
-    async logAdministration(logData: Omit<MedicationLog, 'id' | 'administeredAt'>) {
-        const { data, error } = await supabase
+    async logAdministration(logData: Omit<MedicationLog, 'id' | 'administeredAt'> & { medicationName: string, residentId: string, dosecolumn?: 'dose1_time' | 'dose2_time' | 'dose3_time' }) {
+        // 1. Log to medication_logs (History)
+        const { data: logEntry, error: logError } = await supabase
             .from('medication_logs')
             .insert([
                 {
@@ -106,12 +107,55 @@ export const emarService = {
             .select()
             .single();
 
-        if (error) {
-            console.error('Error logging medication:', error);
-            throw error;
+        if (logError) {
+            console.error('Error logging medication:', logError);
+            throw logError;
         }
 
-        return data;
+        // 2. Sync with Daily Sheet (medications table)
+        // Map shift to column if not provided
+        let targetColumn = logData.dosecolumn;
+        if (!targetColumn) {
+            if (logData.shift === 'Morning') targetColumn = 'dose1_time';
+            else if (logData.shift === 'Evening' || logData.shift === 'Afternoon') targetColumn = 'dose2_time';
+            else if (logData.shift === 'Night') targetColumn = 'dose3_time';
+        }
+
+        if (targetColumn) {
+            const today = new Date().toISOString().split('T')[0];
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Check if row exists
+            const { data: existingRows } = await supabase
+                .from('medications')
+                .select('id')
+                .eq('resident_id', logData.residentId)
+                .eq('date', today)
+                .eq('medicamento', logData.medicationName);
+
+            if (existingRows && existingRows.length > 0) {
+                // Update existing
+                await supabase
+                    .from('medications')
+                    .update({ [targetColumn]: timeNow })
+                    .eq('id', existingRows[0].id);
+            } else {
+                // Create new
+                await supabase
+                    .from('medications')
+                    .insert({
+                        resident_id: logData.residentId,
+                        date: today,
+                        medicamento: logData.medicationName,
+                        dosis: 'Según orden', // Default or fetch from order
+                        via: 'Oral', // Default or fetch from order
+                        [targetColumn]: timeNow,
+                        recorded_by: logData.administeredBy
+                    });
+            }
+        }
+
+        return logEntry;
     },
 
     // Get logs for a specific resident (History)

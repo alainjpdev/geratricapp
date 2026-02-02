@@ -104,7 +104,7 @@ export const getUserFromTable = async (userId: string): Promise<User | null> => 
       .eq('id', userId)
       .maybeSingle();
 
-    if (error || !dbUser) {
+    if (error || !dbUser || !dbUser.is_active) {
       return null;
     }
 
@@ -121,6 +121,34 @@ export const getUserFromTable = async (userId: string): Promise<User | null> => 
   } catch (error) {
     console.error('Error obteniendo usuario:', error);
     return null;
+  }
+};
+/**
+ * Actualizar la contraseña del usuario
+ */
+export const updatePassword = async (userId: string, newPassword: string): Promise<void> => {
+  // En modo JSON o local, no implementamos cambio de password por ahora
+  // o podemos añadirlo si es necesario para pruebas
+  if (USE_JSON_DB || USE_LOCAL_DB) {
+    console.log('🔧 Modo desarrollo: cambio de password simulado');
+    return;
+  }
+
+  try {
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    const { error } = await supabase
+      .from('users')
+      .update({
+        password_hash: passwordHash,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', userId);
+
+    if (error) throw error;
+  } catch (error: any) {
+    console.error('Error actualizando contraseña:', error);
+    throw new Error(error.message || 'Error al actualizar la contraseña');
   }
 };
 

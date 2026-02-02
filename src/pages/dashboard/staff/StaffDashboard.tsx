@@ -227,7 +227,6 @@ export const StaffDashboard: React.FC = () => {
       const { data, error } = await supabase
         .from('users')
         .select('*')
-        .eq('is_active', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -295,7 +294,7 @@ export const StaffDashboard: React.FC = () => {
         {canManage && (
           <button
             onClick={activeTab === 'staff' ? () => setShowAddUser(true) : () => setShowAddResident(true)}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center gap-2 transition-colors shadow-sm"
+            className="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg flex items-center gap-2 transition-colors shadow-sm"
           >
             <UserPlus className="w-5 h-5" />
             <span>{activeTab === 'staff' ? 'NUEVO USUARIO' : 'NUEVO RESIDENTE'}</span>
@@ -311,7 +310,7 @@ export const StaffDashboard: React.FC = () => {
             className={`
               whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2
               ${activeTab === 'staff'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}
             `}
           >
@@ -323,7 +322,7 @@ export const StaffDashboard: React.FC = () => {
             className={`
               whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2
               ${activeTab === 'residents'
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                ? 'border-sky-500 text-sky-600 dark:text-sky-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}
             `}
           >
@@ -342,7 +341,7 @@ export const StaffDashboard: React.FC = () => {
             placeholder={activeTab === 'staff' ? "Buscar por nombre o correo..." : "Buscar residente..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 dark:text-white"
           />
         </div>
 
@@ -353,7 +352,7 @@ export const StaffDashboard: React.FC = () => {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white w-full"
+                className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500 dark:text-white w-full"
               >
                 <option value="all">Todos los Roles</option>
                 <option value="admin">Admin</option>
@@ -370,7 +369,7 @@ export const StaffDashboard: React.FC = () => {
         {
           (activeTab === 'staff' ? staffLoading : residentsLoading) ? (
             <div className="p-12 text-center text-gray-500 dark:text-gray-400">
-              <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <div className="animate-spin w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>
               <p>Cargando {activeTab === 'staff' ? 'personal' : 'residentes'}...</p>
             </div>
           ) : (activeTab === 'staff' ? filteredStaff : filteredResidents).length === 0 ? (
@@ -411,7 +410,7 @@ export const StaffDashboard: React.FC = () => {
                       <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                            <div className="w-10 h-10 rounded-full bg-sky-100 dark:bg-sky-900/50 flex items-center justify-center text-sky-600 dark:text-sky-400 font-bold text-sm">
                               {user.avatar ? (
                                 <img src={user.avatar} alt="" className="w-full h-full rounded-full object-cover" />
                               ) : (
@@ -455,7 +454,7 @@ export const StaffDashboard: React.FC = () => {
                               setSelectedUser(user);
                               setShowEditUser(true);
                             }}
-                            className="px-3 py-1 text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:text-indigo-300 rounded-md transition-colors border border-indigo-100 dark:border-indigo-800 font-bold uppercase"
+                            className="px-3 py-1 text-xs bg-sky-50 text-sky-600 hover:bg-sky-100 dark:bg-sky-900/40 dark:text-sky-300 rounded-md transition-colors border border-sky-100 dark:border-sky-800 font-bold uppercase"
                           >
                             MODIFICAR
                           </button>
@@ -508,7 +507,7 @@ export const StaffDashboard: React.FC = () => {
                               setSelectedResident(resident);
                               setShowEditResident(true);
                             }}
-                            className="px-3 py-1 text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:text-indigo-300 rounded-md transition-colors border border-indigo-100 dark:border-indigo-800 font-bold"
+                            className="px-3 py-1 text-xs bg-sky-50 text-sky-600 hover:bg-sky-100 dark:bg-sky-900/40 dark:text-sky-300 rounded-md transition-colors border border-sky-100 dark:border-sky-800 font-bold"
                           >
                             MODIFICAR
                           </button>
@@ -567,7 +566,7 @@ export const StaffDashboard: React.FC = () => {
                     <input
                       type="text"
                       placeholder="Escribe una condición y pulsa Enter..."
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                       value={conditionInput}
                       onChange={(e) => setConditionInput(e.target.value)}
                       onKeyDown={(e) => {
@@ -601,7 +600,7 @@ export const StaffDashboard: React.FC = () => {
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
                     <select
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                       value={selectedResident.status}
                       onChange={e => setSelectedResident({ ...selectedResident, status: e.target.value as any })}
                     >
@@ -632,7 +631,7 @@ export const StaffDashboard: React.FC = () => {
                   <button
                     type="submit"
                     disabled={updatingResident}
-                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                    className="px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
                   >
                     {updatingResident ? 'Guardando...' : 'Guardar'}
                   </button>
@@ -662,7 +661,7 @@ export const StaffDashboard: React.FC = () => {
                     <input
                       required
                       type="text"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                       value={newUser.firstName}
                       onChange={e => setNewUser({ ...newUser, firstName: e.target.value })}
                     />
@@ -683,7 +682,7 @@ export const StaffDashboard: React.FC = () => {
                   <input
                     required
                     type="email"
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                     value={newUser.email}
                     onChange={e => setNewUser({ ...newUser, email: e.target.value })}
                   />
@@ -693,7 +692,7 @@ export const StaffDashboard: React.FC = () => {
                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Teléfono</label>
                   <input
                     type="text"
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                     value={newUser.telefono}
                     onChange={e => setNewUser({ ...newUser, telefono: e.target.value })}
                   />
@@ -703,7 +702,7 @@ export const StaffDashboard: React.FC = () => {
                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Contraseña (Por defecto: 123456)</label>
                   <input
                     type="text"
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                     value={newUser.password}
                     onChange={e => setNewUser({ ...newUser, password: e.target.value })}
                   />
@@ -713,7 +712,7 @@ export const StaffDashboard: React.FC = () => {
                   <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Rol *</label>
                   <select
                     disabled={!isAdmin}
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white disabled:opacity-50"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white disabled:opacity-50"
                     value={newUser.role}
                     onChange={e => setNewUser({ ...newUser, role: e.target.value })}
                   >
@@ -734,7 +733,7 @@ export const StaffDashboard: React.FC = () => {
                   <button
                     type="submit"
                     disabled={creatingUser}
-                    className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                    className="flex-1 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
                   >
                     {creatingUser ? 'Creando...' : 'Crear Usuario'}
                   </button>
@@ -764,7 +763,7 @@ export const StaffDashboard: React.FC = () => {
                     <input
                       required
                       type="text"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                       value={selectedUser.first_name}
                       onChange={e => setSelectedUser({ ...selectedUser, first_name: e.target.value })}
                     />
@@ -773,7 +772,7 @@ export const StaffDashboard: React.FC = () => {
                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Apellido</label>
                     <input
                       type="text"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                       value={selectedUser.last_name || ''}
                       onChange={e => setSelectedUser({ ...selectedUser, last_name: e.target.value })}
                     />
@@ -785,7 +784,7 @@ export const StaffDashboard: React.FC = () => {
                   <input
                     required
                     type="email"
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white"
                     value={selectedUser.email}
                     onChange={e => setSelectedUser({ ...selectedUser, email: e.target.value })}
                   />
@@ -796,7 +795,7 @@ export const StaffDashboard: React.FC = () => {
                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Rol</label>
                     <select
                       disabled={!isAdmin}
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-indigo-500 dark:text-white disabled:opacity-50"
+                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 p-2.5 bg-transparent text-sm focus:ring-2 focus:ring-sky-500 dark:text-white disabled:opacity-50"
                       value={selectedUser.role}
                       onChange={e => setSelectedUser({ ...selectedUser, role: e.target.value })}
                     >

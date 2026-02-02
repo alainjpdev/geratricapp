@@ -553,7 +553,7 @@ export const DBImportButton = () => {
         <button
           onClick={() => handleExportToJSON(false)}
           disabled={exportingJSON || syncing || importing || loadingJSON}
-          className="flex items-center justify-center gap-1 px-3 py-1 bg-indigo-500 text-white text-xs rounded hover:bg-indigo-600 disabled:opacity-50"
+          className="flex items-center justify-center gap-1 px-3 py-1 bg-sky-500 text-white text-xs rounded hover:bg-sky-600 disabled:opacity-50"
         >
           <FileJson className={`w-3 h-3 ${exportingJSON ? 'animate-spin' : ''}`} />
           {exportingJSON ? 'Exportando...' : 'Exportar Local → JSON'}
