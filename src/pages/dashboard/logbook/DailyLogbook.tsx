@@ -41,7 +41,7 @@ export const DailyLogbook: React.FC = () => {
     if (loading) return <div className="p-8 text-center">Cargando residentes...</div>;
 
     return (
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
+        <div className="px-1 py-4 md:p-8 max-w-7xl mx-auto space-y-6">
             {/* Header / Controls */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
 

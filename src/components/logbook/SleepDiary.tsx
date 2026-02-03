@@ -126,7 +126,7 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
     };
 
     return (
-        <div className="space-y-6">
+        <div className={readOnly ? "space-y-2" : "space-y-6"}>
             {toast.visible && (
                 <Toast
                     message={toast.message}
@@ -200,15 +200,15 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
             )}
 
             {/* List Table */}
-            <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm">
+            <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[600px] text-sm border-collapse">
+                    <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
                         <thead>
-                            <tr className="bg-gray-100 text-gray-700 uppercase">
-                                <th className="border-r border-b border-gray-300 px-4 py-3 font-bold text-center w-32">Inicio</th>
-                                <th className="border-r border-b border-gray-300 px-4 py-3 font-bold text-center w-32">Fin</th>
-                                <th className="border-r border-b border-gray-300 px-4 py-3 font-bold text-center w-32">Calidad</th>
-                                <th className="border-b border-gray-300 px-4 py-3 font-bold text-left">Observaciones</th>
+                            <tr className={`bg-gray-100 text-gray-700 uppercase ${readOnly ? 'text-[10px]' : ''}`}>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-center w-20 md:w-32`}>Inicio</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-center w-20 md:w-32`}>Fin</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-center w-24 md:w-32`}>Calidad</th>
+                                <th className={`border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-left`}>Observaciones</th>
                                 {!readOnly && <th className="border-b border-gray-300 px-2 py-3 w-10"></th>}
                             </tr>
                         </thead>
@@ -229,14 +229,14 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
                             )}
                             {logs.map((log, index) => (
                                 <tr key={log.id} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                                    <td className="border-r border-b border-gray-300 px-4 py-2 text-center text-gray-900 font-medium">
+                                    <td className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-2'} text-center text-gray-900 font-medium`}>
                                         {log.start_time.slice(0, 5)}
                                     </td>
-                                    <td className="border-r border-b border-gray-300 px-4 py-2 text-center text-gray-900 font-medium">
+                                    <td className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-2'} text-center text-gray-900 font-medium`}>
                                         {log.end_time ? log.end_time.slice(0, 5) : '-'}
                                     </td>
-                                    <td className="border-r border-b border-gray-300 px-4 py-2 text-center">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold
+                                    <td className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-2'} text-center`}>
+                                        <span className={`px-2 py-0.5 rounded-full ${readOnly ? 'text-[10px]' : 'text-xs'} font-semibold
                                             ${log.quality === 'Good' ? 'bg-green-100 text-green-700' :
                                                 log.quality === 'Fair' ? 'bg-yellow-100 text-yellow-700' :
                                                     log.quality === 'Poor' ? 'bg-red-100 text-red-700' :
@@ -247,7 +247,7 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
                                                     log.quality === 'Poor' ? 'Mala' : 'Interrumpida'}
                                         </span>
                                     </td>
-                                    <td className="border-b border-gray-300 px-4 py-2 text-gray-600">
+                                    <td className={`border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-2'} text-gray-600`}>
                                         {log.observations || '-'}
                                     </td>
                                     {!readOnly && (

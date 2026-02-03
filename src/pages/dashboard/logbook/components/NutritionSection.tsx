@@ -19,11 +19,11 @@ interface MealRow {
 export const NutritionSection: React.FC<Props> = ({ residentId, date }) => {
     const { user } = useAuthStore();
     const [meals, setMeals] = useState<{ [key: string]: MealRow }>({
-        Breakfast: { time: '', description: '', percentage: 100, notes: '' }, // Desayuno
-        Lunch: { time: '', description: '', percentage: 100, notes: '' },     // Comida
-        Dinner: { time: '', description: '', percentage: 100, notes: '' },    // Cena
-        Snack: { time: '', description: '', percentage: 100, notes: '' },     // Colación
-        Hydration: { time: '', description: '', percentage: 100, notes: '' }  // Hidratación
+        Breakfast: { id: '', time: '', description: '', percentage: 100, notes: '' }, // Desayuno
+        Lunch: { id: '', time: '', description: '', percentage: 100, notes: '' },     // Comida
+        Dinner: { id: '', time: '', description: '', percentage: 100, notes: '' },    // Cena
+        Snack: { id: '', time: '', description: '', percentage: 100, notes: '' },     // Colación
+        Hydration: { id: '', time: '', description: '', percentage: 100, notes: '' }  // Hidratación
     });
 
     useEffect(() => {
@@ -33,12 +33,12 @@ export const NutritionSection: React.FC<Props> = ({ residentId, date }) => {
     const loadLogs = async () => {
         try {
             const data = await logbookService.getNutritionLogs(residentId, date);
-            const newMeals = {
-                Breakfast: { time: '', description: '', percentage: 100, notes: '' },
-                Lunch: { time: '', description: '', percentage: 100, notes: '' },
-                Dinner: { time: '', description: '', percentage: 100, notes: '' },
-                Snack: { time: '', description: '', percentage: 100, notes: '' },
-                Hydration: { time: '', description: '', percentage: 100, notes: '' }
+            const newMeals: { [key: string]: MealRow } = {
+                Breakfast: { id: '', time: '', description: '', percentage: 100, notes: '' },
+                Lunch: { id: '', time: '', description: '', percentage: 100, notes: '' },
+                Dinner: { id: '', time: '', description: '', percentage: 100, notes: '' },
+                Snack: { id: '', time: '', description: '', percentage: 100, notes: '' },
+                Hydration: { id: '', time: '', description: '', percentage: 100, notes: '' }
             };
 
             data.forEach(log => {
@@ -114,12 +114,12 @@ export const NutritionSection: React.FC<Props> = ({ residentId, date }) => {
             <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-xs">
-                            <th className="border-r border-b px-3 py-2 text-left w-32">Tiempo</th>
-                            <th className="border-r border-b px-3 py-2 w-24">Hora</th>
-                            <th className="border-r border-b px-3 py-2">Descripción</th>
-                            <th className="border-r border-b px-3 py-2 w-24">% Consumo</th>
-                            <th className="border-b px-3 py-2">Observaciones</th>
+                        <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-[10px] md:text-xs">
+                            <th className="border-r border-b px-1.5 md:px-3 py-2 text-left w-24 md:w-32">Tiempo</th>
+                            <th className="border-r border-b px-1.5 md:px-3 py-2 w-20 md:w-24">Hora</th>
+                            <th className="border-r border-b px-1.5 md:px-3 py-2">Desc</th>
+                            <th className="border-r border-b px-1.5 md:px-3 py-2 w-20 md:w-24">%</th>
+                            <th className="border-b px-1.5 md:px-3 py-2">Obs</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -140,31 +140,31 @@ export const NutritionSection: React.FC<Props> = ({ residentId, date }) => {
                                 <td className="px-2 py-1 border-r dark:border-gray-700">
                                     <input
                                         type="text"
-                                        className="w-full h-full bg-transparent border-transparent focus:border-indigo-500 rounded px-2"
-                                        placeholder="Descripción del alimento..."
+                                        className="w-full h-full bg-transparent border-transparent focus:border-indigo-500 rounded px-1 md:px-2 text-xs md:text-sm"
+                                        placeholder="Descripción..."
                                         value={meals[type].description}
                                         onChange={e => handleChange(type, 'description', e.target.value)}
                                         onBlur={() => handleSave(type)}
                                     />
                                 </td>
-                                <td className="px-2 py-1 border-r dark:border-gray-700">
-                                    <div className="flex items-center gap-1">
+                                <td className="px-1 md:px-2 py-1 border-r dark:border-gray-700">
+                                    <div className="flex items-center gap-0.5 md:gap-1">
                                         <input
                                             type="number"
                                             min="0" max="100"
-                                            className="w-16 bg-transparent border-gray-200 dark:border-gray-600 rounded text-center"
+                                            className="w-12 md:w-16 bg-transparent border-gray-200 dark:border-gray-600 rounded text-center text-xs md:text-sm"
                                             value={meals[type].percentage}
                                             onChange={e => handleChange(type, 'percentage', +e.target.value)}
                                             onBlur={() => handleSave(type)}
                                         />
-                                        <span className="text-gray-500">%</span>
+                                        <span className="text-gray-500 text-[10px] md:text-xs">%</span>
                                     </div>
                                 </td>
-                                <td className="px-2 py-1">
+                                <td className="px-1 md:px-2 py-1">
                                     <input
                                         type="text"
-                                        className="w-full h-full bg-transparent border-transparent focus:border-indigo-500 rounded px-2"
-                                        placeholder="Notas adicionales..."
+                                        className="w-full h-full bg-transparent border-transparent focus:border-indigo-500 rounded px-1 md:px-2 text-xs md:text-sm"
+                                        placeholder="Notas..."
                                         value={meals[type].notes}
                                         onChange={e => handleChange(type, 'notes', e.target.value)}
                                         onBlur={() => handleSave(type)}

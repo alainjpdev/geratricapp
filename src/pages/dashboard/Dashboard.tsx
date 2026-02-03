@@ -725,7 +725,7 @@ export const Dashboard: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-white p-4 md:p-8">
+        <div className="flex flex-col min-h-screen bg-white px-1 py-4 md:p-8">
             {toast.visible && (
                 <Toast
                     message={toast.message}
@@ -735,7 +735,7 @@ export const Dashboard: React.FC = () => {
             )}
 
             {/* Header / Controls - Sticky (Like LogbookDashboard) */}
-            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-4 -mx-4 md:-mx-8 px-4 md:px-8 py-2">
+            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-4 -mx-1 md:-mx-8 px-1 md:px-8 py-2">
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col md:flex-row gap-2 justify-between items-start md:items-center">
                         <div className="flex items-center gap-3">
@@ -1011,34 +1011,34 @@ export const Dashboard: React.FC = () => {
                 {/* Tabs */}
                 <div className="flex border-b border-gray-200">
                     <button
-                        className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors ${activeTab === 'vitals'
+                        className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 md:gap-2 px-1.5 md:px-6 py-3 font-medium text-[10px] md:text-sm transition-colors ${activeTab === 'vitals'
                             ? 'border-b-2 border-blue-600 text-blue-600'
                             : 'text-gray-500 hover:text-gray-700'
                             }`}
                         onClick={() => setActiveTab('vitals')}
                     >
-                        <Activity className="w-4 h-4" />
-                        Signos Vitales y Medicamentos
+                        <Activity className="w-3.5 h-3.5 md:w-4 h-4" />
+                        <span className="whitespace-normal md:whitespace-nowrap text-center">Signos y Meds</span>
                     </button>
                     <button
-                        className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors ${activeTab === 'care'
+                        className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 md:gap-2 px-1.5 md:px-6 py-3 font-medium text-[10px] md:text-sm transition-colors ${activeTab === 'care'
                             ? 'border-b-2 border-blue-600 text-blue-600'
                             : 'text-gray-500 hover:text-gray-700'
                             }`}
                         onClick={() => setActiveTab('care')}
                     >
-                        <ClipboardList className="w-4 h-4" />
-                        Cuidados y Eliminación
+                        <ClipboardList className="w-3.5 h-3.5 md:w-4 h-4" />
+                        <span className="whitespace-normal md:whitespace-nowrap text-center">Cuidados</span>
                     </button>
                     <button
-                        className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-colors ${activeTab === 'sleep'
+                        className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 md:gap-2 px-1.5 md:px-6 py-3 font-medium text-[10px] md:text-sm transition-colors ${activeTab === 'sleep'
                             ? 'border-b-2 border-blue-600 text-blue-600'
                             : 'text-gray-500 hover:text-gray-700'
                             }`}
                         onClick={() => setActiveTab('sleep')}
                     >
-                        <Moon className="w-4 h-4" />
-                        Diario de Sueño
+                        <Moon className="w-3.5 h-3.5 md:w-4 h-4" />
+                        <span className="whitespace-normal md:whitespace-nowrap text-center">Sueño</span>
                     </button>
                 </div>
 

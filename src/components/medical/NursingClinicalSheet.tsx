@@ -470,31 +470,31 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
     };
 
     return (
-        <div className="space-y-6">
+        <div className={readOnly ? "space-y-2" : "space-y-6"}>
 
             {/* Hygiene Section */}
-            <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm">
+            <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[600px] text-sm border-collapse">
+                    <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
                         <thead>
-                            <tr className="bg-gray-100 text-gray-700 uppercase">
-                                <th colSpan={2} className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold">Cambio de Pañal</th>
-                                <th colSpan={2} className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold">Baño</th>
-                                <th className="border-b border-gray-300 px-2 py-1 text-center font-bold">Cambio de Sábanas</th>
+                            <tr className={`bg-gray-100 text-gray-700 uppercase ${readOnly ? 'text-[10px]' : ''}`}>
+                                <th colSpan={2} className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'} text-center font-bold`}>Cambio de Pañal</th>
+                                <th colSpan={2} className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'} text-center font-bold`}>Baño</th>
+                                <th className={`border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'} text-center font-bold`}>Sábanas</th>
                             </tr>
-                            <tr className="bg-gray-50 text-gray-600 uppercase text-xs">
-                                <th className="border-r border-b border-gray-300 px-2 py-1 w-24">Hora</th>
-                                <th className="border-r border-b border-gray-300 px-2 py-1">Observación</th>
-                                <th className="border-r border-b border-gray-300 px-2 py-1 w-24">Hora</th>
-                                <th className="border-r border-b border-gray-300 px-2 py-1">Observación</th>
-                                <th className="border-b border-gray-300 px-2 py-1 w-24">Hora</th>
+                            <tr className={`bg-gray-50 text-gray-600 uppercase ${readOnly ? 'text-[9px]' : 'text-xs'}`}>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'} w-20 md:w-24`}>Hora</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'}`}>Observación</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'} w-20 md:w-24`}>Hora</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'}`}>Observación</th>
+                                <th className={`border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1'} w-20 md:w-24`}>Hora</th>
                             </tr>
                         </thead>
                         <tbody>
                             {hygieneRows.map((row, index) => (
-                                <tr key={index} className={`hover: bg - blue - 50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} `}>
+                                <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} `}>
                                     {/* Diaper */}
-                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                    <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                         <TimeSelect
                                             value={row.diaper.time}
                                             onChange={(e) => {
@@ -502,10 +502,10 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 saveHygiene(index, 'diaper', { time: e.target.value });
                                             }}
                                             disabled={readOnly}
-                                            className="text-center p-2 text-base md:text-sm h-full"
+                                            className={`text-center p-1 ${readOnly ? 'text-xs h-6' : 'text-base md:text-sm h-10'} border-none shadow-none`}
                                         />
                                     </td>
-                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                    <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                         <input
                                             type="text"
                                             value={row.diaper.observaciones || ''}
@@ -513,12 +513,12 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                             onBlur={() => saveHygiene(index, 'diaper')}
                                             onKeyDown={(e) => e.key === 'Enter' && saveHygiene(index, 'diaper')}
                                             disabled={readOnly}
-                                            className="w-full h-full p-2 text-base md:text-sm bg-transparent border-none focus:ring-0"
-                                            placeholder="Notas..."
+                                            className={`w-full h-full px-2 py-1 bg-transparent border-none focus:ring-0 ${readOnly ? 'text-xs truncate' : 'text-base md:text-sm'}`}
+                                            placeholder={readOnly ? '' : 'Notas...'}
                                         />
                                     </td>
                                     {/* Bath */}
-                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                    <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                         <TimeSelect
                                             value={row.bath.time}
                                             onChange={(e) => {
@@ -526,10 +526,10 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 saveHygiene(index, 'bath', { time: e.target.value });
                                             }}
                                             disabled={readOnly}
-                                            className="text-center p-2 text-base md:text-sm h-full"
+                                            className={`text-center p-1 ${readOnly ? 'text-xs h-6' : 'text-base md:text-sm h-10'} border-none shadow-none`}
                                         />
                                     </td>
-                                    <td className="border-r border-b border-gray-300 p-0 h-10">
+                                    <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                         <input
                                             type="text"
                                             value={row.bath.observaciones || ''}
@@ -537,12 +537,12 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                             onBlur={() => saveHygiene(index, 'bath')}
                                             onKeyDown={(e) => e.key === 'Enter' && saveHygiene(index, 'bath')}
                                             disabled={readOnly}
-                                            className="w-full h-full p-2 text-base md:text-sm bg-transparent border-none focus:ring-0"
-                                            placeholder="Notas..."
+                                            className={`w-full h-full px-2 py-1 bg-transparent border-none focus:ring-0 ${readOnly ? 'text-xs truncate' : 'text-base md:text-sm'}`}
+                                            placeholder={readOnly ? '' : 'Notas...'}
                                         />
                                     </td>
                                     {/* Sheets */}
-                                    <td className="border-b border-gray-300 p-0 h-10">
+                                    <td className={`border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                         <TimeSelect
                                             value={row.sheets.time}
                                             onChange={(e) => {
@@ -550,7 +550,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 saveHygiene(index, 'sheets', { time: e.target.value });
                                             }}
                                             disabled={readOnly}
-                                            className="text-center p-2 text-base md:text-sm h-full"
+                                            className={`text-center p-1 ${readOnly ? 'text-xs h-6' : 'text-base md:text-sm h-10'} border-none shadow-none`}
                                         />
                                     </td>
                                 </tr>
@@ -575,28 +575,28 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
             </Card >
 
             {/* Feeding Section */}
-            < div className="space-y-2" >
-                <h3 className="text-lg font-bold text-gray-800 uppercase border-b-2 border-gray-200 pb-1 inline-block">
+            <div className={readOnly ? "space-y-1" : "space-y-2"}>
+                <h3 className={`${readOnly ? 'text-xs mb-0.5' : 'text-lg mb-2'} font-bold text-gray-800 uppercase border-b border-gray-200 pb-0.5 inline-block tracking-tighter`}>
                     Alimentación
                 </h3>
-                <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm">
+                <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[600px] text-sm border-collapse">
+                        <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
                             <thead>
-                                <tr className="bg-gray-100 text-gray-700 uppercase">
-                                    <th className="border-r border-b border-gray-300 px-2 py-2 w-32 font-bold text-left"></th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-2 w-32 font-bold text-center">Hora</th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-2 font-bold text-left">Descripción</th>
-                                    <th className="border-b border-gray-300 px-2 py-2 font-bold text-left">Observaciones</th>
+                                <tr className={`bg-gray-100 text-gray-700 uppercase ${readOnly ? 'text-[10px]' : ''}`}>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1 w-20' : 'px-2 py-2 w-32'} font-bold text-left`}>Comida</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1 w-20' : 'px-2 py-2 w-32'} font-bold text-center`}>Hora</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-2' : 'px-2 py-2'} font-bold text-left`}>Descripción</th>
+                                    <th className={`border-b border-gray-300 ${readOnly ? 'px-2 py-2' : 'px-2 py-2'} font-bold text-left`}>Obs</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {['desayuno', 'comida', 'cena'].map((meal) => (
                                     <tr key={meal} className="hover:bg-blue-50 bg-white">
-                                        <td className="border-r border-b border-gray-300 px-3 py-2 font-bold text-gray-700 uppercase bg-gray-50">
-                                            {meal}
+                                        <td className={`border-r border-b border-gray-300 ${readOnly ? 'px-1.5 py-1' : 'px-3 py-2'} font-bold text-gray-700 uppercase bg-gray-50`}>
+                                            {meal === 'desayuno' ? 'DES' : meal === 'comida' ? 'COM' : 'CEN'}
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0 h-10">
+                                        <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                             <TimeSelect
                                                 value={feeding[meal].hora}
                                                 onChange={(e) => {
@@ -604,13 +604,13 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                     saveFeeding(meal, { hora: e.target.value });
                                                 }}
                                                 disabled={readOnly}
-                                                className="text-center p-2 text-base md:text-sm h-full"
+                                                className={`text-center p-1 ${readOnly ? 'text-xs h-6' : 'text-base md:text-sm h-10'} border-none shadow-none`}
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
+                                        <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : ''}`}>
                                             <input
                                                 type="text"
-                                                className="w-full h-full min-h-[40px] p-2 text-base md:text-sm border-none focus:ring-0 bg-transparent"
+                                                className={`w-full h-full p-2 border-none focus:ring-0 bg-transparent ${readOnly ? 'text-xs px-2 py-0.5 truncate' : 'text-base md:text-sm'}`}
                                                 placeholder={readOnly ? "" : "Descripción de la dieta..."}
                                                 value={feeding[meal].descripcion}
                                                 disabled={readOnly}
@@ -619,10 +619,10 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 onKeyDown={(e) => e.key === 'Enter' && saveFeeding(meal)}
                                             />
                                         </td>
-                                        <td className="border-b border-gray-300 p-0">
+                                        <td className={`border-b border-gray-300 p-0 ${readOnly ? 'h-6' : ''}`}>
                                             <input
                                                 type="text"
-                                                className="w-full h-full p-2 border-none focus:ring-0 bg-transparent"
+                                                className={`w-full h-full p-2 border-none focus:ring-0 bg-transparent ${readOnly ? 'text-xs px-2 py-0.5 truncate' : ''}`}
                                                 placeholder={readOnly ? "" : "Observaciones..."}
                                                 value={feeding[meal].observaciones}
                                                 disabled={readOnly}
@@ -640,52 +640,42 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
             </div >
 
             {/* Output Section */}
-            <div className="space-y-2">
-                <h3 className="text-lg font-bold text-gray-800 uppercase border-b-2 border-gray-200 pb-1 inline-block">
+            <div className={readOnly ? "space-y-1" : "space-y-2"}>
+                <h3 className={`${readOnly ? 'text-xs mb-0.5' : 'text-lg mb-2'} font-bold text-gray-800 uppercase border-b border-gray-200 pb-0.5 inline-block tracking-tighter`}>
                     Eliminación
                 </h3>
-                <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm">
+                <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[600px] text-sm border-collapse">
+                        <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
                             <thead>
-                                <tr className="bg-gray-100 text-gray-700 uppercase">
-                                    <th className="border-r border-b border-gray-300 px-2 py-1 w-24 align-bottom">Hora</th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-1 w-24 align-bottom">Micciones</th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-1 align-bottom">Descripción</th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-1 w-24 align-bottom">Evacuaciones</th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-1 align-bottom">Descripción</th>
-                                    <th className="border-r border-b border-gray-300 px-2 py-1 w-24 align-bottom">Vómito</th>
-                                    <th className="border-b border-gray-300 px-2 py-1 align-bottom">Descripción</th>
+                                <tr className={`bg-gray-100 text-gray-700 uppercase ${readOnly ? 'text-[10px]' : ''}`}>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5 w-16' : 'px-2 py-1 w-24'} align-bottom font-bold`}>Hora</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5 w-12' : 'px-2 py-1 w-24'} align-bottom font-bold text-center`}>Mic</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-2 py-1'} align-bottom font-bold text-left`}>Desc</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5 w-12' : 'px-2 py-1 w-24'} align-bottom font-bold text-center`}>Eva</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-2 py-1'} align-bottom font-bold text-left`}>Desc</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5 w-12' : 'px-2 py-1 w-24'} align-bottom font-bold text-center`}>Vom</th>
+                                    <th className={`border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-2 py-1'} align-bottom font-bold text-left`}>Desc</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {outputs.map((row, index) => (
                                     <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} `}>
-                                        <td className="border-r border-b border-gray-300 p-0 h-10">
+                                        <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : 'h-10'}`}>
                                             <TimeSelect
                                                 value={row.hora}
                                                 onChange={(e) => {
                                                     handleOutputChange(index, 'hora', e.target.value);
-                                                    saveOutput(index, 'vomito', { hora: e.target.value }); // Saving one type saves the row time for all effectively if we save all
-                                                    // Wait, we save them individually. So changing Time should probably update all 3 if they exist?
-                                                    // For MVP let's just save one or assume users fill data then time.
-                                                    // Actually, if we change time, we might want to update the timestamp for all existing records in this row.
-                                                    // But simplified: Just saving 'micciones' or 'evacuaciones' with new time is implicit if we trigger save there.
-                                                    // Users normally select time then data.
-                                                    // If we want Immediate Save on Time, we need to know WHICH record to update.
-                                                    // We can update all 3.
-                                                    // But let's stick to saving logic: If I change time, update state. If I change data, it saves with current time.
-                                                    // If I change time AFTER data, I should update the DB records.
-                                                    // Updating all 3 here:
+                                                    saveOutput(index, 'vomito', { hora: e.target.value });
                                                     if (row.micciones) saveOutput(index, 'micciones', { hora: e.target.value });
                                                     if (row.evacuaciones) saveOutput(index, 'evacuaciones', { hora: e.target.value });
                                                     if (row.vomito) saveOutput(index, 'vomito', { hora: e.target.value });
                                                 }}
                                                 disabled={readOnly}
-                                                className="text-center p-1 text-base md:text-sm h-full"
+                                                className={`text-center p-1 ${readOnly ? 'text-xs h-6' : 'text-base md:text-sm h-10'} border-none shadow-none`}
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0 text-center">
+                                        <td className={`border-r border-b border-gray-300 p-0 text-center ${readOnly ? 'h-6' : ''}`}>
                                             <select
                                                 value={row.micciones}
                                                 onChange={(e) => {
@@ -693,15 +683,15 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                     saveOutput(index, 'micciones', { micciones: e.target.value });
                                                 }}
                                                 disabled={readOnly}
-                                                className="w-full h-10 p-1 text-base md:text-sm text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer"
+                                                className={`w-full h-full p-1 text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer ${readOnly ? 'text-xs px-1 py-0' : 'text-base md:text-sm'}`}
                                             >
                                                 <option value="" disabled></option>
                                                 <option value="✓">✓</option>
                                                 <option value="-">-</option>
                                             </select>
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent focus:ring-0"
+                                        <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : ''}`}>
+                                            <input type="text" className={`w-full h-full border-none bg-transparent focus:ring-0 ${readOnly ? 'text-xs px-1 py-0 truncate' : 'p-1'}`}
                                                 value={row.miccionesDesc}
                                                 disabled={readOnly}
                                                 onChange={(e) => handleOutputChange(index, 'miccionesDesc', e.target.value)}
@@ -709,7 +699,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 onKeyDown={(e) => e.key === 'Enter' && saveOutput(index, 'micciones')}
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0 text-center">
+                                        <td className={`border-r border-b border-gray-300 p-0 text-center ${readOnly ? 'h-6' : ''}`}>
                                             <select
                                                 value={row.evacuaciones}
                                                 onChange={(e) => {
@@ -717,15 +707,15 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                     saveOutput(index, 'evacuaciones', { evacuaciones: e.target.value });
                                                 }}
                                                 disabled={readOnly}
-                                                className="w-full h-full p-1 text-base md:text-sm text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer"
+                                                className={`w-full h-full p-1 text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer ${readOnly ? 'text-xs px-1 py-0' : 'text-base md:text-sm'}`}
                                             >
                                                 <option value="" disabled></option>
                                                 <option value="✓">✓</option>
                                                 <option value="-">-</option>
                                             </select>
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent focus:ring-0"
+                                        <td className={`border-r border-b border-gray-300 p-0 ${readOnly ? 'h-6' : ''}`}>
+                                            <input type="text" className={`w-full h-full border-none bg-transparent focus:ring-0 ${readOnly ? 'text-xs px-1 py-0 truncate' : 'p-1'}`}
                                                 value={row.evacuacionesDesc}
                                                 disabled={readOnly}
                                                 onChange={(e) => handleOutputChange(index, 'evacuacionesDesc', e.target.value)}
@@ -733,7 +723,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                 onKeyDown={(e) => e.key === 'Enter' && saveOutput(index, 'evacuaciones')}
                                             />
                                         </td>
-                                        <td className="border-r border-b border-gray-300 p-0 text-center">
+                                        <td className={`border-r border-b border-gray-300 p-0 text-center ${readOnly ? 'h-6' : ''}`}>
                                             <select
                                                 value={row.vomito}
                                                 onChange={(e) => {
@@ -741,15 +731,15 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                                                     saveOutput(index, 'vomito', { vomito: e.target.value });
                                                 }}
                                                 disabled={readOnly}
-                                                className="w-full h-full p-1 text-base md:text-sm text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer"
+                                                className={`w-full h-full p-1 text-center border-none bg-transparent focus:outline-none appearance-none cursor-pointer ${readOnly ? 'text-xs px-1 py-0' : 'text-base md:text-sm'}`}
                                             >
                                                 <option value="" disabled></option>
                                                 <option value="✓">✓</option>
                                                 <option value="-">-</option>
                                             </select>
                                         </td>
-                                        <td className="border-b border-gray-300 p-0">
-                                            <input type="text" className="w-full h-full p-1 border-none bg-transparent"
+                                        <td className={`border-b border-gray-300 p-0 ${readOnly ? 'h-6' : ''}`}>
+                                            <input type="text" className={`w-full h-full border-none bg-transparent ${readOnly ? 'text-xs px-1 py-0 truncate' : 'p-1'}`}
                                                 value={row.vomitoDesc}
                                                 disabled={readOnly}
                                                 onChange={(e) => handleOutputChange(index, 'vomitoDesc', e.target.value)}

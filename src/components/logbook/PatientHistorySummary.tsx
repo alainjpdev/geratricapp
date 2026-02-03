@@ -124,7 +124,7 @@ const PatientHistorySummary: React.FC<Props> = ({ residentId, date }) => {
     if (loading) return <div className="p-8 text-center text-gray-400">Cargando actividad...</div>;
 
     return (
-        <Card className="p-6 h-full overflow-y-auto">
+        <Card className="p-3 md:p-6 h-full overflow-y-auto">
             <h3 className="font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-gray-500" />
                 Línea de Tiempo Diaria
@@ -135,12 +135,12 @@ const PatientHistorySummary: React.FC<Props> = ({ residentId, date }) => {
                     No hay actividad registrada para esta fecha.
                 </div>
             ) : (
-                <div className="relative border-l-2 border-gray-200 dark:border-gray-700 ml-3 space-y-8 pb-8">
+                <div className="relative border-l-2 border-gray-200 dark:border-gray-700 ml-1.5 md:ml-3 space-y-6 md:space-y-8 pb-8">
                     {items.map(item => (
-                        <div key={item.id} className="ml-6 relative">
+                        <div key={item.id} className="ml-5 md:ml-6 relative">
                             {/* Dot */}
-                            <div className={`absolute -left-[31px] bg-white dark:bg-gray-800 p-1 rounded-full border-2 ${item.colorClass.split(' ')[2]}`}>
-                                <item.icon className={`w-4 h-4 ${item.colorClass.split(' ')[0]}`} />
+                            <div className={`absolute -left-[27px] md:-left-[31px] bg-white dark:bg-gray-800 p-1 rounded-full border-2 ${item.colorClass.split(' ')[2]}`}>
+                                <item.icon className={`w-3.5 h-3.5 md:w-4 h-4 ${item.colorClass.split(' ')[0]}`} />
                             </div>
 
                             {/* Content */}

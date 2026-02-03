@@ -59,10 +59,10 @@ const NursingNotesSection: React.FC<Props> = ({ residentId, readOnly = false }) 
     };
 
     return (
-        <div className={`grid grid-cols-1 ${readOnly ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-6 h-full`}>
+        <div className={`grid grid-cols-1 ${readOnly ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} gap-4 md:gap-6 h-full`}>
             {/* New Entry */}
             {!readOnly && (
-                <Card className="p-6 flex flex-col h-fit lg:h-full lg:overflow-y-auto">
+                <Card className="p-4 md:p-6 flex flex-col h-fit lg:h-full lg:overflow-y-auto">
                     <h3 className="font-bold text-gray-900 dark:text-white mb-4">Nueva Nota</h3>
                     <form onSubmit={handleSubmit} className="space-y-4 flex-1 flex flex-col">
                         <div>
@@ -133,7 +133,7 @@ const NursingNotesSection: React.FC<Props> = ({ residentId, readOnly = false }) 
                     </div>
                 ) : (
                     notes.map(note => (
-                        <Card key={note.id} className={`p-4 border-l-4 ${note.category === 'Incident' ? 'border-l-red-500' :
+                        <Card key={note.id} className={`p-3 md:p-4 border-l-4 ${note.category === 'Incident' ? 'border-l-red-500' :
                             note.category === 'Medical' ? 'border-l-blue-500' :
                                 'border-l-gray-300'
                             }`}>

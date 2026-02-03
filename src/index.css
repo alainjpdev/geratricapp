@@ -501,13 +501,17 @@ html {
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  overscroll-behavior-y: none;
-  /* Prevent bounce on mobile chrome/safari if desired, or 'contain' */
 }
 
 /* Harmonious vertical scroll container */
 .harmonious-scroll {
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* Contained horizontal scroll for tables */
+.overflow-x-contained {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
 }

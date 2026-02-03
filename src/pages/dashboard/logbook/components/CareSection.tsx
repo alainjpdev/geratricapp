@@ -106,40 +106,40 @@ export const CareSection: React.FC<Props> = ({ residentId, date }) => {
             <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-xs">
-                            <th className="border-r border-b px-4 py-2 w-1/3">Cambio de Pañal (Hora)</th>
-                            <th className="border-r border-b px-4 py-2 w-1/3">Cambio de Sábanas (Hora)</th>
-                            <th className="border-b px-4 py-2 w-1/3">Baño (Hora)</th>
+                        <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-[10px] md:text-xs">
+                            <th className="border-r border-b px-1 md:px-4 py-2 w-1/3">Pañal (Hora)</th>
+                            <th className="border-r border-b px-1 md:px-4 py-2 w-1/3">Sábanas (Hora)</th>
+                            <th className="border-b px-1 md:px-4 py-2 w-1/3">Baño (Hora)</th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows.map((row, i) => (
                             <tr key={i} className={`hover:bg-blue-50 dark:hover:bg-blue-900/20 ${i % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-850'}`}>
-                                <td className="border-r border-gray-200 dark:border-gray-700 p-2 text-center">
+                                <td className="border-r border-gray-200 dark:border-gray-700 p-1 md:p-2 text-center">
                                     <input
                                         type="time"
                                         value={row.diaper.time}
                                         onChange={e => handleChange(i, 'diaper', e.target.value)}
                                         onBlur={() => handleSave(i, 'diaper')}
-                                        className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-center bg-transparent w-32"
+                                        className="border border-gray-300 dark:border-gray-600 rounded px-1 md:px-2 py-1 text-center bg-transparent w-[100px] md:w-32 text-xs md:text-sm"
                                     />
                                 </td>
-                                <td className="border-r border-gray-200 dark:border-gray-700 p-2 text-center">
+                                <td className="border-r border-gray-200 dark:border-gray-700 p-1 md:p-2 text-center">
                                     <input
                                         type="time"
                                         value={row.sheets.time}
                                         onChange={e => handleChange(i, 'sheets', e.target.value)}
                                         onBlur={() => handleSave(i, 'sheets')}
-                                        className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-center bg-transparent w-32"
+                                        className="border border-gray-300 dark:border-gray-600 rounded px-1 md:px-2 py-1 text-center bg-transparent w-[100px] md:w-32 text-xs md:text-sm"
                                     />
                                 </td>
-                                <td className="p-2 text-center">
+                                <td className="p-1 md:p-2 text-center">
                                     <input
                                         type="time"
                                         value={row.bath.time}
                                         onChange={e => handleChange(i, 'bath', e.target.value)}
                                         onBlur={() => handleSave(i, 'bath')}
-                                        className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-center bg-transparent w-32"
+                                        className="border border-gray-300 dark:border-gray-600 rounded px-1 md:px-2 py-1 text-center bg-transparent w-[100px] md:w-32 text-xs md:text-sm"
                                     />
                                 </td>
                             </tr>

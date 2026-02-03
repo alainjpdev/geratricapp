@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, ChevronLeft, ChevronRight, Settings, Bug, Heart, LayoutDashboard, Users, Stethoscope, Briefcase, Pill, Activity, BookOpen, BookUser, UserPlus, FolderOpen, HeartPulse, AlertTriangle } from 'lucide-react';
+import { LogOut, ChevronLeft, ChevronRight, Settings, Bug, Heart, LayoutDashboard, Users, Stethoscope, Briefcase, Pill, Activity, BookOpen, BookUser, UserPlus, FolderOpen, HeartPulse, AlertTriangle, X } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { BugReportModal } from '../modals/BugReportModal';
 import { UserProfile } from './UserProfile';
@@ -37,6 +37,8 @@ interface DynamicSidebarProps {
   expandedMenus: string[];
   onToggleSubmenu: (menuKey: string) => void;
   onLogout: () => void;
+  isOpen?: boolean; // New prop for mobile visibility
+  onClose?: () => void; // New prop to close mobile sidebar
 }
 
 export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
@@ -45,7 +47,9 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
   role,
   expandedMenus,
   onToggleSubmenu,
-  onLogout
+  onLogout,
+  isOpen = false,
+  onClose
 }) => {
   const navigate = useNavigate();
   // Obtener usuario del store de autenticación
@@ -83,17 +87,28 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
   }, [menuItems]);
 
   return (
-    <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-200 z-50 hidden md:flex`}>
+    <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-transform duration-300 z-50 
+      ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
       <div className="flex flex-col h-full relative">
         {/* Collapse Button (centered vertically) */}
         <button
           onClick={onToggleCollapse}
-          className="absolute top-1/2 -right-3 z-50 transform -translate-y-1/2 bg-white shadow-lg border border-gray-200 p-1.5 rounded-full hover:bg-gray-100 transition-all duration-200"
+          className="absolute top-1/2 -right-3 z-50 transform -translate-y-1/2 bg-white shadow-lg border border-gray-200 p-1.5 rounded-full hover:bg-gray-100 transition-all duration-200 hidden md:block"
           aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
         >
           {collapsed ? <ChevronRight className="w-5 h-5 text-gray-900" /> : <ChevronLeft className="w-5 h-5 text-gray-900" />}
         </button>
+
+        {/* Mobile Close Button */}
+        {isOpen && (
+          <button
+            onClick={onClose}
+            className="md:hidden absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-900"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        )}
 
         {/* Logo */}
         <div className="flex items-center border-b border-gray-200 bg-white transition-all duration-200 justify-center py-5">

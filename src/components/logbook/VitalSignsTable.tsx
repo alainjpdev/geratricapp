@@ -94,10 +94,10 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
 
     return (
         <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-amber-600" />
-                    Registro de Signos Vitales
+            <div className={`flex justify-between items-center ${readOnly ? 'mb-1' : 'mb-4'}`}>
+                <h3 className={`${readOnly ? 'text-xs' : 'font-bold text-gray-900'} dark:text-white flex items-center gap-2 font-bold`}>
+                    <Activity className={`${readOnly ? 'w-3 h-3' : 'w-5 h-5'} text-amber-600`} />
+                    {readOnly ? 'S. VITALES' : 'Registro de Signos Vitales'}
                 </h3>
                 {!readOnly && (
                     <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "secondary" : "primary"}>
@@ -141,41 +141,41 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
             )}
 
             <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-1">
-                <table className="w-full text-left text-sm whitespace-nowrap">
-                    <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 text-gray-500">
+                <table className={`w-full text-left ${readOnly ? 'text-xs' : 'text-sm'} whitespace-nowrap`}>
+                    <thead className={`bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 text-gray-500 ${readOnly ? 'text-[10px] uppercase' : ''}`}>
                         <tr>
-                            <th className="px-4 py-3 font-semibold">Fecha / Hora</th>
-                            <th className="px-4 py-3 font-semibold">T/A</th>
-                            <th className="px-4 py-3 font-semibold">FC</th>
-                            <th className="px-4 py-3 font-semibold">Temp</th>
-                            <th className="px-4 py-3 font-semibold">SatO2</th>
-                            <th className="px-4 py-3 font-semibold">DxTx</th>
-                            <th className="px-4 py-3 font-semibold">Registrado por</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>Hora</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>T/A</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>FC</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>Temp</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>SatO2</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>DxTx</th>
+                            <th className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-3'} font-semibold`}>Por</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                         {vitals.map(v => (
                             <tr key={v.id} className="hover:bg-gray-50 dark:hover:bg-gray-750">
-                                <td className="px-4 py-2 text-gray-900 dark:text-white font-medium">
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'} text-gray-900 dark:text-white font-medium`}>
                                     {v.time || new Date(v.recordedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </td>
-                                <td className="px-4 py-2">
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'}`}>
                                     {v.ta}
                                 </td>
-                                <td className="px-4 py-2">
-                                    {v.fc} bpm
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'}`}>
+                                    {v.fc}
                                 </td>
-                                <td className="px-4 py-2">
-                                    {v.temp}°C
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'}`}>
+                                    {v.temp}°
                                 </td>
-                                <td className="px-4 py-2">
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'}`}>
                                     {v.sato2}%
                                 </td>
-                                <td className="px-4 py-2">
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'}`}>
                                     {v.dxtx || '-'}
                                 </td>
-                                <td className="px-4 py-2 text-gray-500 text-xs">
-                                    {v.recorderName || 'Unknown'}
+                                <td className={`${readOnly ? 'px-1 md:px-2 py-1' : 'px-2 md:px-4 py-2'} text-gray-500 text-[10px]`}>
+                                    {v.recorderName?.split(' ')[0] || 'Unk'}
                                 </td>
                             </tr>
                         ))}

@@ -109,22 +109,22 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header / Controls - Sticky */}
-            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
-                <div className="p-6 pb-0">
-                    <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
+            <div className={`sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm ${readOnly ? 'py-1' : ''}`}>
+                <div className={`${readOnly ? 'px-1 py-1' : 'px-1 py-4 md:p-6'} pb-0 md:pb-0`}>
+                    <div className={`flex flex-col md:flex-row gap-2 md:gap-4 justify-between items-start md:items-center ${readOnly ? 'mb-1' : 'mb-4 md:mb-6'}`}>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <BookOpen className="w-6 h-6 text-amber-600" />
-                                Bitácora Digital
+                            <h1 className={`${readOnly ? 'text-lg md:text-xl' : 'text-2xl'} font-bold text-gray-900 dark:text-white flex items-center gap-2`}>
+                                <BookOpen className={`${readOnly ? 'w-4 h-4' : 'w-6 h-6'} text-amber-600`} />
+                                Bitácora Digital {readOnly && <span className="text-xs font-normal text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-100 uppercase tracking-tighter ml-2">Solo Lectura</span>}
                             </h1>
-                            <p className="text-gray-500 text-sm">Registro diario de cuidados de enfermería</p>
+                            {!readOnly && <p className="text-gray-500 text-sm">Registro diario de cuidados de enfermería</p>}
                         </div>
 
                         <div className="flex gap-4 items-center bg-gray-50 dark:bg-gray-800 p-2 rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="flex flex-col">
                                 <label className="text-xs text-gray-400 uppercase font-bold">Residente</label>
                                 <select
-                                    className="bg-transparent font-medium outline-none text-gray-700 dark:text-gray-200"
+                                    className={`bg-transparent font-medium outline-none text-gray-700 dark:text-gray-200 ${readOnly ? 'text-sm' : ''}`}
                                     value={selectedResidentId}
                                     onChange={(e) => setSelectedResidentId(e.target.value)}
                                 >
@@ -133,7 +133,7 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                     ))}
                                 </select>
                             </div>
-                            <div className="h-8 w-px bg-gray-300 dark:bg-gray-600 mx-2 hidden md:block"></div>
+                            <div className={`h-8 w-px bg-gray-300 dark:bg-gray-600 mx-2 hidden md:block ${readOnly ? 'h-4' : ''}`}></div>
                             <div className="flex flex-col">
                                 <label className="text-xs text-gray-400 uppercase font-bold">Fecha</label>
                                 <div className="flex items-center gap-1">
@@ -146,11 +146,11 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         }}
                                         className="p-0.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-500"
                                     >
-                                        <ChevronLeft className="w-4 h-4" />
+                                        <ChevronLeft className={`${readOnly ? 'w-3 h-3' : 'w-4 h-4'}`} />
                                     </button>
                                     <input
                                         type="date"
-                                        className="bg-transparent font-medium outline-none text-gray-700 dark:text-gray-200"
+                                        className={`bg-transparent font-medium outline-none text-gray-700 dark:text-gray-200 ${readOnly ? 'text-sm' : ''}`}
                                         value={selectedDate}
                                         onChange={(e) => setSelectedDate(e.target.value)}
                                     />
@@ -163,7 +163,7 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         }}
                                         className="p-0.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-500"
                                     >
-                                        <ChevronRight className="w-4 h-4" />
+                                        <ChevronRight className={`${readOnly ? 'w-3 h-3' : 'w-4 h-4'}`} />
                                     </button>
                                 </div>
                             </div>
@@ -192,18 +192,18 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                 </div>
 
                 {/* Tabs Navigation */}
-                <div className="flex gap-2 overflow-x-auto">
+                <div className="flex gap-1 md:gap-2">
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`flex items-center gap-2 px-4 py-2 border-b-2 font-medium transition-colors whitespace-nowrap ${activeTab === tab.id
+                            className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 md:gap-2 px-1.5 md:px-4 ${readOnly ? 'py-1.5' : 'py-3'} border-b-2 font-medium transition-colors text-[10px] md:text-sm ${activeTab === tab.id
                                 ? 'border-amber-600 text-amber-700 dark:text-amber-500'
                                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
                                 }`}
                         >
-                            <tab.icon className="w-4 h-4" />
-                            {tab.label}
+                            <tab.icon className={`${readOnly ? 'w-3 h-3' : 'w-3.5 h-3.5 md:w-4 h-4'}`} />
+                            <span className="text-center">{tab.label}</span>
                         </button>
                     ))}
                 </div>
@@ -211,34 +211,34 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
 
 
             {/* Content Area */}
-            <div className="flex-1 p-6 space-y-8 max-w-7xl mx-auto w-full">
+            <div className={`flex-1 px-1 ${readOnly ? 'py-2 md:p-3' : 'py-6 md:p-6'} space-y-4 md:space-y-8 max-w-7xl mx-auto w-full`}>
                 {selectedResidentId && (
                     <>
                         {activeTab === 'sheet' && (
                             <>
                                 {/* Staffing Banner */}
                                 {dailyStaffing && (dailyStaffing.tmNurse || dailyStaffing.tvNurse || dailyStaffing.tnNurse) && (
-                                    <div className="bg-white dark:bg-gray-800 border border-blue-100 dark:border-blue-900/30 rounded-lg p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center animate-in fade-in slide-in-from-top-2">
+                                    <div className={`bg-white dark:bg-gray-800 border border-blue-100 dark:border-blue-900/30 rounded-lg ${readOnly ? 'p-2 mb-2' : 'p-4 mb-6'} shadow-sm flex flex-col md:flex-row gap-2 md:gap-4 justify-between items-center animate-in fade-in slide-in-from-top-2`}>
                                         <div className="flex items-center gap-2">
-                                            <User className="w-5 h-5 text-blue-600" />
-                                            <span className="font-bold text-gray-700 dark:text-gray-200 uppercase text-sm tracking-wide">Enfermeros Asignados:</span>
+                                            <User className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-blue-600`} />
+                                            <span className={`font-bold text-gray-700 dark:text-gray-200 uppercase ${readOnly ? 'text-[10px]' : 'text-sm'} tracking-wide`}>Personal:</span>
                                         </div>
-                                        <div className="flex flex-wrap gap-4 text-sm">
+                                        <div className={`flex flex-wrap gap-2 md:gap-4 ${readOnly ? 'text-xs' : 'text-sm'}`}>
                                             {dailyStaffing.tmNurse && (
-                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-3 py-1.5 rounded-md border border-blue-100 dark:border-blue-800">
-                                                    <span className="text-xs font-bold text-blue-500 uppercase">Mañana:</span>
+                                                <div className={`flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 ${readOnly ? 'px-2 py-0.5' : 'px-3 py-1.5'} rounded-md border border-blue-100 dark:border-blue-800`}>
+                                                    <span className={`${readOnly ? 'text-[10px]' : 'text-xs'} font-bold text-blue-500 uppercase`}>M:</span>
                                                     <span className="font-medium text-gray-800 dark:text-gray-200">{dailyStaffing.tmNurse}</span>
                                                 </div>
                                             )}
                                             {dailyStaffing.tvNurse && (
-                                                <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 px-3 py-1.5 rounded-md border border-amber-100 dark:border-amber-800">
-                                                    <span className="text-xs font-bold text-amber-500 uppercase">Tarde:</span>
+                                                <div className={`flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 ${readOnly ? 'px-2 py-0.5' : 'px-3 py-1.5'} rounded-md border border-amber-100 dark:border-amber-800`}>
+                                                    <span className={`${readOnly ? 'text-[10px]' : 'text-xs'} font-bold text-amber-500 uppercase`}>V:</span>
                                                     <span className="font-medium text-gray-800 dark:text-gray-200">{dailyStaffing.tvNurse}</span>
                                                 </div>
                                             )}
                                             {dailyStaffing.tnNurse && (
-                                                <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-md border border-indigo-100 dark:border-indigo-800">
-                                                    <span className="text-xs font-bold text-indigo-500 uppercase">Noche:</span>
+                                                <div className={`flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/20 ${readOnly ? 'px-2 py-0.5' : 'px-3 py-1.5'} rounded-md border border-indigo-100 dark:border-indigo-800`}>
+                                                    <span className={`${readOnly ? 'text-[10px]' : 'text-xs'} font-bold text-indigo-500 uppercase`}>N:</span>
                                                     <span className="font-medium text-gray-800 dark:text-gray-200">{dailyStaffing.tnNurse}</span>
                                                 </div>
                                             )}
@@ -247,14 +247,14 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                 )}
 
                                 {/* Relevant Notes - Daily */}
-                                <div className="mb-6">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Clipboard className="w-5 h-5 text-purple-600" />
-                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Notas Relevantes del Día</h2>
+                                <div className={`${readOnly ? 'mb-2' : 'mb-6'}`}>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <Clipboard className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-purple-600`} />
+                                        <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white`}>Notas Relevantes</h2>
                                     </div>
                                     <textarea
-                                        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow"
-                                        rows={3}
+                                        className={`w-full ${readOnly ? 'p-2 shadow-none border-dashed border-gray-200' : 'p-3'} border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow ${readOnly ? 'text-xs' : ''}`}
+                                        rows={readOnly ? 2 : 3}
                                         placeholder="Escriba notas relevantes para este día..."
                                         value={dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || ''}
                                         onChange={(e) => handleUpdateField('relevantNotes', e.target.value)}
@@ -264,46 +264,46 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                 </div>
 
                                 <section>
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <Activity className="w-5 h-5 text-blue-600" />
-                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Signos Vitales</h2>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1' : 'mb-4'}`}>
+                                        <Activity className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-blue-600`} />
+                                        <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Signos Vitales</h2>
                                     </div>
                                     <VitalSignsTable residentId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
                                 <section>
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <Tablet className="w-5 h-5 text-emerald-600" />
-                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Medicamentos</h2>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1 mt-2' : 'mb-4'}`}>
+                                        <Tablet className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-emerald-600`} />
+                                        <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Medicamentos</h2>
                                     </div>
-                                    <MedicationSection residentId={selectedResidentId} date={selectedDate} />
+                                    <MedicationSection residentId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
                                 <section>
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <FileText className="w-5 h-5 text-amber-600" />
-                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Hoja Clínica</h2>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1 mt-2' : 'mb-4'}`}>
+                                        <FileText className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-amber-600`} />
+                                        <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Hoja Clínica</h2>
                                     </div>
                                     <NursingClinicalSheet patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
                                 <section>
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <Moon className="w-5 h-5 text-indigo-600" />
-                                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Diario de Sueño</h2>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1 mt-2' : 'mb-4'}`}>
+                                        <Moon className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-indigo-600`} />
+                                        <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Diario de Sueño</h2>
                                     </div>
                                     <SleepDiary patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
                                 {/* Resident Condition - Daily */}
-                                <div className="mt-8 mb-4 p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800 rounded-lg">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Activity className="w-5 h-5 text-amber-600" />
-                                        <h2 className="text-lg font-bold text-gray-800 dark:text-white">Condición del Residente (Diaria)</h2>
+                                <div className={`${readOnly ? 'mt-4 mb-2 p-2' : 'mt-8 mb-4 p-4'} bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800 rounded-lg`}>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <Activity className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-amber-600`} />
+                                        <h2 className={`${readOnly ? 'text-sm' : 'text-lg'} font-bold text-gray-800 dark:text-white`}>Condición General</h2>
                                     </div>
                                     <textarea
-                                        className="w-full p-3 border border-amber-200 dark:border-amber-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-shadow"
-                                        rows={2}
+                                        className={`w-full ${readOnly ? 'p-2 shadow-none border-dashed border-gray-200' : 'p-3'} border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-shadow ${readOnly ? 'text-xs' : ''}`}
+                                        rows={readOnly ? 2 : 2}
                                         placeholder="Describa la condición general del residente hoy..."
                                         value={dailyStaffing?.condition || selectedResident?.conditions || ''}
                                         onChange={(e) => handleUpdateField('condition', e.target.value)}

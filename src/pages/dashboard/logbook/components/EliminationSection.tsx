@@ -121,14 +121,14 @@ export const EliminationSection: React.FC<Props> = ({ residentId, date }) => {
             <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse">
                     <thead>
-                        <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-xs">
-                            <th className="border-r border-b px-2 py-2 w-24">Hora</th>
-                            <th className="border-r border-b px-2 py-2 w-16 text-center">Orina</th>
-                            <th className="border-r border-b px-2 py-2">Obs. Orina</th>
-                            <th className="border-r border-b px-2 py-2 w-16 text-center">Evacuación</th>
-                            <th className="border-r border-b px-2 py-2">Obs. Evacuación</th>
-                            <th className="border-r border-b px-2 py-2 w-16 text-center">Vómito</th>
-                            <th className="border-b px-2 py-2">Obs. Vómito</th>
+                        <tr className="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-[10px] md:text-xs">
+                            <th className="border-r border-b px-1 md:px-2 py-2 w-20 md:w-24">Hora</th>
+                            <th className="border-r border-b px-1 md:px-2 py-2 w-12 md:w-16 text-center">Ori</th>
+                            <th className="border-r border-b px-1 md:px-2 py-2">Obs</th>
+                            <th className="border-r border-b px-1 md:px-2 py-2 w-12 md:w-16 text-center">Eva</th>
+                            <th className="border-r border-b px-1 md:px-2 py-2">Obs</th>
+                            <th className="border-r border-b px-1 md:px-2 py-2 w-12 md:w-16 text-center">Vóm</th>
+                            <th className="border-b px-1 md:px-2 py-2">Obs</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -159,7 +159,7 @@ export const EliminationSection: React.FC<Props> = ({ residentId, date }) => {
                                                 value={(row as any)[`${type}Obs`]}
                                                 onChange={e => handleChange(i, `${type}Obs`, e.target.value)}
                                                 onBlur={() => handleSave(i, type as any)}
-                                                className="w-full bg-transparent border-transparent focus:border-indigo-300 rounded px-2"
+                                                className="w-full bg-transparent border-transparent focus:border-indigo-300 rounded px-1 md:px-2 text-xs md:text-sm"
                                                 placeholder="..."
                                             />
                                         </td>
