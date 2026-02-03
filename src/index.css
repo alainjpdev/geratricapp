@@ -486,3 +486,28 @@ body:not(.dark) a:hover {
 /* ensure first nav link visible - removed */
 /* hide 5th nav link - removed */
 /* hide specific nav link - removed */
+
+/* Mobile Scroll Optimizations */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+html {
+  scroll-behavior: smooth;
+  height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overscroll-behavior-y: none;
+  /* Prevent bounce on mobile chrome/safari if desired, or 'contain' */
+}
+
+/* Harmonious vertical scroll container */
+.harmonious-scroll {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}

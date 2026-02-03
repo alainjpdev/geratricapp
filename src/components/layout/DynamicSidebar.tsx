@@ -83,7 +83,7 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
   }, [menuItems]);
 
   return (
-    <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-200 z-50`}>
+    <div className={`fixed inset-y-0 left-0 ${collapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-200 z-50 hidden md:flex`}>
       <div className="flex flex-col h-full relative">
         {/* Collapse Button (centered vertically) */}
         <button

@@ -1176,11 +1176,11 @@ export const Dashboard: React.FC = () => {
                                                     <th className="border-r border-b border-gray-300 px-4 py-2 w-1/3 text-left font-bold">Medicamento</th>
                                                     <th className="border-r border-b border-gray-300 px-4 py-2 w-16 text-center font-bold">Dosis</th>
                                                     <th className="border-r border-b border-gray-300 px-4 py-2 w-24 text-center font-bold">Vía</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 text-center font-bold">1ª Dosis</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 text-center font-bold">2ª Dosis</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 text-center font-bold">3ª Dosis</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold">1ª Dosis</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold">2ª Dosis</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold">3ª Dosis</th>
                                                     {showExtraDose ? (
-                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-28 text-center font-bold relative group">
+                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold relative group">
                                                             4ª Dosis
                                                             <button
                                                                 onClick={() => setShowExtraDose(false)}
@@ -1248,18 +1248,21 @@ export const Dashboard: React.FC = () => {
                                                         </td>
                                                         {/* Dose 1 */}
                                                         <td className="border-r border-b border-gray-300 p-0">
-                                                            <div className="flex items-center justify-center p-1 gap-1">
-                                                                <TimeSelect
-                                                                    value={row.dose1Time}
-                                                                    onChange={(e) => handleMedicationChange(index, 'dose1Time', e.target.value)}
-                                                                    onBlur={() => saveMedication(index)}
-                                                                    disabled={!!row.dose1Checker && row.dose1Checker !== user?.id && user?.role !== 'admin'}
-                                                                />
+                                                            <div className="flex items-center justify-between py-1 px-3 gap-4">
+                                                                <div className="flex-1">
+                                                                    <TimeSelect
+                                                                        value={row.dose1Time}
+                                                                        onChange={(e) => handleMedicationChange(index, 'dose1Time', e.target.value)}
+                                                                        onBlur={() => saveMedication(index)}
+                                                                        disabled={!!row.dose1Checker && row.dose1Checker !== user?.id && user?.role !== 'admin'}
+                                                                        className="w-full min-w-[65px]"
+                                                                    />
+                                                                </div>
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={!!row.dose1Status}
                                                                     onChange={() => toggleCheck(index, 1)}
-                                                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0 ml-auto"
                                                                     disabled={!canToggleCheck(row.dose1CheckTime, row.dose1Checker, row.dose1Time)}
                                                                     title={row.dose1Checker ? `Verificado por ${row.dose1Checker}` : "Verificar dosis"}
                                                                 />
@@ -1267,18 +1270,21 @@ export const Dashboard: React.FC = () => {
                                                         </td>
                                                         {/* Dose 2 */}
                                                         <td className="border-r border-b border-gray-300 p-0">
-                                                            <div className="flex items-center justify-center p-1 gap-1">
-                                                                <TimeSelect
-                                                                    value={row.dose2Time}
-                                                                    onChange={(e) => handleMedicationChange(index, 'dose2Time', e.target.value)}
-                                                                    onBlur={() => saveMedication(index)}
-                                                                    disabled={!!row.dose2Checker && row.dose2Checker !== user?.id && user?.role !== 'admin'}
-                                                                />
+                                                            <div className="flex items-center justify-between py-1 px-3 gap-4">
+                                                                <div className="flex-1">
+                                                                    <TimeSelect
+                                                                        value={row.dose2Time}
+                                                                        onChange={(e) => handleMedicationChange(index, 'dose2Time', e.target.value)}
+                                                                        onBlur={() => saveMedication(index)}
+                                                                        disabled={!!row.dose2Checker && row.dose2Checker !== user?.id && user?.role !== 'admin'}
+                                                                        className="w-full min-w-[65px]"
+                                                                    />
+                                                                </div>
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={!!row.dose2Status}
                                                                     onChange={() => toggleCheck(index, 2)}
-                                                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0 ml-auto"
                                                                     disabled={!canToggleCheck(row.dose2CheckTime, row.dose2Checker, row.dose2Time)}
                                                                     title={row.dose2Checker ? `Verificado por ${row.dose2Checker}` : "Verificar dosis"}
                                                                 />
@@ -1286,18 +1292,21 @@ export const Dashboard: React.FC = () => {
                                                         </td>
                                                         {/* Dose 3 */}
                                                         <td className="border-r border-b border-gray-300 p-0">
-                                                            <div className="flex items-center justify-center p-1 gap-1">
-                                                                <TimeSelect
-                                                                    value={row.dose3Time}
-                                                                    onChange={(e) => handleMedicationChange(index, 'dose3Time', e.target.value)}
-                                                                    onBlur={() => saveMedication(index)}
-                                                                    disabled={!!row.dose3Checker && row.dose3Checker !== user?.id && user?.role !== 'admin'}
-                                                                />
+                                                            <div className="flex items-center justify-between py-1 px-3 gap-4">
+                                                                <div className="flex-1">
+                                                                    <TimeSelect
+                                                                        value={row.dose3Time}
+                                                                        onChange={(e) => handleMedicationChange(index, 'dose3Time', e.target.value)}
+                                                                        onBlur={() => saveMedication(index)}
+                                                                        disabled={!!row.dose3Checker && row.dose3Checker !== user?.id && user?.role !== 'admin'}
+                                                                        className="w-full min-w-[65px]"
+                                                                    />
+                                                                </div>
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={!!row.dose3Status}
                                                                     onChange={() => toggleCheck(index, 3)}
-                                                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0 ml-auto"
                                                                     disabled={!canToggleCheck(row.dose3CheckTime, row.dose3Checker, row.dose3Time)}
                                                                     title={row.dose3Checker ? `Verificado por ${row.dose3Checker}` : "Verificar dosis"}
                                                                 />
@@ -1307,18 +1316,21 @@ export const Dashboard: React.FC = () => {
                                                         {/* Dose 4 (Conditional) */}
                                                         {showExtraDose ? (
                                                             <td className="border-r border-b border-gray-300 p-0">
-                                                                <div className="flex items-center justify-center p-1 gap-1">
-                                                                    <TimeSelect
-                                                                        value={row.dose4Time || ''}
-                                                                        onChange={(e) => handleMedicationChange(index, 'dose4Time', e.target.value)}
-                                                                        onBlur={() => saveMedication(index)}
-                                                                        disabled={!!row.dose4Checker && row.dose4Checker !== user?.id && user?.role !== 'admin'}
-                                                                    />
+                                                                <div className="flex items-center justify-between py-1 px-3 gap-4">
+                                                                    <div className="flex-1">
+                                                                        <TimeSelect
+                                                                            value={row.dose4Time || ''}
+                                                                            onChange={(e) => handleMedicationChange(index, 'dose4Time', e.target.value)}
+                                                                            onBlur={() => saveMedication(index)}
+                                                                            disabled={!!row.dose4Checker && row.dose4Checker !== user?.id && user?.role !== 'admin'}
+                                                                            className="w-full min-w-[65px]"
+                                                                        />
+                                                                    </div>
                                                                     <input
                                                                         type="checkbox"
                                                                         checked={!!row.dose4Status}
                                                                         onChange={() => toggleCheck(index, 4)}
-                                                                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                        className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0 ml-auto"
                                                                         disabled={!canToggleCheck(row.dose4CheckTime, row.dose4Checker, row.dose4Time)}
                                                                         title={row.dose4Checker ? `Verificado por ${row.dose4Checker}` : "Verificar dosis"}
                                                                     />

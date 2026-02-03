@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { medicalService, DailyMedication } from '../../../../services/medicalService';
 import { Card } from '../../../../components/ui/Card';
-import { Pill, Clock } from 'lucide-react';
+import { Pill, Clock, Check } from 'lucide-react';
 
 interface Props {
     residentId: string;
@@ -57,69 +57,91 @@ export const MedicationSection: React.FC<Props> = ({ residentId, date }) => {
                                 <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">1ª Dosis</th>
                                 <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">2ª Dosis</th>
                                 <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">3ª Dosis</th>
+                                <th className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-center w-24">4ª Dosis</th>
                                 <th className="border-b border-gray-300 dark:border-gray-700 px-4 py-3 font-bold text-left">Observación</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {Object.values(medications.reduce((acc, med) => {
-                                if (!acc[med.medicamento]) {
-                                    acc[med.medicamento] = {
-                                        common: med,
-                                        doses: []
-                                    };
-                                }
-                                acc[med.medicamento].doses.push(med);
-                                return acc;
-                            }, {} as Record<string, { common: DailyMedication, doses: DailyMedication[] }>))
-                                .map((group, index) => {
-                                    // Sort doses by time
-                                    const sortedDoses = group.doses.sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
-                                    const med = group.common;
-
-                                    return (
-                                        <tr key={index} className={`hover:bg-blue-50 dark:hover:bg-blue-900/10 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-800/50'}`}>
-                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-900 dark:text-gray-200 font-medium">
-                                                {med.medicamento}
-                                            </td>
-                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
-                                                {med.dosis || '-'}
-                                            </td>
-                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
-                                                {med.via || '-'}
-                                            </td>
-                                            {/* 1st Dose */}
-                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
-                                                {sortedDoses[0]?.hora ? (
-                                                    <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
-                                                        <Clock className="w-3 h-3" />
-                                                        {sortedDoses[0].hora}
-                                                    </span>
-                                                ) : '-'}
-                                            </td>
-                                            {/* 2nd Dose */}
-                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
-                                                {sortedDoses[1]?.hora ? (
-                                                    <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
-                                                        <Clock className="w-3 h-3" />
-                                                        {sortedDoses[1].hora}
-                                                    </span>
-                                                ) : '-'}
-                                            </td>
-                                            {/* 3rd Dose */}
-                                            <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
-                                                {sortedDoses[2]?.hora ? (
-                                                    <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
-                                                        <Clock className="w-3 h-3" />
-                                                        {sortedDoses[2].hora}
-                                                    </span>
-                                                ) : '-'}
-                                            </td>
-                                            <td className="border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-600 dark:text-gray-400 italic">
-                                                {med.observacion || '-'}
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                            {medications.map((med, index) => (
+                                <tr key={med.id || index} className={`hover:bg-blue-50 dark:hover:bg-blue-900/10 ${index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50/50 dark:bg-gray-800/50'}`}>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-900 dark:text-gray-200 font-medium">
+                                        {med.medicamento}
+                                    </td>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
+                                        {med.dosis || '-'}
+                                    </td>
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center text-gray-900 dark:text-gray-200">
+                                        {med.via || '-'}
+                                    </td>
+                                    {/* 1st Dose */}
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                        <div className="flex flex-col items-center gap-1">
+                                            {med.dose1Time ? (
+                                                <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                    <Clock className="w-3 h-3" />
+                                                    {med.dose1Time}
+                                                </span>
+                                            ) : '-'}
+                                            {med.dose1Status && (
+                                                <span className="text-green-600 flex items-center gap-1 text-[10px] uppercase font-bold">
+                                                    <Check className="w-3 h-3" /> Verificado
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    {/* 2nd Dose */}
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                        <div className="flex flex-col items-center gap-1">
+                                            {med.dose2Time ? (
+                                                <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                    <Clock className="w-3 h-3" />
+                                                    {med.dose2Time}
+                                                </span>
+                                            ) : '-'}
+                                            {med.dose2Status && (
+                                                <span className="text-green-600 flex items-center gap-1 text-[10px] uppercase font-bold">
+                                                    <Check className="w-3 h-3" /> Verificado
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    {/* 3rd Dose */}
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                        <div className="flex flex-col items-center gap-1">
+                                            {med.dose3Time ? (
+                                                <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                    <Clock className="w-3 h-3" />
+                                                    {med.dose3Time}
+                                                </span>
+                                            ) : '-'}
+                                            {med.dose3Status && (
+                                                <span className="text-green-600 flex items-center gap-1 text-[10px] uppercase font-bold">
+                                                    <Check className="w-3 h-3" /> Verificado
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    {/* 4th Dose */}
+                                    <td className="border-r border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-center">
+                                        <div className="flex flex-col items-center gap-1">
+                                            {med.dose4Time ? (
+                                                <span className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded-full inline-flex items-center gap-1 text-xs">
+                                                    <Clock className="w-3 h-3" />
+                                                    {med.dose4Time}
+                                                </span>
+                                            ) : '-'}
+                                            {med.dose4Status && (
+                                                <span className="text-green-600 flex items-center gap-1 text-[10px] uppercase font-bold">
+                                                    <Check className="w-3 h-3" /> Verificado
+                                                </span>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td className="border-b border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-600 dark:text-gray-400 italic">
+                                        {med.observacion || '-'}
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

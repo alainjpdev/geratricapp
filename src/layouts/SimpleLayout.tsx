@@ -41,8 +41,8 @@ export const SimpleLayout: React.FC = () => {
       />
 
       {/* Main Content */}
-      <div className={`${collapsed ? 'ml-16' : 'ml-64'} dark:bg-black bg-white transition-all duration-200 overflow-y-auto h-screen`}>
-        <main className="p-0 md:p-6 dark:text-gray-400 text-gray-800 uppercase">
+      <div className={`flex-1 ${collapsed ? 'md:ml-16' : 'md:ml-64'} min-h-screen transition-all duration-200`}>
+        <main className="p-4 md:p-6 dark:text-gray-400 text-gray-800 uppercase harmonious-scroll">
           <Outlet />
         </main>
       </div>
