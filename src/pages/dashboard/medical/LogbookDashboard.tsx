@@ -252,15 +252,20 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         <Clipboard className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-purple-600`} />
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white`}>Notas Relevantes</h2>
                                     </div>
-                                    <textarea
-                                        className={`w-full ${readOnly ? 'p-2 shadow-none border-dashed border-gray-200' : 'p-3'} border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow ${readOnly ? 'text-xs' : ''}`}
-                                        rows={readOnly ? 2 : 3}
-                                        placeholder="Escriba notas relevantes para este día..."
-                                        value={dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || ''}
-                                        onChange={(e) => handleUpdateField('relevantNotes', e.target.value)}
-                                        onBlur={(e) => handleSaveField('relevantNotes', e.target.value)}
-                                        readOnly={readOnly}
-                                    />
+                                    {readOnly ? (
+                                        <div className="w-full p-2 border border-dashed border-gray-200 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs whitespace-pre-wrap min-h-[2.5rem]">
+                                            {dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || 'Sin notas relevantes.'}
+                                        </div>
+                                    ) : (
+                                        <textarea
+                                            className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow"
+                                            rows={3}
+                                            placeholder="Escriba notas relevantes para este día..."
+                                            value={dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || ''}
+                                            onChange={(e) => handleUpdateField('relevantNotes', e.target.value)}
+                                            onBlur={(e) => handleSaveField('relevantNotes', e.target.value)}
+                                        />
+                                    )}
                                 </div>
 
                                 <section>
@@ -301,15 +306,20 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         <Activity className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-amber-600`} />
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-lg'} font-bold text-gray-800 dark:text-white`}>Condición General</h2>
                                     </div>
-                                    <textarea
-                                        className={`w-full ${readOnly ? 'p-2 shadow-none border-dashed border-gray-200' : 'p-3'} border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-shadow ${readOnly ? 'text-xs' : ''}`}
-                                        rows={readOnly ? 2 : 2}
-                                        placeholder="Describa la condición general del residente hoy..."
-                                        value={dailyStaffing?.condition || selectedResident?.conditions || ''}
-                                        onChange={(e) => handleUpdateField('condition', e.target.value)}
-                                        onBlur={(e) => handleSaveField('condition', e.target.value)}
-                                        readOnly={readOnly}
-                                    />
+                                    {readOnly ? (
+                                        <div className="w-full p-2 border border-dashed border-gray-200 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs whitespace-pre-wrap min-h-[2rem]">
+                                            {dailyStaffing?.condition || selectedResident?.conditions || 'Sin observaciones de condición.'}
+                                        </div>
+                                    ) : (
+                                        <textarea
+                                            className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-shadow"
+                                            rows={2}
+                                            placeholder="Describa la condición general del residente hoy..."
+                                            value={dailyStaffing?.condition || selectedResident?.conditions || ''}
+                                            onChange={(e) => handleUpdateField('condition', e.target.value)}
+                                            onBlur={(e) => handleSaveField('condition', e.target.value)}
+                                        />
+                                    )}
                                 </div>
 
                             </>
