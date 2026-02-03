@@ -742,7 +742,8 @@ export const Dashboard: React.FC = () => {
             )}
 
             {/* Header / Controls - Sticky (Like LogbookDashboard) */}
-            <div className="md:sticky md:top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-2 md:mb-4 -mx-1 md:-mx-8 px-1 md:px-8 py-1 md:py-2">
+            {/* Part 1: Header / Controls / Mobile Condition - ALWAYS STICKY */}
+            <div className="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-xs mb-0 md:mb-0 -mx-1 md:-mx-8 px-1 md:px-8 py-1 md:py-2">
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col md:flex-row gap-2 justify-between items-start md:items-center">
                         <div className="flex items-center gap-3">
@@ -847,9 +848,8 @@ export const Dashboard: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Prominent Info Row in Header - Thinner */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-2">
-                        {/* Section 1: Condición (Static) */}
+                    {/* Condition (Mobile Only - inside Sticky Header) */}
+                    <div className="md:hidden">
                         <div className="bg-blue-50/50 dark:bg-blue-900/5 border border-blue-100 dark:border-blue-900/30 p-1.5 px-2 rounded-md flex flex-col gap-1">
                             <div className="flex items-center gap-1.5 text-blue-700/80 dark:text-blue-500 font-bold text-[9px] uppercase tracking-wider">
                                 <Activity className="w-3 h-3" />
@@ -867,93 +867,119 @@ export const Dashboard: React.FC = () => {
                                 )}
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        {/* Section 2: Notas de Enfermería Relevantes (Dynamic) */}
-                        <div className="bg-amber-50/50 dark:bg-amber-900/5 border border-amber-100 dark:border-amber-900/30 p-1.5 px-2 rounded-md flex flex-col gap-1">
-                            <div className="flex items-center justify-between w-full">
-                                <div className="flex items-center gap-1.5 text-amber-700/80 dark:text-amber-500 font-bold text-[9px] uppercase tracking-wider">
-                                    <ClipboardList className="w-3 h-3" />
-                                    Notas Relevantes:
-                                </div>
-                                {!showNoteInput && (
-                                    <button
-                                        onClick={() => setShowNoteInput(true)}
-                                        className="text-amber-600 hover:text-amber-700 p-0.5 rounded-full hover:bg-amber-100 transition-colors"
-                                    >
-                                        <Plus className="w-3 h-3" />
-                                    </button>
-                                )}
+            {/* Part 2: Notes / Desktop Condition - STATIC (Scrolls away) */}
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-2 md:mb-4 -mx-1 md:-mx-8 px-1 md:px-8 pt-1 pb-1 md:pb-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-2">
+                    {/* Section 1: Condición (Desktop Static) */}
+                    <div className="hidden md:block">
+                        <div className="bg-blue-50/50 dark:bg-blue-900/5 border border-blue-100 dark:border-blue-900/30 p-1.5 px-2 rounded-md flex flex-col gap-1">
+                            <div className="flex items-center gap-1.5 text-blue-700/80 dark:text-blue-500 font-bold text-[9px] uppercase tracking-wider">
+                                <Activity className="w-3 h-3" />
+                                Condición del Residente:
                             </div>
-
                             <div className="flex flex-wrap gap-1.5 items-center min-h-[22px]">
-                                {headerData.notes ? (
-                                    headerData.notes.split(';').filter(Boolean).map((note, idx) => (
-                                        <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-1.5 shadow-sm max-w-full">
-                                            <span className="leading-snug py-0.5" title={note.trim()}>{note.trim()}</span>
-                                            <button
-                                                onClick={() => {
-                                                    const notes = headerData.notes.split(';').filter(Boolean);
-                                                    notes.splice(idx, 1);
-                                                    handleHeaderChange('notes', notes.join(';'));
-                                                }}
-                                                className="text-gray-300 hover:text-red-500"
-                                            >
-                                                <X className="w-2.5 h-2.5" />
-                                            </button>
+                                {headerData.diagnosis ? (
+                                    headerData.diagnosis.split(';').filter(Boolean).map((cond, i) => (
+                                        <div key={i} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-blue-100 dark:border-blue-900/50 text-[11px] font-bold text-blue-700 dark:text-blue-300 shadow-sm uppercase">
+                                            {cond.trim()}
                                         </div>
                                     ))
-                                ) : !showNoteInput && (
-                                    <button
-                                        onClick={() => setShowNoteInput(true)}
-                                        className="flex items-center gap-1.5 text-amber-600/50 hover:text-amber-600 text-[10px] italic py-0.5"
-                                    >
-                                        <Plus className="w-3 h-3 border border-dashed border-amber-300 rounded" />
-                                        Agregar nota...
-                                    </button>
+                                ) : (
+                                    <span className="text-gray-400 text-[10px] italic">Sin condición registrada</span>
                                 )}
+                            </div>
+                        </div>
+                    </div>
 
-                                {showNoteInput && (
-                                    <div className="flex items-center gap-1.5 flex-1 w-full">
-                                        <input
-                                            autoFocus
-                                            type="text"
-                                            value={tempNote}
-                                            onChange={(e) => setTempNote(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    if (tempNote.trim()) {
-                                                        const currentNotes = headerData.notes ? headerData.notes.split(';').filter(Boolean) : [];
-                                                        handleHeaderChange('notes', [...currentNotes, tempNote.trim()].join(';'));
-                                                        setTempNote('');
-                                                        setShowNoteInput(false);
-                                                    } else {
-                                                        setShowNoteInput(false);
-                                                    }
-                                                }
-                                                if (e.key === 'Escape') setShowNoteInput(false);
-                                            }}
-                                            onBlur={() => {
-                                                if (!tempNote.trim()) setShowNoteInput(false);
-                                            }}
-                                            className="bg-white dark:bg-gray-800 border-amber-200 focus:border-amber-400 rounded px-2 py-0.5 text-xs flex-1 focus:ring-1 focus:ring-amber-300 outline-none h-6"
-                                            placeholder="Escribe y pulsa Enter..."
-                                        />
+                    {/* Section 2: Notas de Enfermería Relevantes (Dynamic) */}
+                    <div className="bg-amber-50/50 dark:bg-amber-900/5 border border-amber-100 dark:border-amber-900/30 p-1.5 px-2 rounded-md flex flex-col gap-1">
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center gap-1.5 text-amber-700/80 dark:text-amber-500 font-bold text-[9px] uppercase tracking-wider">
+                                <ClipboardList className="w-3 h-3" />
+                                Notas Relevantes:
+                            </div>
+                            {!showNoteInput && (
+                                <button
+                                    onClick={() => setShowNoteInput(true)}
+                                    className="text-amber-600 hover:text-amber-700 p-0.5 rounded-full hover:bg-amber-100 transition-colors"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5 items-center min-h-[22px]">
+                            {headerData.notes ? (
+                                headerData.notes.split(';').filter(Boolean).map((note, idx) => (
+                                    <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-1.5 shadow-sm max-w-full">
+                                        <span className="leading-snug py-0.5" title={note.trim()}>{note.trim()}</span>
                                         <button
                                             onClick={() => {
+                                                const notes = headerData.notes.split(';').filter(Boolean);
+                                                notes.splice(idx, 1);
+                                                handleHeaderChange('notes', notes.join(';'));
+                                            }}
+                                            className="text-gray-300 hover:text-red-500"
+                                        >
+                                            <X className="w-2.5 h-2.5" />
+                                        </button>
+                                    </div>
+                                ))
+                            ) : !showNoteInput && (
+                                <button
+                                    onClick={() => setShowNoteInput(true)}
+                                    className="flex items-center gap-1.5 text-amber-600/50 hover:text-amber-600 text-[10px] italic py-0.5"
+                                >
+                                    <Plus className="w-3 h-3 border border-dashed border-amber-300 rounded" />
+                                    Agregar nota...
+                                </button>
+                            )}
+
+                            {showNoteInput && (
+                                <div className="flex items-center gap-1.5 flex-1 w-full">
+                                    <input
+                                        autoFocus
+                                        type="text"
+                                        value={tempNote}
+                                        onChange={(e) => setTempNote(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
                                                 if (tempNote.trim()) {
                                                     const currentNotes = headerData.notes ? headerData.notes.split(';').filter(Boolean) : [];
                                                     handleHeaderChange('notes', [...currentNotes, tempNote.trim()].join(';'));
                                                     setTempNote('');
+                                                    setShowNoteInput(false);
+                                                } else {
+                                                    setShowNoteInput(false);
                                                 }
-                                                setShowNoteInput(false);
-                                            }}
-                                            className="text-green-600 p-0.5"
-                                        >
-                                            <Check className="w-3.5 h-3.5" />
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
+                                            }
+                                            if (e.key === 'Escape') setShowNoteInput(false);
+                                        }}
+                                        onBlur={() => {
+                                            if (!tempNote.trim()) setShowNoteInput(false);
+                                        }}
+                                        className="bg-white dark:bg-gray-800 border-amber-200 focus:border-amber-400 rounded px-2 py-0.5 text-xs flex-1 focus:ring-1 focus:ring-amber-300 outline-none h-6"
+                                        placeholder="Escribe y pulsa Enter..."
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            if (tempNote.trim()) {
+                                                const currentNotes = headerData.notes ? headerData.notes.split(';').filter(Boolean) : [];
+                                                handleHeaderChange('notes', [...currentNotes, tempNote.trim()].join(';'));
+                                                setTempNote('');
+                                            }
+                                            setShowNoteInput(false);
+                                        }}
+                                        className="text-green-600 p-0.5"
+                                    >
+                                        <Check className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
