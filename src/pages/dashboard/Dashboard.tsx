@@ -360,7 +360,7 @@ export const Dashboard: React.FC = () => {
                 const staffing = await medicalService.getDailyStaffing(headerData.patientId, headerData.date);
                 if (!mounted) return;
 
-                if (staffing) {
+                if (staffing && (staffing.tmNurse || staffing.tvNurse || staffing.tnNurse)) {
                     setHeaderData(prev => ({
                         ...prev,
                         tmName: staffing.tmNurse || '',
@@ -368,39 +368,47 @@ export const Dashboard: React.FC = () => {
                         tnName: staffing.tnNurse || ''
                     }));
                 } else {
-                    // DATA PERSISTENCE: Check if we have "default" staff for this day in localStorage
-                    try {
+                    // Try Global Database Staffing first
+                    const globalStaff = await medicalService.getGlobalStaffing(headerData.date);
+                    if (globalStaff && (globalStaff.tmNurse || globalStaff.tvNurse || globalStaff.tnNurse)) {
+                        console.log('[Dashboard] Auto-filling from Global DB:', globalStaff);
+                        setHeaderData(prev => ({
+                            ...prev,
+                            tmName: globalStaff.tmNurse || '',
+                            tvName: globalStaff.tvNurse || '',
+                            tnName: globalStaff.tnNurse || ''
+                        }));
+                        // Auto-save to this resident's specific record
+                        await medicalService.saveDailyStaffing({
+                            residentId: headerData.patientId,
+                            date: headerData.date,
+                            tmNurse: globalStaff.tmNurse || '',
+                            tvNurse: globalStaff.tvNurse || '',
+                            tnNurse: globalStaff.tnNurse || ''
+                        });
+                    } else {
+                        // Fallback to LocalStorage (User's last choice on this machine)
                         const savedStaff = localStorage.getItem(`staff_prefs_${headerData.date}`);
                         if (savedStaff) {
-                            const parsed = JSON.parse(savedStaff);
-                            console.log('[Dashboard] Auto-filling staff from previous selection:', parsed);
-
-                            setHeaderData(prev => ({
-                                ...prev,
-                                tmName: parsed.tmName || '',
-                                tvName: parsed.tvName || '',
-                                tnName: parsed.tnName || ''
-                            }));
-
-                            // AUTO-SAVE to DB so it persists for this resident
-                            await medicalService.saveDailyStaffing({
-                                residentId: headerData.patientId,
-                                date: headerData.date,
-                                tmNurse: parsed.tmName || '',
-                                tvNurse: parsed.tvName || '',
-                                tnNurse: parsed.tnName || ''
-                            });
-                        } else {
-                            // No defaults found, clear
-                            setHeaderData(prev => ({
-                                ...prev,
-                                tmName: '',
-                                tvName: '',
-                                tnName: ''
-                            }));
+                            try {
+                                const parsed = JSON.parse(savedStaff);
+                                setHeaderData(prev => ({
+                                    ...prev,
+                                    tmName: parsed.tmName || '',
+                                    tvName: parsed.tvName || '',
+                                    tnName: parsed.tnName || ''
+                                }));
+                                // Sync back to DB (Both Global and Patient-Specific)
+                                await medicalService.saveGlobalStaffing(headerData.date, parsed.tmName, parsed.tvName, parsed.tnName);
+                                await medicalService.saveDailyStaffing({
+                                    residentId: headerData.patientId,
+                                    date: headerData.date,
+                                    tmNurse: parsed.tmName || '',
+                                    tvNurse: parsed.tvName || '',
+                                    tnNurse: parsed.tnName || ''
+                                });
+                            } catch (e) { /* ignore */ }
                         }
-                    } catch (err) {
-                        console.error('Error loading staff prefs:', err);
                     }
                 }
             } catch (error) {
@@ -441,6 +449,14 @@ export const Dashboard: React.FC = () => {
                     tvNurse: updatedData.tvName,
                     tnNurse: updatedData.tnName
                 });
+
+                // GLOBAL PERSISTENCE: Save to Master record for the day
+                await medicalService.saveGlobalStaffing(
+                    updatedData.date,
+                    updatedData.tmName || '',
+                    updatedData.tvName || '',
+                    updatedData.tnName || ''
+                );
 
                 // DATA PERSISTENCE: Save as "default" for this day in localStorage
                 // This allows auto-filling for other patients

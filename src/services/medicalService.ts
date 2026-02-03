@@ -345,6 +345,43 @@ export const medicalService = {
         }
     },
 
+    async getGlobalStaffing(date: string) {
+        const { data, error } = await supabase
+            .from('global_staffing')
+            .select('*')
+            .eq('date', date)
+            .maybeSingle();
+
+        if (error) {
+            console.error('Error fetching global staffing:', error);
+            return null;
+        }
+        return data ? {
+            tmNurse: data.tm_nurse,
+            tvNurse: data.tv_nurse,
+            tnNurse: data.tn_nurse
+        } : null;
+    },
+
+    async saveGlobalStaffing(date: string, tm: string, tv: string, tn: string) {
+        const { error } = await supabase
+            .from('global_staffing')
+            .upsert({
+                date,
+                tm_nurse: tm,
+                tv_nurse: tv,
+                tn_nurse: tn,
+                updated_at: new Date().toISOString()
+            }, {
+                onConflict: 'date'
+            });
+
+        if (error) {
+            console.error('Error saving global staffing:', error);
+            throw error;
+        }
+    },
+
     // --- Range Queries for Reports ---
     async getVitalsRange(residentId: string, startDate: string, endDate: string) {
         const { data, error } = await supabase
