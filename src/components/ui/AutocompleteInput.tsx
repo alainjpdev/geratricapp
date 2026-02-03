@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { medicalService } from '../../services/medicalService';
+import { X } from 'lucide-react';
 
 interface AutocompleteInputProps {
     value: string;
@@ -117,13 +118,33 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
                     {suggestions.map((suggestion, index) => (
                         <li
                             key={index}
-                            onClick={() => {
+                            onMouseDown={(e) => {
+                                e.preventDefault(); // Prevent input onBlur from firing immediately
                                 onChange(suggestion);
                                 setShowSuggestions(false);
+                                // Manually trigger blur logic after a short delay or directly if needed
+                                setTimeout(() => {
+                                    onBlur?.();
+                                }, 10);
                             }}
-                            className="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm text-gray-700 font-medium border-b last:border-0 border-gray-100"
+                            className="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm text-gray-700 font-medium border-b last:border-0 border-gray-100 flex justify-between items-center group"
                         >
-                            {suggestion}
+                            <span>{suggestion}</span>
+                            <button
+                                onMouseDown={(e) => {
+                                    e.stopPropagation(); // Don't trigger the li click
+                                    e.preventDefault(); // Don't blur the input
+                                    if (confirm(`¿Eliminar "${suggestion}" de las recomendaciones?`)) {
+                                        medicalService.removeFromLibrary(suggestion).then(() => {
+                                            setSuggestions(prev => prev.filter(s => s !== suggestion));
+                                        });
+                                    }
+                                }}
+                                className="text-gray-300 hover:text-red-500 p-1 rounded-full hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                                title="Eliminar recomendación"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
                         </li>
                     ))}
                 </ul>,

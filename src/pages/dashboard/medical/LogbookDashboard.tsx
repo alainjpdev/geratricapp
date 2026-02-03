@@ -253,8 +253,16 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white`}>Notas Relevantes</h2>
                                     </div>
                                     {readOnly ? (
-                                        <div className="w-full p-2 border border-dashed border-gray-200 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs whitespace-pre-wrap min-h-[2.5rem]">
-                                            {dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || 'Sin notas relevantes.'}
+                                        <div className="flex flex-col md:flex-row md:flex-wrap gap-2 md:gap-1.5 items-stretch md:items-center">
+                                            {(dailyStaffing?.relevantNotes || selectedResident?.relevantNotes) ? (
+                                                (dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || '').split(';').filter(Boolean).map((note, idx) => (
+                                                    <div key={idx} className="bg-white dark:bg-gray-800 px-3 py-2 md:px-2 md:py-1.5 rounded-md border border-purple-100 dark:border-purple-900/50 text-sm md:text-[11px] text-gray-700 dark:text-gray-200 shadow-sm flex-1 min-w-[140px] md:flex-none">
+                                                        <span className="leading-snug">{note.trim()}</span>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="text-gray-400 text-sm md:text-xs italic">Sin notas relevantes registrados.</div>
+                                            )}
                                         </div>
                                     ) : (
                                         <textarea
@@ -307,8 +315,16 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-lg'} font-bold text-gray-800 dark:text-white`}>Condición General</h2>
                                     </div>
                                     {readOnly ? (
-                                        <div className="w-full p-2 border border-dashed border-gray-200 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs whitespace-pre-wrap min-h-[2rem]">
-                                            {dailyStaffing?.condition || selectedResident?.conditions || 'Sin observaciones de condición.'}
+                                        <div className="flex flex-wrap gap-1.5 items-center">
+                                            {(dailyStaffing?.condition || selectedResident?.conditions) ? (
+                                                (dailyStaffing?.condition || selectedResident?.conditions || '').split(';').filter(Boolean).map((cond, idx) => (
+                                                    <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-1.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] font-bold text-amber-700 dark:text-amber-400 shadow-sm uppercase flex-1 min-w-[120px] md:flex-none text-center">
+                                                        {cond.trim()}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="text-gray-400 text-xs italic font-normal">Sin condición registrada.</div>
+                                            )}
                                         </div>
                                     ) : (
                                         <textarea

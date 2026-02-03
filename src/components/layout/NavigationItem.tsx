@@ -8,13 +8,15 @@ interface NavigationItemProps {
   collapsed: boolean;
   expandedMenus: string[];
   onToggleSubmenu: (menuKey: string) => void;
+  onItemClick?: () => void;
 }
 
 export const NavigationItem: React.FC<NavigationItemProps> = ({
   item,
   collapsed,
   expandedMenus,
-  onToggleSubmenu
+  onToggleSubmenu,
+  onItemClick
 }) => {
   // Ocultar Perfil completamente (Desktop y Mobile)
   if (item.to === '/dashboard/profile') {
@@ -73,6 +75,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
                     ? 'bg-gray-100 text-gray-900'
                     : 'text-gray-900 hover:bg-gray-100 hover:text-gray-700')
                 }
+                onClick={onItemClick}
               >
                 <subItem.icon className="w-4 h-4 mr-3" />
                 <span className="uppercase">{subItem.label.toUpperCase()}</span>
@@ -95,6 +98,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
         className={`${mobileClass} items-center ${collapsed ? 'justify-center' : ''} px-3 py-2 rounded-lg text-sm font-medium transition-colors group relative ` +
           'dark:text-white text-gray-700 dark:hover:bg-white/10 hover:bg-gray-100 dark:hover:text-white hover:text-gray-900 uppercase'
         }
+        onClick={onItemClick}
         title={collapsed ? `${item.label} (Google Sheets)` : ''}
       >
         <item.icon className={`w-5 h-5 transition-all duration-200 ${collapsed ? 'mr-0' : 'mr-0'
@@ -127,6 +131,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
         className={`${mobileClass} items-center ${collapsed ? 'justify-center' : ''} px-3 py-2 rounded-lg text-sm font-medium transition-colors group relative ` +
           'dark:text-white text-gray-700 dark:hover:bg-white/10 hover:bg-gray-100 dark:hover:text-white hover:text-gray-900 uppercase'
         }
+        onClick={onItemClick}
         title={collapsed ? `${item.label} (Nueva Ventana)` : ''}
       >
         <item.icon className={`w-5 h-5 transition-all duration-200 ${collapsed ? 'mr-0' : 'mr-0'
@@ -166,6 +171,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
           ? 'bg-gray-100 text-gray-900'
           : 'text-gray-900 hover:bg-gray-100 hover:text-gray-700')
       }
+      onClick={onItemClick}
       title={collapsed ? item.label : ''}
     >
       <item.icon className={`w-5 h-5 transition-all duration-200 ${collapsed ? 'mr-0' : 'mr-0'

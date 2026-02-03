@@ -114,7 +114,10 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
         <div className="flex items-center border-b border-gray-200 bg-white transition-all duration-200 justify-center py-5">
           <div
             className={`flex items-center gap-2 transition-all duration-200 cursor-pointer hover:opacity-80`}
-            onClick={() => navigate('/dashboard')}
+            onClick={() => {
+              onClose?.();
+              navigate('/dashboard');
+            }}
           >
             <div className="bg-sky-100 p-2 rounded-full flex-shrink-0">
               <Heart className={`text-sky-500 transition-all duration-200 ${collapsed ? 'h-6 w-6' : 'h-6 w-6'}`} />
@@ -139,6 +142,7 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
               collapsed={collapsed}
               expandedMenus={expandedMenus}
               onToggleSubmenu={onToggleSubmenu}
+              onItemClick={onClose}
             />
           ))}
         </nav>
@@ -176,7 +180,10 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
           <div className={`flex ${collapsed ? 'flex-col gap-2' : 'flex-row gap-1'} mt-1`}>
             {/* Logout */}
             <button
-              onClick={onLogout}
+              onClick={() => {
+                onClose?.();
+                onLogout();
+              }}
               className={`flex items-center ${collapsed ? 'w-full justify-center' : 'flex-1'} px-3 py-2 text-sm font-medium dark:text-white text-gray-900 dark:hover:bg-white/10 hover:bg-gray-100 dark:hover:text-white hover:text-gray-700 rounded-lg transition-colors group relative uppercase`}
               title={collapsed ? 'Cerrar Sesión' : ''}
             >
@@ -193,7 +200,10 @@ export const DynamicSidebar: React.FC<DynamicSidebarProps> = ({
 
             {/* Bug Report Button */}
             <button
-              onClick={() => setIsBugModalOpen(true)}
+              onClick={() => {
+                onClose?.();
+                setIsBugModalOpen(true);
+              }}
               className={`flex items-center ${collapsed ? 'w-full justify-center' : 'w-auto'} px-2 py-2 text-sm font-medium dark:text-gray-400 text-gray-400 dark:hover:bg-white/10 hover:bg-gray-100 dark:hover:text-gray-200 hover:text-gray-600 rounded-lg transition-colors group relative uppercase`}
               title="Reportar Error"
             >

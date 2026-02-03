@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Trash2, Edit2, Check, X, Save, Printer, Activity, ClipboardList, Plus, ChevronLeft, ChevronRight, BookOpen, MessageSquarePlus, Moon } from 'lucide-react';
 import { Toast } from '../../components/ui/Toast';
 import { NursingClinicalSheet } from '../../components/medical/NursingClinicalSheet';
 import { SleepDiary } from '../../components/logbook/SleepDiary';
+import { MedicationHistory } from './components/MedicationHistory';
 import { TimeSelect } from '../../components/ui/TimeSelect';
 import { AutocompleteInput } from '../../components/ui/AutocompleteInput';
 import { residentService, Resident } from '../../services/residentService';
@@ -109,6 +110,11 @@ export const Dashboard: React.FC = () => {
             dose4Time: ''
         }))
     );
+
+    const medicationsRef = useRef(medications);
+    useEffect(() => {
+        medicationsRef.current = medications;
+    }, [medications]);
 
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; visible: boolean }>({
         message: '',
@@ -274,10 +280,10 @@ export const Dashboard: React.FC = () => {
                         dosis: d.dosis,
                         via: d.via,
                         observacion: d.observacion,
-                        dose1Time: d.dose1_time || '',
-                        dose2Time: d.dose2_time || '',
-                        dose3Time: d.dose3_time || '',
-                        dose4Time: d.dose4_time || '',
+                        dose1Time: d.dose1_time ? d.dose1_time.substring(0, 5) : '',
+                        dose2Time: d.dose2_time ? d.dose2_time.substring(0, 5) : '',
+                        dose3Time: d.dose3_time ? d.dose3_time.substring(0, 5) : '',
+                        dose4Time: d.dose4_time ? d.dose4_time.substring(0, 5) : '',
                         dose1Checker: d.dose1_checker || '',
                         dose1CheckTime: d.dose1_check_time || '',
                         dose1Status: d.dose1_status || false,
@@ -538,7 +544,7 @@ export const Dashboard: React.FC = () => {
     };
 
     const saveMedication = async (index: number) => {
-        const row = medications[index];
+        const row = medicationsRef.current[index];
         if (!headerData.patientId || !headerData.date) return;
         if (!row.medicamento) return; // Need at least a name
 
@@ -607,6 +613,7 @@ export const Dashboard: React.FC = () => {
         const newMeds = [...medications];
         (newMeds[index] as any)[field] = value;
         setMedications(newMeds);
+        medicationsRef.current = newMeds; // Update ref immediately for instant blur saves
     };
 
     const addMedicationRow = () => {
@@ -785,7 +792,9 @@ export const Dashboard: React.FC = () => {
                             </div>
                             <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-1 shrink-0"></div>
                             <div className="flex flex-col min-w-[140px]">
-                                <label className="text-[10px] text-gray-400 uppercase font-bold leading-none mb-0.5">Fecha</label>
+                                <label className="text-[10px] text-gray-400 uppercase font-bold leading-none mb-0.5">
+                                    Fecha ({medicalService.formatDateToDMY(headerData.date)})
+                                </label>
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => {
@@ -880,7 +889,7 @@ export const Dashboard: React.FC = () => {
                                 {headerData.notes ? (
                                     headerData.notes.split(';').filter(Boolean).map((note, idx) => (
                                         <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-1.5 shadow-sm max-w-full">
-                                            <span className="truncate max-w-[200px] md:max-w-[300px]" title={note.trim()}>{note.trim()}</span>
+                                            <span className="leading-snug py-0.5" title={note.trim()}>{note.trim()}</span>
                                             <button
                                                 onClick={() => {
                                                     const notes = headerData.notes.split(';').filter(Boolean);
@@ -953,9 +962,9 @@ export const Dashboard: React.FC = () => {
             <div className="max-w-5xl mx-auto w-full space-y-3 md:space-y-6">
 
                 {/* Staff Assignment Section (Collapsed/Optional) */}
-                <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 bg-gray-50 border-b border-gray-300">
-                        <div className="border-b md:border-b-0 md:border-r border-gray-300 p-1.5 md:p-3">
+                <Card padding="none" className="border border-gray-300 overflow-hidden shadow-sm mb-1 md:mb-4">
+                    <div className="grid grid-cols-3 bg-gray-50 border-b border-gray-300">
+                        <div className="md:border-b-0 border-r border-gray-300 p-1 md:p-3">
                             <label className="text-[10px] font-bold text-gray-400 uppercase mb-0.5 md:mb-1">TM Nombre</label>
                             <select
                                 value={headerData.tmName}
@@ -971,7 +980,7 @@ export const Dashboard: React.FC = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="border-b md:border-b-0 md:border-r border-gray-300 p-1.5 md:p-3">
+                        <div className="md:border-b-0 border-r border-gray-300 p-1 md:p-3">
                             <label className="text-[10px] font-bold text-gray-400 uppercase mb-0.5 md:mb-1">TV Nombre</label>
                             <select
                                 value={headerData.tvName}
@@ -987,7 +996,7 @@ export const Dashboard: React.FC = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="p-1.5 md:p-3">
+                        <div className="p-1 md:p-3">
                             <label className="text-[10px] font-bold text-gray-400 uppercase mb-0.5 md:mb-1">TN Nombre</label>
                             <select
                                 value={headerData.tnName}
@@ -1172,14 +1181,14 @@ export const Dashboard: React.FC = () => {
                                         <table className="w-full min-w-[1000px] text-sm md:text-base">
                                             <thead>
                                                 <tr className="bg-gray-100 text-gray-700 uppercase text-[10px] md:text-sm">
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-1/4 text-left font-bold">Medicamento</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-20 md:w-32 text-center font-bold">Dosis</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-24 md:w-40 text-center font-bold">Vía</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold">1ª Dos</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold">2ª Dos</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold">3ª Dos</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-auto min-w-[100px] text-left font-bold">Medicamento</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-16 md:w-24 text-center font-bold">Dosis</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-20 md:w-28 text-center font-bold">Vía</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-24 md:w-32 text-center font-bold">1ª Dos</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-24 md:w-32 text-center font-bold">2ª Dos</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-24 md:w-32 text-center font-bold">3ª Dos</th>
                                                     {showExtraDose ? (
-                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold relative group">
+                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-24 md:w-32 text-center font-bold relative group">
                                                             4ª Dos
                                                             <button
                                                                 onClick={() => setShowExtraDose(false)}
@@ -1200,7 +1209,7 @@ export const Dashboard: React.FC = () => {
                                                             </button>
                                                         </th>
                                                     )}
-                                                    <th className="border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 text-center font-bold">Obs</th>
+                                                    <th className="border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 text-center font-bold min-w-[120px]">Obs</th>
                                                     <th className="border-b border-gray-300 px-1 py-1 w-10 md:w-12"></th>
                                                 </tr>
                                             </thead>
@@ -1397,6 +1406,9 @@ export const Dashboard: React.FC = () => {
 
                                 </Card>
                             </div>
+
+                            {/* Medication History */}
+                            <MedicationHistory patientId={headerData.patientId} currentDate={headerData.date} />
                         </div>
                     ) : activeTab === 'care' ? (
                         <div className="space-y-3 md:space-y-6 animate-fadeIn">

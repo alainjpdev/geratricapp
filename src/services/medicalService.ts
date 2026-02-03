@@ -538,5 +538,25 @@ export const medicalService = {
         if (error) {
             console.error('Error adding to medication library:', error);
         }
+    },
+
+    async removeFromLibrary(name: string) {
+        if (!name) return;
+        const { error } = await supabase
+            .from('medication_library')
+            .delete()
+            .eq('name', name);
+
+        if (error) {
+            console.error('Error removing from medication library:', error);
+            throw error;
+        }
+    },
+
+    formatDateToDMY(dateStr: string) {
+        if (!dateStr) return '';
+        const [y, m, d] = dateStr.split('-');
+        if (!y || !m || !d) return dateStr;
+        return `${d}/${m}/${y}`;
     }
 };
