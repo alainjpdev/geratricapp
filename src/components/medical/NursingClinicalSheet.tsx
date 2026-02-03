@@ -470,10 +470,10 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
     };
 
     return (
-        <div className={readOnly ? "space-y-2" : "space-y-6"}>
+        <div className={readOnly ? "space-y-1 md:space-y-2" : "space-y-3 md:space-y-6"}>
 
             {/* Hygiene Section */}
-            <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
+            <Card padding={readOnly ? 'none' : 'none'} className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''} md:p-0`}>
                 <div className="overflow-x-auto">
                     <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
                         <thead>
@@ -579,15 +579,15 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                 <h3 className={`${readOnly ? 'text-xs mb-0.5' : 'text-lg mb-2'} font-bold text-gray-800 uppercase border-b border-gray-200 pb-0.5 inline-block tracking-tighter`}>
                     Alimentación
                 </h3>
-                <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
+                <Card padding={readOnly ? 'none' : 'md'} className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
                     <div className="overflow-x-auto">
-                        <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
+                        <table className={`w-full min-w-[600px] ${readOnly ? 'text-[10px] md:text-xs' : 'text-xs md:text-sm'} border-collapse`}>
                             <thead>
                                 <tr className={`bg-gray-100 text-gray-700 uppercase ${readOnly ? 'text-[10px]' : ''}`}>
-                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1 w-20' : 'px-2 py-2 w-32'} font-bold text-left`}>Comida</th>
-                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1 w-20' : 'px-2 py-2 w-32'} font-bold text-center`}>Hora</th>
-                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-2' : 'px-2 py-2'} font-bold text-left`}>Descripción</th>
-                                    <th className={`border-b border-gray-300 ${readOnly ? 'px-2 py-2' : 'px-2 py-2'} font-bold text-left`}>Obs</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5 w-20' : 'px-2 py-1 md:px-4 md:py-2 w-32'} font-bold text-left`}>Comida</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5 w-20' : 'px-2 py-1 md:px-4 md:py-2 w-32'} font-bold text-center`}>Hora</th>
+                                    <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1 md:px-4 md:py-2'} font-bold text-left`}>Descripción</th>
+                                    <th className={`border-b border-gray-300 ${readOnly ? 'px-1 py-0.5' : 'px-2 py-1 md:px-4 md:py-2'} font-bold text-left`}>Obs</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -644,7 +644,7 @@ export const NursingClinicalSheet: React.FC<NursingClinicalSheetProps> = ({ pati
                 <h3 className={`${readOnly ? 'text-xs mb-0.5' : 'text-lg mb-2'} font-bold text-gray-800 uppercase border-b border-gray-200 pb-0.5 inline-block tracking-tighter`}>
                     Eliminación
                 </h3>
-                <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
+                <Card padding={readOnly ? 'none' : 'md'} className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
                     <div className="overflow-x-auto">
                         <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
                             <thead>

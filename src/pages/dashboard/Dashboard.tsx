@@ -725,7 +725,7 @@ export const Dashboard: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-white px-1 py-4 md:p-8">
+        <div className="flex flex-col min-h-screen bg-white px-1 py-1 md:py-4 md:p-8">
             {toast.visible && (
                 <Toast
                     message={toast.message}
@@ -735,7 +735,7 @@ export const Dashboard: React.FC = () => {
             )}
 
             {/* Header / Controls - Sticky (Like LogbookDashboard) */}
-            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-4 -mx-1 md:-mx-8 px-1 md:px-8 py-2">
+            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-2 md:mb-4 -mx-1 md:-mx-8 px-1 md:px-8 py-1 md:py-2">
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col md:flex-row gap-2 justify-between items-start md:items-center">
                         <div className="flex items-center gap-3">
@@ -838,9 +838,8 @@ export const Dashboard: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Prominent Nursing Notes in Header - Compact */}
                     {/* Prominent Info Row in Header - Thinner */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-2">
                         {/* Section 1: Condición (Static) */}
                         <div className="bg-blue-50/50 dark:bg-blue-900/5 border border-blue-100 dark:border-blue-900/30 p-1.5 px-2 rounded-md flex flex-col gap-1">
                             <div className="flex items-center gap-1.5 text-blue-700/80 dark:text-blue-500 font-bold text-[9px] uppercase tracking-wider">
@@ -951,20 +950,20 @@ export const Dashboard: React.FC = () => {
                 </div>
             </div>
 
-            <div className="max-w-5xl mx-auto w-full space-y-6">
+            <div className="max-w-5xl mx-auto w-full space-y-3 md:space-y-6">
 
                 {/* Staff Assignment Section (Collapsed/Optional) */}
                 <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 bg-gray-50 border-b border-gray-300">
-                        <div className="border-b md:border-b-0 md:border-r border-gray-300 p-3">
-                            <label className="text-xs font-bold text-gray-500 uppercase mb-1">TM Nombre</label>
+                        <div className="border-b md:border-b-0 md:border-r border-gray-300 p-1.5 md:p-3">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-0.5 md:mb-1">TM Nombre</label>
                             <select
                                 value={headerData.tmName}
                                 onChange={(e) => handleHeaderChange('tmName', e.target.value)}
                                 disabled={user?.role !== 'admin'}
-                                className={`w-full bg-transparent border-none p-0 text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
+                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
                             >
-                                <option value="">Enfermero Turno Mañana...</option>
+                                <option value="">TM...</option>
                                 {staffMembers.map(staff => (
                                     <option key={staff.id} value={`${staff.first_name} ${staff.last_name}`}>
                                         {staff.first_name} {staff.last_name}
@@ -972,15 +971,15 @@ export const Dashboard: React.FC = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="border-b md:border-b-0 md:border-r border-gray-300 p-3">
-                            <label className="text-xs font-bold text-gray-500 uppercase mb-1">TV Nombre</label>
+                        <div className="border-b md:border-b-0 md:border-r border-gray-300 p-1.5 md:p-3">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-0.5 md:mb-1">TV Nombre</label>
                             <select
                                 value={headerData.tvName}
                                 onChange={(e) => handleHeaderChange('tvName', e.target.value)}
                                 disabled={user?.role !== 'admin'}
-                                className={`w-full bg-transparent border-none p-0 text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
+                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
                             >
-                                <option value="">Enfermero Turno Vespertino...</option>
+                                <option value="">TV...</option>
                                 {staffMembers.map(staff => (
                                     <option key={staff.id} value={`${staff.first_name} ${staff.last_name}`}>
                                         {staff.first_name} {staff.last_name}
@@ -988,15 +987,15 @@ export const Dashboard: React.FC = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="p-3">
-                            <label className="text-xs font-bold text-gray-500 uppercase mb-1">TN Nombre</label>
+                        <div className="p-1.5 md:p-3">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-0.5 md:mb-1">TN Nombre</label>
                             <select
                                 value={headerData.tnName}
                                 onChange={(e) => handleHeaderChange('tnName', e.target.value)}
                                 disabled={user?.role !== 'admin'}
-                                className={`w-full bg-transparent border-none p-0 text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
+                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
                             >
-                                <option value="">Enfermero Turno Nocturno...</option>
+                                <option value="">TN...</option>
                                 {staffMembers.map(staff => (
                                     <option key={staff.id} value={`${staff.first_name} ${staff.last_name}`}>
                                         {staff.first_name} {staff.last_name}
@@ -1009,7 +1008,7 @@ export const Dashboard: React.FC = () => {
                 </Card>
 
                 {/* Tabs */}
-                <div className="flex border-b border-gray-200">
+                <div className="flex border-b border-gray-200 sticky top-[100px] md:static bg-white z-10">
                     <button
                         className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 md:gap-2 px-1.5 md:px-6 py-3 font-medium text-[10px] md:text-sm transition-colors ${activeTab === 'vitals'
                             ? 'border-b-2 border-blue-600 text-blue-600'
@@ -1047,30 +1046,30 @@ export const Dashboard: React.FC = () => {
                     activeTab === 'vitals' ? (
                         <div className="space-y-6 animate-fadeIn">
                             {/* Vital Signs Table */}
-                            <div className="space-y-2">
-                                <h3 className="text-lg font-bold text-gray-800 uppercase border-b-2 border-gray-200 pb-1 inline-block">
+                            <div className="space-y-1 md:space-y-2">
+                                <h3 className="text-sm md:text-lg font-bold text-gray-800 uppercase border-b-2 border-gray-200 pb-0.5 md:pb-1 inline-block">
                                     Signos Vitales
                                 </h3>
-                                <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm">
+                                <Card padding="none" className="border border-gray-300 overflow-hidden shadow-sm">
                                     <div className="overflow-x-auto">
                                         <table className="w-full min-w-[600px] text-sm">
                                             <thead>
-                                                <tr className="bg-gray-100 text-gray-700 uppercase">
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 w-24 text-center font-bold">Hora</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 text-center font-bold">T/A</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 text-center font-bold">FC</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 text-center font-bold">FR</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 text-center font-bold">Temp</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 text-center font-bold">Sat O2%</th>
-                                                    <th className="border-b border-gray-300 px-4 py-2 text-center font-bold">DxTx</th>
+                                                <tr className="bg-gray-100 text-gray-700 uppercase text-[10px] md:text-xs">
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 w-14 md:w-24 text-center font-bold">Hora</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 text-center font-bold">T/A</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 text-center font-bold">FC</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 text-center font-bold">FR</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 text-center font-bold">Temp</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 text-center font-bold">Sat O2%</th>
+                                                    <th className="border-b border-gray-300 px-1 py-1 md:px-4 md:py-2 text-center font-bold">DxTx</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {vitals.map((row, index) => {
                                                     const [sys, dia] = (row.ta || '').split('/');
                                                     return (
-                                                        <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                                                            <td className="border-r border-b border-gray-300 px-2 py-1 text-center font-bold text-gray-600 bg-gray-50">
+                                                        <tr key={index} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} text-xs md:text-sm`}>
+                                                            <td className="border-r border-b border-gray-300 px-1 py-0.5 md:px-2 md:py-1 text-center font-bold text-gray-600 bg-gray-50">
                                                                 {row.time}
                                                             </td>
                                                             <td className="border-r border-b border-gray-300 p-0">
@@ -1164,24 +1163,24 @@ export const Dashboard: React.FC = () => {
                             </div>
 
                             {/* Medications Table */}
-                            <div className="space-y-2">
-                                <h3 className="text-lg font-bold text-gray-800 uppercase border-b-2 border-gray-200 pb-1 inline-block">
+                            <div className="space-y-1 md:space-y-2">
+                                <h3 className="text-sm md:text-lg font-bold text-gray-800 uppercase border-b-2 border-gray-200 pb-0.5 md:pb-1 inline-block">
                                     Medicamentos
                                 </h3>
-                                <Card className="p-0 border border-gray-300 overflow-hidden shadow-sm">
+                                <Card padding="none" className="border border-gray-300 overflow-hidden shadow-sm">
                                     <div className="overflow-x-auto">
-                                        <table className="w-full min-w-[600px] text-sm">
+                                        <table className="w-full min-w-[1000px] text-sm md:text-base">
                                             <thead>
-                                                <tr className="bg-gray-100 text-gray-700 uppercase">
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 w-1/3 text-left font-bold">Medicamento</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 w-16 text-center font-bold">Dosis</th>
-                                                    <th className="border-r border-b border-gray-300 px-4 py-2 w-24 text-center font-bold">Vía</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold">1ª Dosis</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold">2ª Dosis</th>
-                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold">3ª Dosis</th>
+                                                <tr className="bg-gray-100 text-gray-700 uppercase text-[10px] md:text-sm">
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-1/4 text-left font-bold">Medicamento</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-20 md:w-32 text-center font-bold">Dosis</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 w-24 md:w-40 text-center font-bold">Vía</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold">1ª Dos</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold">2ª Dos</th>
+                                                    <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold">3ª Dos</th>
                                                     {showExtraDose ? (
-                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-32 text-center font-bold relative group">
-                                                            4ª Dosis
+                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-28 md:w-36 text-center font-bold relative group">
+                                                            4ª Dos
                                                             <button
                                                                 onClick={() => setShowExtraDose(false)}
                                                                 className="absolute -top-1 -right-1 bg-red-100 text-red-600 rounded-full p-0.5 hover:bg-red-200"
@@ -1191,7 +1190,7 @@ export const Dashboard: React.FC = () => {
                                                             </button>
                                                         </th>
                                                     ) : (
-                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-10 text-center bg-gray-50 p-0">
+                                                        <th className="border-r border-b border-gray-300 px-1 py-1 w-8 md:w-10 text-center bg-gray-50 p-0">
                                                             <button
                                                                 onClick={() => setShowExtraDose(true)}
                                                                 className="w-full h-full flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 transition-colors"
@@ -1201,8 +1200,8 @@ export const Dashboard: React.FC = () => {
                                                             </button>
                                                         </th>
                                                     )}
-                                                    <th className="border-b border-gray-300 px-4 py-2 text-center font-bold">Observaciones</th>
-                                                    <th className="border-b border-gray-300 px-2 py-2 w-10"></th>
+                                                    <th className="border-b border-gray-300 px-1 py-1 md:px-4 md:py-3 text-center font-bold">Obs</th>
+                                                    <th className="border-b border-gray-300 px-1 py-1 w-10 md:w-12"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1400,7 +1399,7 @@ export const Dashboard: React.FC = () => {
                             </div>
                         </div>
                     ) : activeTab === 'care' ? (
-                        <div className="space-y-6 animate-fadeIn">
+                        <div className="space-y-3 md:space-y-6 animate-fadeIn">
                             <NursingClinicalSheet
                                 key={`${headerData.patientId}-${headerData.date}`} // Force remount to clear state
                                 patientId={headerData.patientId}
@@ -1408,7 +1407,7 @@ export const Dashboard: React.FC = () => {
                             />
                         </div>
                     ) : (
-                        <div className="space-y-6 animate-fadeIn">
+                        <div className="space-y-3 md:space-y-6 animate-fadeIn">
                             <SleepDiary
                                 key={`${headerData.patientId}-${headerData.date}`}
                                 patientId={headerData.patientId}
@@ -1418,6 +1417,7 @@ export const Dashboard: React.FC = () => {
                     )}
 
             </div >
+            <div className="h-40 md:h-64"></div> {/* Large spacing for vertical scroll */}
         </div >
     );
 };

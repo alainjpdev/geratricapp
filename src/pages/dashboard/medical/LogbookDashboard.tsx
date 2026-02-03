@@ -211,7 +211,7 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
 
 
             {/* Content Area */}
-            <div className={`flex-1 px-1 ${readOnly ? 'py-2 md:p-3' : 'py-6 md:p-6'} space-y-4 md:space-y-8 max-w-7xl mx-auto w-full`}>
+            <div className={`flex-1 px-1 ${readOnly ? 'py-1 md:p-2' : 'py-6 md:p-6'} ${readOnly ? 'space-y-2 md:space-y-3' : 'space-y-4 md:space-y-8'} max-w-7xl mx-auto w-full`}>
                 {selectedResidentId && (
                     <>
                         {activeTab === 'sheet' && (
@@ -268,32 +268,32 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                     )}
                                 </div>
 
-                                <section>
-                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1' : 'mb-4'}`}>
+                                <section className={readOnly ? 'space-y-0.5' : ''}>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-0.5' : 'mb-4'}`}>
                                         <Activity className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-blue-600`} />
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Signos Vitales</h2>
                                     </div>
                                     <VitalSignsTable residentId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
-                                <section>
-                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1 mt-2' : 'mb-4'}`}>
+                                <section className={readOnly ? 'space-y-0.5' : ''}>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-0.5 mt-1' : 'mb-4'}`}>
                                         <Tablet className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-emerald-600`} />
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Medicamentos</h2>
                                     </div>
                                     <MedicationSection residentId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
-                                <section>
-                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1 mt-2' : 'mb-4'}`}>
+                                <section className={readOnly ? 'space-y-0.5' : ''}>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-0.5 mt-1' : 'mb-4'}`}>
                                         <FileText className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-amber-600`} />
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Hoja Clínica</h2>
                                     </div>
                                     <NursingClinicalSheet patientId={selectedResidentId} date={selectedDate} readOnly={readOnly} />
                                 </section>
 
-                                <section>
-                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-1 mt-2' : 'mb-4'}`}>
+                                <section className={readOnly ? 'space-y-0.5' : ''}>
+                                    <div className={`flex items-center gap-2 ${readOnly ? 'mb-0.5 mt-1' : 'mb-4'}`}>
                                         <Moon className={`${readOnly ? 'w-4 h-4' : 'w-5 h-5'} text-indigo-600`} />
                                         <h2 className={`${readOnly ? 'text-sm' : 'text-xl'} font-bold text-gray-800 dark:text-white uppercase tracking-tighter`}>Diario de Sueño</h2>
                                     </div>

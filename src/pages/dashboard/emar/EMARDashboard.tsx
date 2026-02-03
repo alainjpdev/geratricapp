@@ -164,17 +164,17 @@ const EMARDashboard: React.FC = () => {
                 </div>
             ) : (
                 <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-                    <table className="w-full text-sm text-left border-collapse">
+                    <table className="w-full min-w-[1000px] text-sm text-left border-collapse">
                         <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase">
                             <tr>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700">Residente</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700">Medicamento</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center">Dosis</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center">Vía</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24">1ª Dosis</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24">2ª Dosis</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24">3ª Dosis</th>
-                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center">Acciones</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 w-1/5">Residente</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 w-1/4">Medicamento</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24 md:w-32">Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-28 md:w-40">Vía</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24 md:w-32">1ª Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24 md:w-32">2ª Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24 md:w-32">3ª Dosis</th>
+                                <th className="px-4 py-3 border-b border-gray-300 dark:border-gray-700 text-center w-24 md:w-32">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">

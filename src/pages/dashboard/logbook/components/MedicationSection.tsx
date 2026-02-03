@@ -35,7 +35,7 @@ export const MedicationSection: React.FC<Props> = ({ residentId, date, readOnly 
     };
 
     return (
-        <Card className={`${readOnly ? 'p-2' : 'p-4'} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700`}>
+        <Card padding={readOnly ? 'none' : 'md'} className={`${readOnly ? 'p-2' : 'p-4'} bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700`}>
             <h3 className={`${readOnly ? 'text-xs mb-1' : 'font-bold text-base mb-4'} font-bold text-gray-900 dark:text-white flex items-center gap-2`}>
                 <Pill className={`${readOnly ? 'w-3 h-3' : 'w-5 h-5'} text-blue-600`} />
                 {readOnly ? 'MEDS ADMIN.' : 'Medicamentos Administrados'}
@@ -49,16 +49,16 @@ export const MedicationSection: React.FC<Props> = ({ residentId, date, readOnly 
                 </div>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
+                    <table className={`w-full min-w-[1000px] ${readOnly ? 'text-xs md:text-sm' : 'text-sm'} border-collapse`}>
                         <thead>
-                            <tr className={`bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase ${readOnly ? 'text-[10px]' : 'text-[10px] md:text-xs'}`}>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1' : 'px-1.5 md:px-4 py-3'} font-bold text-left`}>Med</th>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-16' : 'px-1.5 md:px-4 py-3 w-20 md:w-24'} font-bold text-center`}>Dos</th>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-12' : 'px-1.5 md:px-4 py-3 w-20 md:w-24'} font-bold text-center`}>Vía</th>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-12' : 'px-1.5 md:px-4 py-3 w-20 md:w-24'} font-bold text-center`}>1ª</th>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-12' : 'px-1.5 md:px-4 py-3 w-20 md:w-24'} font-bold text-center`}>2ª</th>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-12' : 'px-1.5 md:px-4 py-3 w-20 md:w-24'} font-bold text-center`}>3ª</th>
-                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-12' : 'px-1.5 md:px-4 py-3 w-20 md:w-24'} font-bold text-center`}>4ª</th>
+                            <tr className={`bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase ${readOnly ? 'text-[10px] md:text-xs' : 'text-[10px] md:text-sm'}`}>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-1/4' : 'px-1.5 md:px-4 py-3 w-1/4'} font-bold text-left`}>Med</th>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-20 md:w-32' : 'px-1.5 md:px-4 py-3 w-20 md:w-32'} font-bold text-center`}>Dos</th>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-24 md:w-40' : 'px-1.5 md:px-4 py-3 w-24 md:w-40'} font-bold text-center`}>Vía</th>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-20 md:w-28' : 'px-1.5 md:px-4 py-3 w-20 md:w-28'} font-bold text-center`}>1ª</th>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-20 md:w-28' : 'px-1.5 md:px-4 py-3 w-20 md:w-28'} font-bold text-center`}>2ª</th>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-20 md:w-28' : 'px-1.5 md:px-4 py-3 w-20 md:w-28'} font-bold text-center`}>3ª</th>
+                                <th className={`border-r border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1 w-20 md:w-28' : 'px-1.5 md:px-4 py-3 w-20 md:w-28'} font-bold text-center`}>4ª</th>
                                 <th className={`border-b border-gray-300 dark:border-gray-700 ${readOnly ? 'px-1 py-1' : 'px-1.5 md:px-4 py-3'} font-bold text-left`}>Obs</th>
                             </tr>
                         </thead>

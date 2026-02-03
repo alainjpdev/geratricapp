@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Plus, Trash2, Moon } from 'lucide-react';
@@ -17,6 +17,7 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
     const { user } = useAuthStore();
     const [loading, setLoading] = useState(false);
     const [logs, setLogs] = useState<SleepLog[]>([]);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     // New entry state
     const [newItem, setNewItem] = useState<{
@@ -125,8 +126,16 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
         }
     };
 
+    // Auto-expand textarea
+    useEffect(() => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [newItem.observations]);
+
     return (
-        <div className={readOnly ? "space-y-2" : "space-y-6"}>
+        <div className={readOnly ? "space-y-1 md:space-y-2" : "space-y-3 md:space-y-6"}>
             {toast.visible && (
                 <Toast
                     message={toast.message}
@@ -137,19 +146,19 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
 
             {/* Input Form - Only show if NOT readOnly */}
             {!readOnly && (
-                <Card className="p-4 bg-white shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-2 mb-4 text-primary-700">
-                        <Moon className="w-5 h-5" />
-                        <h3 className="font-semibold">Nuevo Registro de Sueño</h3>
+                <Card className="p-2 md:p-4 bg-white shadow-sm border border-gray-100">
+                    <div className="flex items-center gap-2 mb-2 md:mb-4 text-primary-700">
+                        <Moon className="w-4 h-4 md:w-5 md:h-5" />
+                        <h3 className="font-semibold text-sm md:text-base">Nuevo Registro de Sueño</h3>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 items-end">
                         <div className="md:col-span-2">
                             <label className="block text-xs font-medium text-gray-500 mb-1">Inicio</label>
                             <TimeSelect
                                 value={newItem.start_time}
                                 onChange={(e) => setNewItem({ ...newItem, start_time: e.target.value })}
-                                className="p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-sm h-[38px]"
+                                className="p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-xs md:text-sm h-[32px] md:h-[38px]"
                             />
                         </div>
 
@@ -158,7 +167,7 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
                             <TimeSelect
                                 value={newItem.end_time}
                                 onChange={(e) => setNewItem({ ...newItem, end_time: e.target.value })}
-                                className="p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-sm h-[38px]"
+                                className="p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-xs md:text-sm h-[32px] md:h-[38px]"
                             />
                         </div>
 
@@ -167,7 +176,7 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
                             <select
                                 value={newItem.quality}
                                 onChange={(e) => setNewItem({ ...newItem, quality: e.target.value as any })}
-                                className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-sm bg-white"
+                                className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-xs md:text-sm bg-white h-[32px] md:h-[38px]"
                             >
                                 <option value="Good">Buena</option>
                                 <option value="Fair">Regular</option>
@@ -178,21 +187,22 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
 
                         <div className="md:col-span-5">
                             <label className="block text-xs font-medium text-gray-500 mb-1">Observaciones</label>
-                            <input
-                                type="text"
+                            <textarea
+                                ref={textareaRef}
                                 value={newItem.observations}
                                 onChange={(e) => setNewItem({ ...newItem, observations: e.target.value })}
-                                className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                                className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 transition-all text-xs md:text-sm resize-none overflow-hidden min-h-[32px] md:min-h-[38px]"
                                 placeholder="Comentarios sobre el sueño..."
+                                rows={1}
                             />
                         </div>
 
                         <div className="md:col-span-1">
                             <Button
                                 onClick={handleAddItem}
-                                className="w-full h-[38px] flex items-center justify-center p-0 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-sm"
+                                className="w-full h-[32px] md:h-[38px] flex items-center justify-center p-0 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow-sm"
                             >
-                                <Plus className="w-5 h-5" />
+                                <Plus className="w-4 h-4 md:w-5 md:h-5" />
                             </Button>
                         </div>
                     </div>
@@ -200,22 +210,22 @@ export const SleepDiary: React.FC<SleepDiaryProps> = ({ patientId, date, readOnl
             )}
 
             {/* List Table */}
-            <Card className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''}`}>
+            <Card padding="none" className={`p-0 border border-gray-300 overflow-hidden shadow-sm ${readOnly ? 'bg-white' : ''} md:p-0`}>
                 <div className="overflow-x-auto">
-                    <table className={`w-full min-w-[600px] ${readOnly ? 'text-xs' : 'text-sm'} border-collapse`}>
+                    <table className={`w-full min-w-[600px] ${readOnly ? 'text-[10px] md:text-xs' : 'text-xs md:text-sm'} border-collapse`}>
                         <thead>
-                            <tr className={`bg-gray-100 text-gray-700 uppercase ${readOnly ? 'text-[10px]' : ''}`}>
-                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-center w-20 md:w-32`}>Inicio</th>
-                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-center w-20 md:w-32`}>Fin</th>
-                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-center w-24 md:w-32`}>Calidad</th>
-                                <th className={`border-b border-gray-300 ${readOnly ? 'px-2 py-1' : 'px-4 py-3'} font-bold text-left`}>Observaciones</th>
-                                {!readOnly && <th className="border-b border-gray-300 px-2 py-3 w-10"></th>}
+                            <tr className="bg-gray-100 text-gray-700 uppercase">
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1' : 'px-2 py-1 md:px-4 md:py-2'} text-center font-bold w-20 md:w-32`}>Inicio</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1' : 'px-2 py-1 md:px-4 md:py-2'} text-center font-bold w-20 md:w-32`}>Fin</th>
+                                <th className={`border-r border-b border-gray-300 ${readOnly ? 'px-1 py-1' : 'px-2 py-1 md:px-4 md:py-2'} text-center font-bold w-24 md:w-32`}>Calidad</th>
+                                <th className={`border-b border-gray-300 ${readOnly ? 'px-1 py-1' : 'px-2 py-1 md:px-4 md:py-2'} text-left font-bold`}>Observaciones</th>
+                                {!readOnly && <th className="border-b border-gray-300 px-1 py-1 w-10"></th>}
                             </tr>
                         </thead>
                         <tbody>
                             {loading && (
                                 <tr>
-                                    <td colSpan={readOnly ? 4 : 5} className="text-center py-8 text-gray-500">
+                                    <td colSpan={readOnly ? 4 : 5} className="text-center py-4 md:py-8 text-gray-500">
                                         Cargando...
                                     </td>
                                 </tr>
