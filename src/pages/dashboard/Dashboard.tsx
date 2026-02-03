@@ -742,7 +742,7 @@ export const Dashboard: React.FC = () => {
             )}
 
             {/* Header / Controls - Sticky (Like LogbookDashboard) */}
-            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-2 md:mb-4 -mx-1 md:-mx-8 px-1 md:px-8 py-1 md:py-2">
+            <div className="md:sticky md:top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm mb-2 md:mb-4 -mx-1 md:-mx-8 px-1 md:px-8 py-1 md:py-2">
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col md:flex-row gap-2 justify-between items-start md:items-center">
                         <div className="flex items-center gap-3">
