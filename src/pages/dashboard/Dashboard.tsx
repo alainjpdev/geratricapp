@@ -995,8 +995,8 @@ export const Dashboard: React.FC = () => {
                             <select
                                 value={headerData.tmName}
                                 onChange={(e) => handleHeaderChange('tmName', e.target.value)}
-                                disabled={user?.role !== 'admin'}
-                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
+                                disabled={user?.role !== 'admin' && user?.role !== 'enfermero'}
+                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' && user?.role !== 'enfermero' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
                             >
                                 <option value="">TM...</option>
                                 {staffMembers.map(staff => (
@@ -1011,8 +1011,8 @@ export const Dashboard: React.FC = () => {
                             <select
                                 value={headerData.tvName}
                                 onChange={(e) => handleHeaderChange('tvName', e.target.value)}
-                                disabled={user?.role !== 'admin'}
-                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
+                                disabled={user?.role !== 'admin' && user?.role !== 'enfermero'}
+                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' && user?.role !== 'enfermero' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
                             >
                                 <option value="">TV...</option>
                                 {staffMembers.map(staff => (
@@ -1027,8 +1027,8 @@ export const Dashboard: React.FC = () => {
                             <select
                                 value={headerData.tnName}
                                 onChange={(e) => handleHeaderChange('tnName', e.target.value)}
-                                disabled={user?.role !== 'admin'}
-                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
+                                disabled={user?.role !== 'admin' && user?.role !== 'enfermero'}
+                                className={`w-full bg-transparent border-none p-0 text-xs md:text-sm font-medium focus:ring-0 ${user?.role !== 'admin' && user?.role !== 'enfermero' ? 'text-gray-500 cursor-not-allowed' : 'text-gray-700'}`}
                             >
                                 <option value="">TN...</option>
                                 {staffMembers.map(staff => (

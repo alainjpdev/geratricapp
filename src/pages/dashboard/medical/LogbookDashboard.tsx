@@ -180,13 +180,15 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                 <Printer className="w-5 h-5" />
                                 <span className="hidden md:inline">Imprimir</span>
                             </button>
-                            <button
-                                onClick={() => setStaffingModalOpen(true)}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors"
-                            >
-                                <Users className="w-5 h-5" />
-                                <span className="font-medium hidden md:inline">Asignar Personal</span>
-                            </button>
+                            {(user?.role === 'admin' || user?.role === 'enfermero') && (
+                                <button
+                                    onClick={() => setStaffingModalOpen(true)}
+                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors"
+                                >
+                                    <Users className="w-5 h-5" />
+                                    <span className="font-medium hidden md:inline">Asignar Personal</span>
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
