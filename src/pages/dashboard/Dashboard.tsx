@@ -457,21 +457,21 @@ export const Dashboard: React.FC = () => {
                 });
 
                 // GLOBAL PERSISTENCE: Save to Master record for the day
-                await medicalService.saveGlobalStaffing(
-                    updatedData.date,
-                    updatedData.tmName || '',
-                    updatedData.tvName || '',
-                    updatedData.tnName || ''
-                );
+                // await medicalService.saveGlobalStaffing(
+                //     updatedData.date,
+                //     updatedData.tmName || '',
+                //     updatedData.tvName || '',
+                //     updatedData.tnName || ''
+                // );
 
                 // DATA PERSISTENCE: Save as "default" for this day in localStorage
                 // This allows auto-filling for other patients
-                const currentPrefs = {
-                    tmName: updatedData.tmName,
-                    tvName: updatedData.tvName,
-                    tnName: updatedData.tnName
-                };
-                localStorage.setItem(`staff_prefs_${updatedData.date}`, JSON.stringify(currentPrefs));
+                // const currentPrefs = {
+                //     tmName: updatedData.tmName,
+                //     tvName: updatedData.tvName,
+                //     tnName: updatedData.tnName
+                // };
+                // localStorage.setItem(`staff_prefs_${updatedData.date}`, JSON.stringify(currentPrefs));
 
             } catch (error) {
                 console.error('Error saving staffing:', error);
