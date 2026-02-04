@@ -12,6 +12,16 @@ export const SimpleLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapse = () => setCollapsed(!collapsed);
 
+  // Apply font size preference
+  React.useEffect(() => {
+    if (user?.fontSize) {
+      document.documentElement.style.fontSize = `${user.fontSize}px`;
+    } else {
+      // Reset to default if no preference (usually browser default 16px, but explicit is safer if scaling)
+      document.documentElement.style.fontSize = '16px';
+    }
+  }, [user?.fontSize]);
+
   // State for mobile sidebar
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 

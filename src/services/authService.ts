@@ -33,7 +33,7 @@ export const loginWithUsersTable = async (email: string, password: string): Prom
     // Primero, buscar el usuario en la tabla users
     const { data: dbUser, error: userError } = await supabase
       .from('users')
-      .select('id, email, first_name, last_name, role, avatar, password_hash, is_active, grupo_asignado')
+      .select('id, email, first_name, last_name, role, avatar, password_hash, is_active, grupo_asignado, font_size')
       .eq('email', email)
       .maybeSingle();
 
@@ -69,7 +69,8 @@ export const loginWithUsersTable = async (email: string, password: string): Prom
       role: (['admin', 'enfermero', 'paciente', 'pariente'].includes(dbUser.role) ? dbUser.role : 'paciente') as 'admin' | 'enfermero' | 'paciente' | 'pariente',
       avatar: dbUser.avatar || '',
       grupoAsignado: dbUser.grupo_asignado || undefined,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      fontSize: dbUser.font_size || 16
     };
 
     // Generar un token simple (en producción, usar JWT)
@@ -100,7 +101,7 @@ export const getUserFromTable = async (userId: string): Promise<User | null> => 
   try {
     const { data: dbUser, error } = await supabase
       .from('users')
-      .select('id, email, first_name, last_name, role, avatar, is_active, grupo_asignado')
+      .select('id, email, first_name, last_name, role, avatar, is_active, grupo_asignado, font_size')
       .eq('id', userId)
       .maybeSingle();
 
@@ -116,7 +117,8 @@ export const getUserFromTable = async (userId: string): Promise<User | null> => 
       role: (['admin', 'enfermero', 'paciente', 'pariente'].includes(dbUser.role) ? dbUser.role : 'paciente') as 'admin' | 'enfermero' | 'paciente' | 'pariente',
       avatar: dbUser.avatar || '',
       grupoAsignado: dbUser.grupo_asignado || undefined,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      fontSize: dbUser.font_size || 16
     };
   } catch (error) {
     console.error('Error obteniendo usuario:', error);

@@ -10,7 +10,8 @@ const Configuration: React.FC = () => {
 
     const [formData, setFormData] = useState({
         firstName: '',
-        lastName: ''
+        lastName: '',
+        fontSize: 16 // Default value
     });
 
     // Estado para cambio de contraseña
@@ -27,7 +28,8 @@ const Configuration: React.FC = () => {
         if (user) {
             setFormData({
                 firstName: user.firstName || '',
-                lastName: user.lastName || ''
+                lastName: user.lastName || '',
+                fontSize: user.fontSize || 16
             });
         }
     }, [user]);
@@ -54,7 +56,8 @@ const Configuration: React.FC = () => {
                 .from('users')
                 .update({
                     first_name: formData.firstName,
-                    last_name: formData.lastName
+                    last_name: formData.lastName,
+                    font_size: formData.fontSize
                 })
                 .eq('id', user.id);
 
@@ -169,6 +172,28 @@ const Configuration: React.FC = () => {
                                     className="w-full px-3 py-2 border dark:border-white/20 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent dark:text-white text-gray-900 dark:bg-white/5 bg-white uppercase"
                                     placeholder="Tu apellido"
                                 />
+                            </div>
+
+                            {/* Font Size Configuration */}
+                            <div>
+                                <label htmlFor="fontSize" className="block text-xs font-semibold dark:text-gray-400 text-gray-700 uppercase mb-1">Tamaño de Letra (px)</label>
+                                <div className="flex items-center gap-4">
+                                    <input
+                                        type="range"
+                                        id="fontSize"
+                                        name="fontSize"
+                                        min="12"
+                                        max="24"
+                                        step="1"
+                                        value={formData.fontSize || 16}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, fontSize: parseInt(e.target.value) }))}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                                    />
+                                    <span className="text-sm font-bold dark:text-white text-gray-900 min-w-[3ch]">
+                                        {formData.fontSize || 16}px
+                                    </span>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1 uppercase">Ajusta el tamaño de letra de la aplicación.</p>
                             </div>
 
                             <div className="pt-4 flex justify-end">

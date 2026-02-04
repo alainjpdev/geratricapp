@@ -8,6 +8,7 @@ export interface User {
   grupoAsignado?: string;
   createdAt: string;
   hours?: number;
+  fontSize?: number;
 }
 
 export interface AuthState {
