@@ -102,12 +102,12 @@ const VitalsDashboard: React.FC = () => {
                                         type="button"
                                         onClick={() => setSelectedResidentId(r.id)}
                                         className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors whitespace-nowrap ${selectedResidentId === r.id
-                                                ? 'bg-sky-100 border-sky-300 text-sky-800'
-                                                : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                                            ? 'bg-sky-100 border-sky-300 text-sky-800'
+                                            : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                                             }`}
                                     >
                                         <User className="w-4 h-4" />
-                                        {r.firstName} {r.lastName}
+                                        {`${r.firstName} ${r.lastName}`.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
                                     </button>
                                 ))}
                             </div>

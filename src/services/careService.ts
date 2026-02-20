@@ -267,7 +267,7 @@ export const careService = {
     // --- Unified History ---
     async getResidentHistory(residentId: string, limit = 50) {
         // Fetch most recent logs from all categories
-        const [care, nutrition, elimination, vitals] = await Promise.all([
+        const [care, nutrition, elimination, vitals, staffing] = await Promise.all([
             supabase.from('care_logs')
                 .select('*, performer:users(first_name, last_name)')
                 .eq('resident_id', residentId)
@@ -287,6 +287,11 @@ export const careService = {
                 .select('*, recorder:users(first_name, last_name)')
                 .eq('resident_id', residentId)
                 .order('created_at', { ascending: false })
+                .limit(limit),
+            supabase.from('daily_staffing')
+                .select('*')
+                .eq('resident_id', residentId)
+                .order('date', { ascending: false })
                 .limit(limit)
         ]);
 
@@ -327,6 +332,19 @@ export const careService = {
             timestamp: d.created_at,
             author: `${d.recorder?.first_name || ''} ${d.recorder?.last_name || ''}`
         }));
+
+        staffing.data?.forEach((d: any) => {
+            if (d.relevant_notes) {
+                history.push({
+                    id: `${d.resident_id}-${d.date}`,
+                    type: 'Notas Relevantes',
+                    summary: `Notas del día ${d.date}`,
+                    detail: d.relevant_notes,
+                    timestamp: `${d.date}T23:59:59Z`, // End of day for sorting
+                    author: 'Enfermería'
+                });
+            }
+        });
 
         // Sort combined
         return history.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, limit);

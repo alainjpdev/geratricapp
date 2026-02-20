@@ -77,6 +77,8 @@ export interface DailyStaffing {
     tnNurse?: string;
     condition?: string;
     relevantNotes?: string;
+    notesUpdatedBy?: string;   // user id
+    notesAuthorName?: string;  // display name (from join)
 }
 
 export const medicalService = {
@@ -138,6 +140,46 @@ export const medicalService = {
             residentId: d.resident_id,
             recordedBy: d.recorded_by,
             recordedAt: d.created_at, // Map created_at to recordedAt interface property
+            date: d.date,
+            time: d.time,
+            ta: d.ta,
+            fc: d.fc,
+            fr: d.fr,
+            temp: d.temp,
+            sato2: d.sato2,
+            dxtx: d.dxtx,
+            recorderName: d.recorder ? `${d.recorder.first_name || ''} ${d.recorder.last_name || ''}` : 'Unknown'
+        }));
+    },
+
+    async getVitalsHistory(residentId: string, limitDays: number) {
+        const endDate = new Date().toISOString().split('T')[0];
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - limitDays);
+        const startDateStr = startDate.toISOString().split('T')[0];
+
+        const { data, error } = await supabase
+            .from('vital_signs')
+            .select(`
+                *,
+                recorder:users (first_name, last_name)
+            `)
+            .eq('resident_id', residentId)
+            .gte('date', startDateStr)
+            .lte('date', endDate)
+            .order('date', { ascending: false })
+            .order('time', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching vitals history:', error);
+            return [];
+        }
+
+        return data.map((d: any) => ({
+            id: d.id,
+            residentId: d.resident_id,
+            recordedBy: d.recorded_by,
+            recordedAt: d.created_at,
             date: d.date,
             time: d.time,
             ta: d.ta,
@@ -319,25 +361,69 @@ export const medicalService = {
             tvNurse: data.tv_nurse,
             tnNurse: data.tn_nurse,
             condition: data.condition,
-            relevantNotes: data.relevant_notes
+            relevantNotes: data.relevant_notes,
+            notesUpdatedBy: data.notes_updated_by
         } as DailyStaffing;
     },
 
+    async getStaffingHistory(residentId: string, limit: number) {
+        const { data, error } = await supabase
+            .from('daily_staffing')
+            .select('*')
+            .eq('resident_id', residentId)
+            .not('relevant_notes', 'is', null)
+            .not('relevant_notes', 'eq', '')
+            .order('date', { ascending: false })
+            .limit(limit);
+
+        if (error) {
+            console.error('Error fetching staffing history:', error);
+            return [];
+        }
+
+        // Collect unique user IDs that have notes_updated_by
+        const userIds = [...new Set(data.map((d: any) => d.notes_updated_by).filter(Boolean))];
+        let userMap: Record<string, string> = {};
+
+        if (userIds.length > 0) {
+            const { data: users } = await supabase
+                .from('users')
+                .select('id, first_name, last_name')
+                .in('id', userIds.map(id => String(id)));
+
+            if (users) {
+                for (const u of users) {
+                    userMap[u.id] = `${u.first_name || ''} ${u.last_name || ''}`.trim();
+                }
+            }
+        }
+
+        return data.map((d: any) => ({
+            residentId: d.resident_id,
+            date: d.date,
+            relevantNotes: d.relevant_notes,
+            notesUpdatedBy: d.notes_updated_by,
+            notesAuthorName: d.notes_updated_by ? (userMap[d.notes_updated_by] || undefined) : undefined
+        }));
+    },
+
     async saveDailyStaffing(staffing: DailyStaffing) {
+        const upsertData: any = {
+            resident_id: staffing.residentId,
+            date: staffing.date,
+            tm_nurse: staffing.tmNurse,
+            tv_nurse: staffing.tvNurse,
+            tn_nurse: staffing.tnNurse,
+            condition: staffing.condition,
+            relevant_notes: staffing.relevantNotes,
+            updated_at: new Date().toISOString()
+        };
+        if (staffing.notesUpdatedBy) {
+            upsertData.notes_updated_by = staffing.notesUpdatedBy;
+        }
         const { error } = await supabase
             .from('daily_staffing')
-            .upsert({
-                resident_id: staffing.residentId,
-                date: staffing.date,
-                tm_nurse: staffing.tmNurse,
-                tv_nurse: staffing.tvNurse,
-                tn_nurse: staffing.tnNurse,
-                condition: staffing.condition,
-                relevant_notes: staffing.relevantNotes,
-                updated_at: new Date().toISOString()
-            }, {
-                onConflict: 'resident_id,date'
-            });
+            .upsert(upsertData, { onConflict: 'resident_id,date' });
 
         if (error) {
             console.error('Error saving daily staffing:', error);

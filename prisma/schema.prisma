@@ -8,37 +8,47 @@ datasource db {
 }
 
 model User {
-  id                    String                 @id @default(uuid())
-  email                 String                 @unique
-  firstName             String                 @map("first_name")
-  lastName              String                 @map("last_name")
-  role                  String                 @default("paciente")
-  avatar                String?
-  passwordHash          String?                @map("password_hash")
-  isActive              Boolean                @default(true) @map("is_active")
-  createdAt             DateTime               @default(now()) @map("created_at")
-  updatedAt             DateTime               @updatedAt @map("updated_at")
-  grupoAsignado         String?                @map("grupo_asignado")
-  announcementStudents  AnnouncementStudent[]  @relation("AnnouncementStudentUser")
-  assignmentStudents    AssignmentStudent[]    @relation("AssignmentStudentUser")
-  assignmentSubmissions AssignmentSubmission[] @relation("AssignmentSubmissionUser")
-  classMemberships      ClassMember[]
-  classesAsTeacher      Class[]                @relation("ClassTeacher")
-  gradesAsGrader        Grade[]                @relation("GradeGrader")
-  gradesAsStudent       Grade[]                @relation("GradeStudent")
-  materialStudents      MaterialStudent[]      @relation("MaterialStudentUser")
-  modulesCreated        Module[]               @relation("ModuleCreator")
-  ordersCreated         Orden[]
-  quizStudents          QuizStudent[]          @relation("QuizStudentUser")
-  quizSubmissions       QuizSubmission[]       @relation("QuizSubmissionUser")
-  streamItems           StreamItem[]
-  parentRelations       StudentParent[]        @relation("StudentParentParent")
-  studentParents        StudentParent[]        @relation("StudentParentStudent")
-  bugReports            BugReport[]
-  resident              Resident?
-  medicationLogs        MedicationLog[]
-  recordedVitals        VitalSign[]
-  authoredNotes         NursingNote[]
+  id                                           String                 @id @default(uuid())
+  email                                        String                 @unique
+  firstName                                    String                 @map("first_name")
+  lastName                                     String                 @map("last_name")
+  role                                         String                 @default("paciente")
+  avatar                                       String?
+  passwordHash                                 String?                @map("password_hash")
+  isActive                                     Boolean                @default(true) @map("is_active")
+  createdAt                                    DateTime               @default(now()) @map("created_at")
+  updatedAt                                    DateTime               @updatedAt @map("updated_at")
+  grupoAsignado                                String?                @map("grupo_asignado")
+  font_size                                    Int?                   @default(16)
+  announcementStudents                         AnnouncementStudent[]  @relation("AnnouncementStudentUser")
+  assignmentStudents                           AssignmentStudent[]    @relation("AssignmentStudentUser")
+  assignmentSubmissions                        AssignmentSubmission[] @relation("AssignmentSubmissionUser")
+  bugReports                                   BugReport[]
+  care_logs                                    care_logs[]
+  classMemberships                             ClassMember[]
+  classesAsTeacher                             Class[]                @relation("ClassTeacher")
+  elimination_logs                             elimination_logs[]
+  gradesAsGrader                               Grade[]                @relation("GradeGrader")
+  gradesAsStudent                              Grade[]                @relation("GradeStudent")
+  materialStudents                             MaterialStudent[]      @relation("MaterialStudentUser")
+  medicationLogs                               MedicationLog[]
+  medications_medications_dose1_checkerTousers medications[]          @relation("medications_dose1_checkerTousers")
+  medications_medications_dose2_checkerTousers medications[]          @relation("medications_dose2_checkerTousers")
+  medications_medications_dose3_checkerTousers medications[]          @relation("medications_dose3_checkerTousers")
+  medications_medications_dose4_checkerTousers medications[]          @relation("medications_dose4_checkerTousers")
+  medications_medications_recorded_byTousers   medications[]          @relation("medications_recorded_byTousers")
+  modulesCreated                               Module[]               @relation("ModuleCreator")
+  authoredNotes                                NursingNote[]
+  nutrition_logs                               nutrition_logs[]
+  ordersCreated                                Orden[]
+  quizStudents                                 QuizStudent[]          @relation("QuizStudentUser")
+  quizSubmissions                              QuizSubmission[]       @relation("QuizSubmissionUser")
+  resident                                     Resident?
+  sleep_logs                                   sleep_logs[]
+  streamItems                                  StreamItem[]
+  parentRelations                              StudentParent[]        @relation("StudentParentParent")
+  studentParents                               StudentParent[]        @relation("StudentParentStudent")
+  recordedVitals                               VitalSign[]
 
   @@index([email])
   @@index([role])
@@ -50,8 +60,8 @@ model BugReport {
   description String
   userId      String?  @map("user_id")
   status      String   @default("open")
-  type        String   @default("manual") // 'manual' or 'auto'
-  errorHash   String?  @map("error_hash") // For deduplication
+  type        String   @default("manual")
+  errorHash   String?  @map("error_hash")
   createdAt   DateTime @default(now()) @map("created_at")
   user        User?    @relation(fields: [userId], references: [id])
 
@@ -63,47 +73,49 @@ model BugReport {
 }
 
 model Resident {
-  id                String   @id @default(uuid())
-  firstName         String   @map("first_name")
-  lastName          String   @map("last_name")
-  dateOfBirth       DateTime @map("date_of_birth")
-  roomNumber        String?  @map("room_number")
-  status            String   @default("Active") // Active, Hospitalized, Deceased
-  emergencyContact  Json?    @map("emergency_contact") // { name, phone, relation }
-  allergies         String?
-  conditions        String?
-  carePlanSummary   String?  @map("care_plan_summary")
-  
-  userId            String?  @unique @map("user_id")
-  user              User?    @relation(fields: [userId], references: [id])
-  
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
-
-  medications       MedicationOrder[]
-  vitalSigns        VitalSign[]
-  nursingNotes      NursingNote[]
+  id               String             @id @default(uuid())
+  firstName        String             @map("first_name")
+  lastName         String             @map("last_name")
+  dateOfBirth      DateTime           @map("date_of_birth")
+  roomNumber       String?            @map("room_number")
+  status           String             @default("Active")
+  emergencyContact Json?              @map("emergency_contact")
+  allergies        String?
+  conditions       String?
+  carePlanSummary  String?            @map("care_plan_summary")
+  userId           String?            @unique @map("user_id")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  relevant_notes   String?
+  care_logs        care_logs[]
+  daily_staffing   daily_staffing[]
+  elimination_logs elimination_logs[]
+  medicationOrders MedicationOrder[]
+  medications      medications[]
+  nursingNotes     NursingNote[]
+  nutrition_logs   nutrition_logs[]
+  user             User?              @relation(fields: [userId], references: [id])
+  sleep_logs       sleep_logs[]
+  vitalSigns       VitalSign[]
 
   @@map("residents")
 }
 
 model MedicationOrder {
-  id              String   @id @default(uuid())
-  residentId      String   @map("resident_id")
-  medicationName  String   @map("medication_name")
-  dosage          String
-  frequency       String   // e.g., "Morning", "Evening", "QD", "BID", "PRN"
-  route           String   // e.g., "Oral", "IV", "Topical"
-  startDate       DateTime @map("start_date")
-  endDate         DateTime? @map("end_date")
-  isActive        Boolean  @default(true) @map("is_active")
-  instructions    String?
-  
-  resident        Resident @relation(fields: [residentId], references: [id])
-  logs            MedicationLog[]
-
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id             String          @id @default(uuid())
+  residentId     String          @map("resident_id")
+  medicationName String          @map("medication_name")
+  dosage         String
+  frequency      String
+  route          String
+  startDate      DateTime        @map("start_date")
+  endDate        DateTime?       @map("end_date")
+  isActive       Boolean         @default(true) @map("is_active")
+  instructions   String?
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  logs           MedicationLog[]
+  resident       Resident        @relation(fields: [residentId], references: [id])
 
   @@index([residentId])
   @@index([isActive])
@@ -111,16 +123,15 @@ model MedicationOrder {
 }
 
 model MedicationLog {
-  id              String   @id @default(uuid())
-  orderId         String   @map("order_id")
-  administeredBy  String   @map("administered_by") // User ID
-  administeredAt  DateTime @default(now()) @map("administered_at")
-  status          String   // "Given", "Refused", "Missed"
-  notes           String?
-  shift           String?  // "Morning", "Afternoon", "Night"
-
-  order           MedicationOrder @relation(fields: [orderId], references: [id])
-  administrator   User     @relation(fields: [administeredBy], references: [id])
+  id             String          @id @default(uuid())
+  orderId        String          @map("order_id")
+  administeredBy String          @map("administered_by")
+  administeredAt DateTime        @default(now()) @map("administered_at")
+  status         String
+  notes          String?
+  shift          String?
+  administrator  User            @relation(fields: [administeredBy], references: [id])
+  order          MedicationOrder @relation(fields: [orderId], references: [id])
 
   @@index([orderId])
   @@index([administeredAt])
@@ -128,45 +139,39 @@ model MedicationLog {
 }
 
 model VitalSign {
-  id                    String   @id @default(uuid())
-  residentId            String   @map("resident_id")
-  recordedBy            String   @map("recorded_by") // User ID (Nurse)
-  recordedAt            DateTime @default(now()) @map("recorded_at")
-  
-  bloodPressureSystolic Int?     @map("bp_systolic")
-  bloodPressureDiastolic Int?    @map("bp_diastolic")
-  heartRate             Int?     @map("heart_rate")
-  temperature           Float?
-  oxygenSaturation      Int?     @map("oxygen_saturation")
-  glucose               Int?
-  weight                Float?
-  notes                 String?
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  residentId String    @map("resident_id")
+  date       DateTime  @db.Date
+  time       String
+  ta         String?
+  fc         String?
+  fr         String?
+  temp       String?
+  sato2      String?
+  dxtx       String?
+  recordedBy String?   @map("recorded_by")
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  shift      String?
+  recorder   User?     @relation(fields: [recordedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resident   Resident  @relation(fields: [residentId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  resident              Resident @relation(fields: [residentId], references: [id])
-  recorder              User     @relation(fields: [recordedBy], references: [id])
-
-  createdAt             DateTime @default(now()) @map("created_at")
-  updatedAt             DateTime @updatedAt @map("updated_at")
-
-  @@index([residentId])
-  @@index([recordedAt])
+  @@unique([residentId, date, time])
   @@map("vital_signs")
 }
 
 model NursingNote {
-  id          String   @id @default(uuid())
-  residentId  String   @map("resident_id")
-  authorId    String   @map("author_id") // User ID (Nurse)
-  createdAt   DateTime @default(now()) @map("created_at")
-  shift       String   // Morning, Afternoon, Night
-  category    String   // General, Incident, Medical, Family, Activity
-  content     String
-  severity    String   @default("Low") // Low, Medium, High
-
-  resident    Resident @relation(fields: [residentId], references: [id])
-  author      User     @relation(fields: [authorId], references: [id])
-
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id         String   @id @default(uuid())
+  residentId String   @map("resident_id")
+  authorId   String   @map("author_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  shift      String
+  category   String
+  content    String
+  severity   String   @default("Low")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  author     User     @relation(fields: [authorId], references: [id])
+  resident   Resident @relation(fields: [residentId], references: [id])
 
   @@index([residentId])
   @@index([createdAt])
@@ -622,4 +627,147 @@ model OrdenItem {
 
   @@index([ordenId])
   @@map("orden_items")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model care_logs {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resident_id  String
+  performed_by String?
+  category     String?
+  performed_at DateTime? @default(now()) @db.Timestamptz(6)
+  notes        String?
+  shift        String?
+  date         DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  users        User?     @relation(fields: [performed_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  residents    Resident  @relation(fields: [resident_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model daily_staffing {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resident_id    String
+  date           DateTime @db.Date
+  tm_nurse       String?
+  tv_nurse       String?
+  tn_nurse       String?
+  created_at     DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  updated_at     DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  condition      String?  @default("")
+  relevant_notes String?  @default("")
+  residents      Resident @relation(fields: [resident_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([resident_id, date])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model elimination_logs {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resident_id     String
+  logged_by       String?
+  type            String?
+  characteristics String?
+  logged_at       DateTime? @default(now()) @db.Timestamptz(6)
+  date            DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  notes           String?
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime? @default(now()) @db.Timestamptz(6)
+  users           User?     @relation(fields: [logged_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  residents       Resident  @relation(fields: [resident_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model global_staffing {
+  date       DateTime  @id @db.Date
+  tm_nurse   String?
+  tv_nurse   String?
+  tn_nurse   String?
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model medication_library {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String    @unique
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([name(ops: raw("gin_trgm_ops"))], map: "idx_medication_library_name_trgm", type: Gin)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model medications {
+  id                                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resident_id                            String
+  date                                   DateTime  @db.Date
+  medicamento                            String?
+  dosis                                  String?
+  via                                    String?
+  hora                                   String?
+  observacion                            String?
+  recorded_by                            String?
+  created_at                             DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                             DateTime? @default(now()) @db.Timestamptz(6)
+  dose1_time                             DateTime? @db.Time(6)
+  dose2_time                             DateTime? @db.Time(6)
+  dose3_time                             DateTime? @db.Time(6)
+  dose4_time                             DateTime? @db.Time(6)
+  dose1_checker                          String?
+  dose1_check_time                       DateTime? @db.Timestamptz(6)
+  dose1_status                           Boolean?  @default(false)
+  dose2_checker                          String?
+  dose2_check_time                       DateTime? @db.Timestamptz(6)
+  dose2_status                           Boolean?  @default(false)
+  dose3_checker                          String?
+  dose3_check_time                       DateTime? @db.Timestamptz(6)
+  dose3_status                           Boolean?  @default(false)
+  dose4_checker                          String?
+  dose4_check_time                       DateTime? @db.Timestamptz(6)
+  dose4_status                           Boolean?  @default(false)
+  users_medications_dose1_checkerTousers User?     @relation("medications_dose1_checkerTousers", fields: [dose1_checker], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_medications_dose2_checkerTousers User?     @relation("medications_dose2_checkerTousers", fields: [dose2_checker], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_medications_dose3_checkerTousers User?     @relation("medications_dose3_checkerTousers", fields: [dose3_checker], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_medications_dose4_checkerTousers User?     @relation("medications_dose4_checkerTousers", fields: [dose4_checker], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_medications_recorded_byTousers   User?     @relation("medications_recorded_byTousers", fields: [recorded_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  residents                              Resident  @relation(fields: [resident_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([resident_id, date, medicamento, hora])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nutrition_logs {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resident_id         String
+  logged_by           String?
+  meal_type           String?
+  percentage_consumed Int?
+  description         String?
+  logged_at           DateTime? @default(now()) @db.Timestamptz(6)
+  date                DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  notes               String?
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime? @default(now()) @db.Timestamptz(6)
+  users               User?     @relation(fields: [logged_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  residents           Resident  @relation(fields: [resident_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([resident_id, date, meal_type], map: "nutrition_logs_unique_meal")
+}
+
+model sleep_logs {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resident_id  String
+  date         DateTime       @db.Date
+  start_time   DateTime       @db.Time(6)
+  end_time     DateTime?      @db.Time(6)
+  quality      sleep_quality?
+  observations String?
+  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
+  created_by   String?
+  users        User?          @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  residents    Resident       @relation(fields: [resident_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum sleep_quality {
+  Good
+  Fair
+  Poor
+  Interrupted
 }

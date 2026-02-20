@@ -16,6 +16,8 @@ interface Props {
 const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }) => {
     const { user } = useAuthStore();
     const [vitals, setVitals] = useState<VitalSign[]>([]);
+    const [vitalsHistory, setVitalsHistory] = useState<VitalSign[]>([]);
+    const [historyLimit, setHistoryLimit] = useState(1);
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
 
@@ -36,7 +38,6 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
             if (!mounted) return;
 
             // Sort by time ascending (early to late)
-            // If v.time exists (HH:mm), sort by it. Else fallback to recordedAt.
             const sortedData = [...data].sort((a, b) => {
                 if (a.time && b.time) return a.time.localeCompare(b.time);
                 return new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime();
@@ -47,10 +48,22 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
         }
     };
 
+    const loadHistory = async (mounted: boolean) => {
+        try {
+            const data = await medicalService.getVitalsHistory(residentId, historyLimit);
+            if (!mounted) return;
+            // Filter out current date to avoid duplication
+            setVitalsHistory(data.filter(v => v.date !== date));
+        } catch (error) {
+            console.error('Error loading history', error);
+        }
+    };
+
     useEffect(() => {
         if (residentId) {
             // Reset state immediately
             setVitals([]);
+            setVitalsHistory([]);
             setNewVital({
                 bloodPressureSystolic: 120,
                 bloodPressureDiastolic: 80,
@@ -63,9 +76,10 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
 
             let mounted = true;
             loadVitals(mounted);
+            loadHistory(mounted);
             return () => { mounted = false; };
         }
-    }, [residentId, date]);
+    }, [residentId, date, historyLimit]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -189,6 +203,73 @@ const VitalSignsTable: React.FC<Props> = ({ residentId, date, readOnly = false }
                     </tbody>
                 </table>
             </div>
+
+            {/* History of Vital Signs */}
+            {vitalsHistory.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                            <Plus className="w-4 h-4 text-gray-400" />
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{historyLimit === 1 ? 'SIGNOS DÍA ANTERIOR' : `HISTORIAL SIGNOS ${historyLimit}D`}</span>
+                        </div>
+                        <div className="flex gap-1">
+                            {[1, 3, 7, 30].map((days) => (
+                                <button
+                                    key={days}
+                                    onClick={() => setHistoryLimit(days)}
+                                    className={`text-[9px] font-bold px-2 py-0.5 rounded transition-colors border ${historyLimit === days
+                                        ? 'bg-blue-600 text-white border-blue-600'
+                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-500 border-gray-200 dark:border-gray-700 hover:text-blue-600'
+                                        }`}
+                                >
+                                    {days === 1 ? 'AYER' : `${days}D`}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="space-y-1">
+                        {vitalsHistory.map((v, i) => (
+                            <div key={v.id} className="flex gap-3 items-center py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-800/10 transition-colors px-1 rounded">
+                                <div className="flex flex-col w-12 shrink-0">
+                                    <span className="text-[10px] font-bold text-blue-600 dark:text-blue-500 leading-none">
+                                        {new Date(v.date + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit' })}
+                                    </span>
+                                    <span className="text-[8px] font-medium text-gray-400 uppercase leading-none mt-0.5">
+                                        {new Date(v.date + 'T12:00:00').toLocaleDateString('es-ES', { month: 'short' })}
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-5 md:grid-cols-6 flex-1 gap-2 text-[11px]">
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] text-gray-400 uppercase leading-tight font-bold">T/A</span>
+                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{v.ta}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] text-gray-400 uppercase leading-tight font-bold">FC</span>
+                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{v.fc}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] text-gray-400 uppercase leading-tight font-bold">Temp</span>
+                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{v.temp}°</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] text-gray-400 uppercase leading-tight font-bold">SatO2</span>
+                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{v.sato2}%</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] text-gray-400 uppercase leading-tight font-bold">DxTx</span>
+                                        <span className="text-gray-700 dark:text-gray-300 font-medium">{v.dxtx || '-'}</span>
+                                    </div>
+                                    <div className="hidden md:flex flex-col justify-center">
+                                        <span className="text-[9px] text-gray-400 italic">
+                                            {v.time || new Date(v.recordedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

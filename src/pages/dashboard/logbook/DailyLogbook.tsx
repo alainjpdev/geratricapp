@@ -58,7 +58,7 @@ export const DailyLogbook: React.FC = () => {
                             className="bg-transparent font-bold text-gray-900 dark:text-white text-lg focus:outline-none focus:ring-0 w-full md:min-w-[200px]"
                         >
                             {residents.map(r => (
-                                <option key={r.id} value={r.id}>{r.firstName} {r.lastName}</option>
+                                <option key={r.id} value={r.id}>{`${r.firstName} ${r.lastName}`.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</option>
                             ))}
                         </select>
                     </div>

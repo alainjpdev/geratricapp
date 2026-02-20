@@ -18,6 +18,11 @@ import { LogbookPrintModal } from '../../../components/logbook/LogbookPrintModal
 import { Printer } from 'lucide-react';
 
 const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
+
+    // Helper: capitalize each word properly regardless of original casing
+    const titleCase = (str: string) =>
+        str ? str.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : '';
+
     const { user } = useAuthStore();
     const [residents, setResidents] = useState<Resident[]>([]);
     const [selectedResidentId, setSelectedResidentId] = useState<string>('');
@@ -31,6 +36,8 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     const [activeTab, setActiveTab] = useState<'sheet' | 'notes' | 'history'>('sheet');
     const [loading, setLoading] = useState(false);
     const [dailyStaffing, setDailyStaffing] = useState<DailyStaffing | null>(null);
+    const [notesHistory, setNotesHistory] = useState<{ date: string, relevantNotes: string, notesAuthorName?: string }[]>([]);
+    const [historyLimit, setHistoryLimit] = useState(1);
     const [staffingModalOpen, setStaffingModalOpen] = useState(false);
     const [printModalOpen, setPrintModalOpen] = useState(false);
 
@@ -42,7 +49,20 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
         if (selectedResidentId && selectedDate) {
             loadStaffing();
         }
-    }, [selectedResidentId, selectedDate]);
+        if (selectedResidentId) {
+            loadHistory();
+        }
+    }, [selectedResidentId, selectedDate, historyLimit]);
+
+    const loadHistory = async () => {
+        try {
+            const history = await medicalService.getStaffingHistory(selectedResidentId, historyLimit);
+            // Filter out the selected date from history to avoid duplication if it's already shown in daily notes
+            setNotesHistory(history.filter(h => h.date !== selectedDate));
+        } catch (error) {
+            console.error('Error loading history:', error);
+        }
+    };
 
     const loadStaffing = async () => {
         try {
@@ -89,10 +109,12 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
     const handleSaveField = async (field: keyof DailyStaffing, value: string) => {
         const updatedStaffing: DailyStaffing = {
             ...(dailyStaffing || { residentId: selectedResidentId, date: selectedDate }),
-            [field]: value
+            [field]: value,
+            ...(field === 'relevantNotes' && user?.id ? { notesUpdatedBy: user.id } : {})
         };
         try {
             await medicalService.saveDailyStaffing(updatedStaffing);
+            if (field === 'relevantNotes') loadHistory();
         } catch (error) {
             console.error(`Error saving ${field}:`, error);
         }
@@ -129,7 +151,7 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                     onChange={(e) => setSelectedResidentId(e.target.value)}
                                 >
                                     {residents.map(r => (
-                                        <option key={r.id} value={r.id}>{r.firstName} {r.lastName}</option>
+                                        <option key={r.id} value={r.id}>{titleCase(r.firstName)} {titleCase(r.lastName)}</option>
                                     ))}
                                 </select>
                             </div>
@@ -256,26 +278,94 @@ const LogbookDashboard: React.FC<{ readOnly?: boolean }> = ({ readOnly }) => {
                                     </div>
                                     {readOnly ? (
                                         <div className="flex flex-col md:flex-row md:flex-wrap gap-2 md:gap-1.5 items-stretch md:items-center">
-                                            {(dailyStaffing?.relevantNotes || selectedResident?.relevantNotes) ? (
-                                                (dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || '').split(';').filter(Boolean).map((note, idx) => (
+                                            {(dailyStaffing?.relevantNotes) ? (
+                                                (dailyStaffing.relevantNotes || '').split(';').filter(Boolean).map((note, idx) => (
                                                     <div key={idx} className="bg-white dark:bg-gray-800 px-3 py-2 md:px-2 md:py-1.5 rounded-md border border-purple-100 dark:border-purple-900/50 text-sm md:text-[11px] text-gray-700 dark:text-gray-200 shadow-sm flex-1 min-w-[140px] md:flex-none">
                                                         <span className="leading-snug">{note.trim()}</span>
                                                     </div>
                                                 ))
                                             ) : (
-                                                <div className="text-gray-400 text-sm md:text-xs italic">Sin notas relevantes registrados.</div>
+                                                <div className="text-gray-400 text-sm md:text-xs italic">Sin notas relevantes registrados para hoy.</div>
                                             )}
                                         </div>
                                     ) : (
-                                        <textarea
-                                            className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow"
-                                            rows={3}
-                                            placeholder="Escriba notas relevantes para este día..."
-                                            value={dailyStaffing?.relevantNotes || selectedResident?.relevantNotes || ''}
-                                            onChange={(e) => handleUpdateField('relevantNotes', e.target.value)}
-                                            onBlur={(e) => handleSaveField('relevantNotes', e.target.value)}
-                                        />
+                                        <>
+                                            <textarea
+                                                className="w-full p-3 border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 outline-none transition-shadow"
+                                                rows={3}
+                                                placeholder="Escriba notas relevantes para este día... (estas notas se guardarán solo para esta fecha)"
+                                                value={dailyStaffing?.relevantNotes || ''}
+                                                onChange={(e) => handleUpdateField('relevantNotes', e.target.value)}
+                                                onBlur={(e) => handleSaveField('relevantNotes', e.target.value)}
+                                            />
+                                            {/* Mini history for context */}
+                                            <div className="mt-2 text-[10px] text-gray-400 font-medium">
+                                                Las notas de hoy son independientes del historial del paciente.
+                                            </div>
+                                        </>
                                     )}
+
+
+                                    {/* History of Relevant Notes */}
+                                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div className="flex items-center gap-2">
+                                                <History className="w-4 h-4 text-gray-400" />
+                                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{historyLimit === 1 ? 'NOTA DÍA ANTERIOR' : `HISTORIAL ${historyLimit}D`}</span>
+                                            </div>
+                                            <div className="flex gap-1">
+                                                {[1, 3, 7, 30].map((days) => (
+                                                    <button
+                                                        key={days}
+                                                        onClick={() => setHistoryLimit(days)}
+                                                        className={`text-[9px] font-bold px-2 py-0.5 rounded transition-colors border ${historyLimit === days
+                                                            ? 'bg-amber-600 text-white border-amber-600'
+                                                            : 'bg-gray-100 dark:bg-gray-800 text-gray-500 border-gray-200 dark:border-gray-700 hover:text-amber-600'
+                                                            }`}
+                                                    >
+                                                        {days === 1 ? 'AYER' : `${days}D`}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        {notesHistory.length > 0 ? (
+                                            <div className="space-y-1 mt-1">
+                                                {notesHistory.map((h, i) => (
+                                                    <div key={i} className="flex gap-3 items-start py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
+                                                        <div className="flex flex-col w-12 shrink-0">
+                                                            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-500 leading-none">
+                                                                {new Date(h.date + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit' })}
+                                                            </span>
+                                                            <span className="text-[8px] font-medium text-gray-400 uppercase leading-none mt-0.5">
+                                                                {new Date(h.date + 'T12:00:00').toLocaleDateString('es-ES', { month: 'short' })}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+                                                                {h.relevantNotes.split(';').filter(Boolean).map((n, j) => (
+                                                                    <span key={j} className="text-[11px] text-gray-600 dark:text-gray-400 flex items-center gap-1.5">
+                                                                        {j > 0 && <span className="w-1 h-1 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0"></span>}
+                                                                        {n.trim()}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                            {h.notesAuthorName && (
+                                                                <div className="mt-0.5 flex items-center gap-1 text-[9px] text-gray-400">
+                                                                    <User className="w-2.5 h-2.5" />
+                                                                    <span>{h.notesAuthorName}</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="text-[10px] text-gray-400 italic py-2">
+                                                Sin notas registradas en este periodo.
+                                            </div>
+                                        )}
+                                    </div>
+
                                 </div>
 
                                 <section className={readOnly ? 'space-y-0.5' : ''}>

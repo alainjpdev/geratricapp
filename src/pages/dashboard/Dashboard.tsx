@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Trash2, Edit2, Check, X, Save, Printer, Activity, ClipboardList, Plus, ChevronLeft, ChevronRight, BookOpen, MessageSquarePlus, Moon } from 'lucide-react';
+import { Trash2, Edit2, Check, X, Save, Printer, Activity, ClipboardList, Plus, ChevronLeft, ChevronRight, BookOpen, MessageSquarePlus, Moon, History as HistoryIcon } from 'lucide-react';
 import { Toast } from '../../components/ui/Toast';
 import { NursingClinicalSheet } from '../../components/medical/NursingClinicalSheet';
 import { SleepDiary } from '../../components/logbook/SleepDiary';
@@ -76,7 +76,8 @@ export const Dashboard: React.FC = () => {
         patientName: '',
         patientId: '',
         diagnosis: '', // Condition (Static)
-        notes: ''      // Relevant Notes (Deletable)
+        notes: '',      // Relevant Notes Today (Daily)
+        notesHistory: [] as { date: string; notes: string }[] // History of last 2 days
     });
 
     // Hardcoded times based on the reference
@@ -132,6 +133,9 @@ export const Dashboard: React.FC = () => {
 
     const [showNoteInput, setShowNoteInput] = useState(false);
     const [tempNote, setTempNote] = useState('');
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const isLocked = headerData.date < todayStr;
 
     useEffect(() => {
         const loadResidents = async () => {
@@ -366,12 +370,13 @@ export const Dashboard: React.FC = () => {
                 const staffing = await medicalService.getDailyStaffing(headerData.patientId, headerData.date);
                 if (!mounted) return;
 
-                if (staffing && (staffing.tmNurse || staffing.tvNurse || staffing.tnNurse)) {
+                if (staffing) {
                     setHeaderData(prev => ({
                         ...prev,
                         tmName: staffing.tmNurse || '',
                         tvName: staffing.tvNurse || '',
-                        tnName: staffing.tnNurse || ''
+                        tnName: staffing.tnNurse || '',
+                        notes: staffing.relevantNotes || ''
                     }));
                 } else {
                     // Try Global Database Staffing first
@@ -382,7 +387,8 @@ export const Dashboard: React.FC = () => {
                             ...prev,
                             tmName: globalStaff.tmNurse || '',
                             tvName: globalStaff.tvNurse || '',
-                            tnName: globalStaff.tnNurse || ''
+                            tnName: globalStaff.tnNurse || '',
+                            notes: ''
                         }));
                         // Auto-save to this resident's specific record
                         await medicalService.saveDailyStaffing({
@@ -390,7 +396,8 @@ export const Dashboard: React.FC = () => {
                             date: headerData.date,
                             tmNurse: globalStaff.tmNurse || '',
                             tvNurse: globalStaff.tvNurse || '',
-                            tnNurse: globalStaff.tnNurse || ''
+                            tnNurse: globalStaff.tnNurse || '',
+                            relevantNotes: ''
                         });
                     } else {
                         // Fallback to LocalStorage (User's last choice on this machine)
@@ -402,7 +409,8 @@ export const Dashboard: React.FC = () => {
                                     ...prev,
                                     tmName: parsed.tmName || '',
                                     tvName: parsed.tvName || '',
-                                    tnName: parsed.tnName || ''
+                                    tnName: parsed.tnName || '',
+                                    notes: ''
                                 }));
                                 // Sync back to DB (Both Global and Patient-Specific)
                                 await medicalService.saveGlobalStaffing(headerData.date, parsed.tmName, parsed.tvName, parsed.tnName);
@@ -411,14 +419,48 @@ export const Dashboard: React.FC = () => {
                                     date: headerData.date,
                                     tmNurse: parsed.tmName || '',
                                     tvNurse: parsed.tvName || '',
-                                    tnNurse: parsed.tnName || ''
+                                    tnNurse: parsed.tnName || '',
+                                    relevantNotes: ''
                                 });
                             } catch (e) { /* ignore */ }
+                        } else {
+                            // Reset notes if nothing found
+                            setHeaderData(prev => ({
+                                ...prev,
+                                notes: ''
+                            }));
                         }
                     }
                 }
+
+                // Fetch History of Relevant Notes (Last 2 days)
+                const [y, m, d] = headerData.date.split('-').map(Number);
+                const baseDate = new Date(y, m - 1, d);
+
+                const prevDates = [];
+                for (let i = 1; i <= 2; i++) {
+                    const prev = new Date(baseDate);
+                    prev.setDate(prev.getDate() - i);
+                    prevDates.push(prev.toISOString().split('T')[0]);
+                }
+
+                // Fetch in reverse to show newest first
+                const historyResults = await Promise.all(
+                    prevDates.map(async (dt) => {
+                        const s = await medicalService.getDailyStaffing(headerData.patientId, dt);
+                        return { date: dt, notes: s?.relevantNotes || '' };
+                    })
+                );
+
+                if (mounted) {
+                    setHeaderData(prev => ({
+                        ...prev,
+                        notesHistory: historyResults.filter(h => h.notes)
+                    }));
+                }
+
             } catch (error) {
-                console.error('Error fetching staffing:', error);
+                console.error('Error fetching staffing/notes:', error);
             }
         };
 
@@ -429,14 +471,39 @@ export const Dashboard: React.FC = () => {
         };
     }, [headerData.patientId, headerData.date]);
 
+    const formatDateLabel = (dateStr: string) => {
+        if (!dateStr) return '';
+        try {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const date = new Date(y, m - 1, d);
+            const [cy, cm, cd] = headerData.date.split('-').map(Number);
+            const current = new Date(cy, cm - 1, cd);
+
+            const diffTime = current.getTime() - date.getTime();
+            const diffDays = Math.round(diffTime / (1000 * 3600 * 24));
+
+            if (diffDays === 1) return 'Ayer';
+            if (diffDays === 2) return 'Anteayer';
+            return dateStr.split('-').reverse().slice(0, 2).join('/');
+        } catch (e) {
+            return dateStr;
+        }
+    };
+
     const handleHeaderChange = async (field: string, value: string) => {
         console.log(`[Dashboard] Header Change: ${field} = ${value}`);
         setHeaderData(prev => ({ ...prev, [field]: value }));
 
-        // Persist relevant notes if they changed
+        // Persist relevant notes if they changed (DAILY LOG)
         if (field === 'notes' && headerData.patientId) {
             try {
-                await residentService.updateResident(headerData.patientId, {
+                // Save to daily log
+                await medicalService.saveDailyStaffing({
+                    residentId: headerData.patientId,
+                    date: headerData.date,
+                    tmNurse: headerData.tmName,
+                    tvNurse: headerData.tvName,
+                    tnNurse: headerData.tnName,
                     relevantNotes: value
                 });
             } catch (error) {
@@ -453,26 +520,9 @@ export const Dashboard: React.FC = () => {
                     date: updatedData.date,
                     tmNurse: updatedData.tmName,
                     tvNurse: updatedData.tvName,
-                    tnNurse: updatedData.tnName
+                    tnNurse: updatedData.tnName,
+                    relevantNotes: updatedData.notes
                 });
-
-                // GLOBAL PERSISTENCE: Save to Master record for the day
-                // await medicalService.saveGlobalStaffing(
-                //     updatedData.date,
-                //     updatedData.tmName || '',
-                //     updatedData.tvName || '',
-                //     updatedData.tnName || ''
-                // );
-
-                // DATA PERSISTENCE: Save as "default" for this day in localStorage
-                // This allows auto-filling for other patients
-                // const currentPrefs = {
-                //     tmName: updatedData.tmName,
-                //     tvName: updatedData.tvName,
-                //     tnName: updatedData.tnName
-                // };
-                // localStorage.setItem(`staff_prefs_${updatedData.date}`, JSON.stringify(currentPrefs));
-
             } catch (error) {
                 console.error('Error saving staffing:', error);
             }
@@ -778,7 +828,7 @@ export const Dashboard: React.FC = () => {
                                                 patientId: resident.id,
                                                 patientName: `${resident.firstName} ${resident.lastName}`,
                                                 diagnosis: resident.conditions || '',
-                                                notes: resident.relevantNotes || ''
+                                                notes: '' // Reset notes to blank when switching patient; useEffect will load daily notes if they exist
                                             }));
                                         } else {
                                             setHeaderData(prev => ({ ...prev, patientId: '', patientName: '', diagnosis: '', notes: '' }));
@@ -787,7 +837,7 @@ export const Dashboard: React.FC = () => {
                                 >
                                     <option value="">Seleccionar...</option>
                                     {residents.map(r => (
-                                        <option key={r.id} value={r.id}>{r.firstName} {r.lastName}</option>
+                                        <option key={r.id} value={r.id}>{`${r.firstName} ${r.lastName}`.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</option>
                                     ))}
                                 </select>
                             </div>
@@ -896,51 +946,57 @@ export const Dashboard: React.FC = () => {
                     </div>
 
                     {/* Section 2: Notas de Enfermería Relevantes (Dynamic) */}
-                    <div className="bg-amber-50/50 dark:bg-amber-900/5 border border-amber-100 dark:border-amber-900/30 p-1.5 px-2 rounded-md flex flex-col gap-1">
+                    <div className="bg-amber-50/20 dark:bg-amber-900/5 border border-amber-100/50 dark:border-amber-900/20 p-2 rounded-lg flex flex-col gap-2 shadow-sm">
                         <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center gap-1.5 text-amber-700/80 dark:text-amber-500 font-bold text-[9px] uppercase tracking-wider">
-                                <ClipboardList className="w-3 h-3" />
-                                Notas Relevantes:
+                            <div className="flex items-center gap-2 text-amber-700/80 dark:text-amber-500 font-bold text-[10px] uppercase tracking-widest">
+                                <ClipboardList className="w-4 h-4" />
+                                Bitácora de {headerData.date ? headerData.date.split('-').reverse().slice(0, 2).join('/') : '--/--'} {isLocked ? '(Historial)' : '(Hoy)'}
                             </div>
-                            {!showNoteInput && (
+                            {!showNoteInput && !isLocked && (
                                 <button
                                     onClick={() => setShowNoteInput(true)}
-                                    className="text-amber-600 hover:text-amber-700 p-0.5 rounded-full hover:bg-amber-100 transition-colors"
+                                    className="bg-amber-100 dark:bg-amber-800 text-amber-700 dark:text-amber-200 p-1 rounded-md hover:bg-amber-200 transition-colors shadow-sm"
                                 >
-                                    <Plus className="w-3 h-3" />
+                                    <Plus className="w-3.5 h-3.5" />
                                 </button>
                             )}
                         </div>
 
-                        <div className="flex flex-wrap gap-1.5 items-center min-h-[22px]">
+                        {/* Today's Notes - Blank if none */}
+                        <div className="flex flex-wrap gap-1.5 items-center min-h-[32px]">
                             {headerData.notes ? (
                                 headerData.notes.split(';').filter(Boolean).map((note, idx) => (
-                                    <div key={idx} className="bg-white dark:bg-gray-800 px-2 py-0.5 rounded-md border border-amber-100 dark:border-amber-900/50 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-1.5 shadow-sm max-w-full">
-                                        <span className="leading-snug py-0.5" title={note.trim()}>{note.trim()}</span>
-                                        <button
-                                            onClick={() => {
-                                                const notes = headerData.notes.split(';').filter(Boolean);
-                                                notes.splice(idx, 1);
-                                                handleHeaderChange('notes', notes.join(';'));
-                                            }}
-                                            className="text-gray-300 hover:text-red-500"
-                                        >
-                                            <X className="w-2.5 h-2.5" />
-                                        </button>
+                                    <div key={idx} className="bg-white dark:bg-gray-800 px-2.5 py-1 rounded-md border border-amber-200 dark:border-amber-700 text-[11px] text-gray-700 dark:text-gray-200 flex items-center gap-2 shadow-sm group">
+                                        <span className="leading-tight font-medium" title={note.trim()}>{note.trim()}</span>
+                                        {!isLocked && (
+                                            <button
+                                                onClick={() => {
+                                                    const notes = headerData.notes.split(';').filter(Boolean);
+                                                    notes.splice(idx, 1);
+                                                    handleHeaderChange('notes', notes.join(';'));
+                                                }}
+                                                className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        )}
                                     </div>
                                 ))
-                            ) : !showNoteInput && (
-                                <button
+                            ) : !showNoteInput && !isLocked && (
+                                <div
                                     onClick={() => setShowNoteInput(true)}
-                                    className="flex items-center gap-1.5 text-amber-600/50 hover:text-amber-600 text-[10px] italic py-0.5"
+                                    className="w-full h-10 border border-dashed border-amber-200 dark:border-amber-800/50 rounded-lg flex items-center justify-center cursor-pointer hover:bg-amber-50/50 dark:hover:bg-amber-900/10 transition-colors group"
                                 >
-                                    <Plus className="w-3 h-3 border border-dashed border-amber-300 rounded" />
-                                    Agregar nota...
-                                </button>
+                                    <span className="text-[11px] text-amber-400 group-hover:text-amber-500 italic font-medium">Añadir nota relevante para hoy...</span>
+                                </div>
+                            )}
+
+                            {isLocked && !headerData.notes && (
+                                <div className="text-gray-400 text-[10px] italic py-2">No se registraron notas para esta fecha.</div>
                             )}
 
                             {showNoteInput && (
-                                <div className="flex items-center gap-1.5 flex-1 w-full">
+                                <div className="flex items-center gap-2 flex-1 w-full animate-in fade-in slide-in-from-left-2">
                                     <input
                                         autoFocus
                                         type="text"
@@ -962,8 +1018,8 @@ export const Dashboard: React.FC = () => {
                                         onBlur={() => {
                                             if (!tempNote.trim()) setShowNoteInput(false);
                                         }}
-                                        className="bg-white dark:bg-gray-800 border-amber-200 focus:border-amber-400 rounded px-2 py-0.5 text-xs flex-1 focus:ring-1 focus:ring-amber-300 outline-none h-6"
-                                        placeholder="Escribe y pulsa Enter..."
+                                        className="bg-white dark:bg-gray-800 border-amber-400 focus:border-amber-600 rounded-lg px-3 py-1.5 text-xs flex-1 outline-none shadow-inner h-8 focus:ring-1 focus:ring-amber-200"
+                                        placeholder="Escriba aquí y pulse Enter..."
                                     />
                                     <button
                                         onClick={() => {
@@ -974,13 +1030,39 @@ export const Dashboard: React.FC = () => {
                                             }
                                             setShowNoteInput(false);
                                         }}
-                                        className="text-green-600 p-0.5"
+                                        className="text-green-600 hover:text-green-700 p-1"
                                     >
-                                        <Check className="w-3.5 h-3.5" />
+                                        <Check className="w-4 h-4 font-bold" />
                                     </button>
                                 </div>
                             )}
                         </div>
+
+                        {/* Recent History Feed (Exactly 2 days) */}
+                        {headerData.notesHistory.length > 0 && (
+                            <div className="mt-1 pt-2 border-t border-amber-200/30 flex flex-col gap-2">
+                                <div className="flex items-center gap-2">
+                                    <HistoryIcon className="w-3 h-3 text-gray-400" />
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Historial Reciente</span>
+                                </div>
+                                <div className="space-y-2">
+                                    {headerData.notesHistory.map((h, i) => (
+                                        <div key={i} className="flex gap-3 items-start group">
+                                            <div className="bg-gray-100/80 dark:bg-gray-800 px-2 py-0.5 rounded text-[10px] font-bold text-gray-500 min-w-[55px] text-center border border-gray-200 dark:border-gray-700 shadow-sm">
+                                                {formatDateLabel(h.date)}
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5 flex-1">
+                                                {h.notes.split(';').filter(Boolean).map((n, j) => (
+                                                    <div key={j} className="text-[11px] text-gray-500/80 dark:text-gray-400/80 bg-white/50 dark:bg-gray-800/40 px-2 py-0.5 rounded border border-gray-100 dark:border-gray-700/50 backdrop-blur-sm">
+                                                        {n.trim()}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -1119,7 +1201,8 @@ export const Dashboard: React.FC = () => {
                                                                             handleVitalChange(index, 'ta', `${val}/${newDia}`);
                                                                         }}
                                                                         onBlur={() => saveVitalSign(index)}
-                                                                        className="w-10 text-right py-2 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                        disabled={isLocked}
+                                                                        className={`w-10 text-right py-2 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                         placeholder="000"
                                                                     />
                                                                     <span className="text-gray-400 font-bold mx-0.5">/</span>
@@ -1133,7 +1216,8 @@ export const Dashboard: React.FC = () => {
                                                                             handleVitalChange(index, 'ta', `${newSys}/${val}`);
                                                                         }}
                                                                         onBlur={() => saveVitalSign(index)}
-                                                                        className="w-10 text-left py-2 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                        disabled={isLocked}
+                                                                        className={`w-10 text-left py-2 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                         placeholder="00"
                                                                     />
                                                                 </div>
@@ -1145,7 +1229,8 @@ export const Dashboard: React.FC = () => {
                                                                     value={row.fc}
                                                                     onChange={(e) => handleVitalChange(index, 'fc', e.target.value)}
                                                                     onBlur={() => saveVitalSign(index)}
-                                                                    className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                    disabled={isLocked}
+                                                                    className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                 />
                                                             </td>
                                                             <td className="border-r border-b border-gray-300 p-0">
@@ -1155,7 +1240,8 @@ export const Dashboard: React.FC = () => {
                                                                     value={row.fr}
                                                                     onChange={(e) => handleVitalChange(index, 'fr', e.target.value)}
                                                                     onBlur={() => saveVitalSign(index)}
-                                                                    className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                    disabled={isLocked}
+                                                                    className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                 />
                                                             </td>
                                                             <td className="border-r border-b border-gray-300 p-0">
@@ -1165,7 +1251,8 @@ export const Dashboard: React.FC = () => {
                                                                     value={row.temp}
                                                                     onChange={(e) => handleVitalChange(index, 'temp', e.target.value)}
                                                                     onBlur={() => saveVitalSign(index)}
-                                                                    className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                    disabled={isLocked}
+                                                                    className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                 />
                                                             </td>
                                                             <td className="border-r border-b border-gray-300 p-0">
@@ -1175,7 +1262,8 @@ export const Dashboard: React.FC = () => {
                                                                     value={row.sato2}
                                                                     onChange={(e) => handleVitalChange(index, 'sato2', e.target.value)}
                                                                     onBlur={() => saveVitalSign(index)}
-                                                                    className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                    disabled={isLocked}
+                                                                    className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                 />
                                                             </td>
                                                             <td className="border-b border-gray-300 p-0">
@@ -1185,7 +1273,8 @@ export const Dashboard: React.FC = () => {
                                                                     value={row.dxtx}
                                                                     onChange={(e) => handleVitalChange(index, 'dxtx', e.target.value)}
                                                                     onBlur={() => saveVitalSign(index)}
-                                                                    className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
+                                                                    disabled={isLocked}
+                                                                    className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                                 />
                                                             </td>
                                                         </tr>
@@ -1247,8 +1336,9 @@ export const Dashboard: React.FC = () => {
                                                                 value={row.medicamento}
                                                                 onChange={(val) => handleMedicationChange(index, 'medicamento', val)}
                                                                 onBlur={() => saveMedication(index)}
-                                                                className="w-full h-full py-2 px-2 focus:outline-none focus:bg-blue-50 bg-transparent"
-                                                                placeholder={index === 0 ? "Nombre del medicamento" : ""}
+                                                                disabled={isLocked}
+                                                                className={`w-full h-full py-2 px-2 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
+                                                                placeholder={index === 0 && !isLocked ? "Nombre del medicamento" : ""}
                                                             />
                                                         </td>
                                                         <td className="border-r border-b border-gray-300 p-0">
@@ -1257,8 +1347,9 @@ export const Dashboard: React.FC = () => {
                                                                 value={row.dosis}
                                                                 onChange={(e) => handleMedicationChange(index, 'dosis', e.target.value)}
                                                                 onBlur={() => saveMedication(index)}
-                                                                className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent"
-                                                                placeholder={index === 0 ? "dosis" : ""}
+                                                                disabled={isLocked}
+                                                                className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
+                                                                placeholder={index === 0 && !isLocked ? "dosis" : ""}
                                                             />
                                                         </td>
                                                         <td className="border-r border-b border-gray-300 p-0 text-center relative group">
@@ -1269,7 +1360,8 @@ export const Dashboard: React.FC = () => {
                                                                 value={row.via}
                                                                 onChange={(e) => handleMedicationChange(index, 'via', e.target.value)}
                                                                 onBlur={() => saveMedication(index)}
-                                                                className="w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent appearance-none cursor-pointer relative z-10"
+                                                                disabled={isLocked}
+                                                                className={`w-full h-full text-center py-2 px-1 focus:outline-none focus:bg-blue-50 bg-transparent appearance-none cursor-pointer relative z-10 ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
                                                             >
                                                                 <option value=""></option>
                                                                 <option value="oral">Oral</option>
@@ -1379,8 +1471,9 @@ export const Dashboard: React.FC = () => {
                                                                 value={row.observacion}
                                                                 onChange={(e) => handleMedicationChange(index, 'observacion', e.target.value)}
                                                                 onBlur={() => saveMedication(index)}
-                                                                className="w-full h-full py-2 px-2 focus:outline-none focus:bg-blue-50 bg-transparent"
-                                                                placeholder={index === 0 ? "Notas..." : ""}
+                                                                disabled={isLocked}
+                                                                className={`w-full h-full py-2 px-2 focus:outline-none focus:bg-blue-50 bg-transparent ${isLocked ? 'cursor-not-allowed opacity-70' : ''}`}
+                                                                placeholder={index === 0 && !isLocked ? "Notas..." : ""}
                                                             />
                                                         </td>
                                                         <td className="border-b border-gray-300 p-0 h-10 text-center">
@@ -1419,15 +1512,17 @@ export const Dashboard: React.FC = () => {
                                         </table>
                                     </div>
                                     <div className="bg-gray-50 px-4 py-2 border-t border-gray-300 flex justify-center">
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            onClick={addMedicationRow}
-                                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 flex items-center gap-1 w-full justify-center"
-                                        >
-                                            <Plus className="w-4 h-4" />
-                                            Agregar Medicamento
-                                        </Button>
+                                        {!isLocked && (
+                                            <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                onClick={addMedicationRow}
+                                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 flex items-center gap-1 w-full justify-center"
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                                Agregar Medicamento
+                                            </Button>
+                                        )}
                                     </div>
 
                                 </Card>

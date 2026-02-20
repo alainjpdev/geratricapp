@@ -9,6 +9,7 @@ interface AutocompleteInputProps {
     onBlur?: () => void;
     className?: string;
     placeholder?: string;
+    disabled?: boolean;
 }
 
 export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
@@ -16,7 +17,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     onChange,
     onBlur,
     className = "",
-    placeholder = ""
+    placeholder = "",
+    disabled = false
 }) => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -103,6 +105,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
                         setShowSuggestions(false);
                     }, 200);
                 }}
+                disabled={disabled}
                 className={className}
                 placeholder={placeholder}
             />
